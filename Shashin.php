@@ -47,7 +47,7 @@ define('SHASHIN_PICASA_SERVER', get_option('shashin_picasa_server'));
 define('SHASHIN_USER_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME?kind=album&alt=rss');
 define('SHASHIN_ALBUM_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
-define('SHASHIN_IMG_URL', '/wp-content/plugins/Shashin/display/');
+define('SHASHIN_IMG_URL', '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
 define('SHASHIN_DOWNLOAD_URL', 'http://www.toppa.com/shashin-wordpress-plugin/');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
 define('SHASHIN_DEFAULT_DIV_PADDING', 10);
