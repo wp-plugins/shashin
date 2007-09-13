@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Michael Toppa
- * @version 1.0
+ * @version 1.0.2
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -46,7 +46,7 @@
     <ul>
     <li><strong>Display an album thumbnail:</strong> copy and paste the code
     listed under <em>Markup</em>, and then edit it as needed.
-    [salbum=album_key,location_yn,pubdate_yn,align,clear] Note album
+    [salbum=album_key,location_yn,pubdate_yn,float,clear] Note album
     thumbnail sizes are set by Picasa at 160x160.</li>
     <li><strong>Syncing:</strong> sync an album after you upload new photos
     to it in Picasa. Wait at least a few minutes between syncs for an album -

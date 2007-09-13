@@ -23,7 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Michael Toppa
- * @version 1.0
+ * @version 1.0.2
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()
@@ -49,17 +49,17 @@
     <ul>
     <li><strong>Display an image:</strong> copy and paste the code
     listed under <em>Markup</em>, and then edit it as needed.
-    [simage=photo_key,max_size,caption_yn,align,clear]</li>
+    [simage=photo_key,max_size,caption_yn,float,clear]</li>
     <li><strong>Valid Picasa image sizes:</strong> 32, 48, 64, 72, 144, 160,
     200, 288, 320, 400, 512, 576, 640, 720, 800. For a cropped square image,
     use sizes 32, 48, 64, or 160.</li>
     <li><strong>Display random images:</strong>
-    [srandom=album_key,max_size,max_cols,how_many,caption_yn,align,clear] Enter
+    [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>Display table of thumbnails:</strong>
-    [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,align,clear]</li>
+    [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,float,clear]</li>
     <li><strong>Display newest images:</strong>
-    [snewest=album_key,max_size,max_cols,how_many,caption_yn,align,clear] Enter
+    [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>More Help:</strong> see the
     <a href="<?php echo SHASHIN_DOWNLOAD_URL ?>">Shashin page</a> for detailed

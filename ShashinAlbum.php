@@ -3,7 +3,7 @@
  * ShashinAlbum class file.
  *
  * @author Michael Toppa
- * @version 1.0
+ * @version 1.0.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -424,15 +424,15 @@ class ShashinAlbum {
      * and title of an album, with a hyperlink to the album at Picasa. Thumbnail
      * size is fixed at 160x160.
      * 
-     * salbum tag: [salbum=album_key,location_yn,pubdate_yn,align,clear]
-     * php call: echo $photo->getAlbumMarkup(array(null,album_key,'location_yn','pubdate_yn','align','clear'));
+     * salbum tag: [salbum=album_key,location_yn,pubdate_yn,float,clear]
+     * php call: echo $photo->getAlbumMarkup(array(null,album_key,'location_yn','pubdate_yn','float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete salbum tag
      * - Album Key (required): the Shashin album_key (not the Picasa album ID)
      * - Location (optional): y or n to show the location of the image, with a link to Google Maps.
      * - Pub Date (optional): y or n to show the pub date of the album
-     * - Align (optional): a css float value (left, right, or none)
+     * - float (optional): a css float value (left, right, or none)
      * - Clear (optional): a css clear value (left, right, or both)
      *
      * Example:
@@ -467,9 +467,9 @@ class ShashinAlbum {
             $date = $this->data['pub_date'];
         }
 
-        // set the align value
+        // set the float value
         if (strlen(trim($match[4]))) {
-            $align = $match[4];
+            $float = $match[4];
         }
 
         // set the clear value
@@ -481,8 +481,8 @@ class ShashinAlbum {
         $replace = '<div class="shashin_album" style="width: '
             . (SHASHIN_ALBUM_THUMB_SIZE + $divPadding) . 'px;';
             
-        if (strlen($align)) {
-            $replace .= ' float: ' . $align . ';';
+        if (strlen($float)) {
+            $replace .= ' float: ' . $float . ';';
         }
 
         if (strlen($clear)) {

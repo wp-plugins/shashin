@@ -3,7 +3,7 @@
  * ShashinPhoto class file.
  *
  * @author Michael Toppa
- * @version 1.0
+ * @version 1.0.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -178,15 +178,15 @@ class ShashinPhoto {
      * Translates the "simage" Shashin tag into xhtml displaying the specified
      * photo, with a hyperlink to the photo at Picasa.
      *
-     * simage tag: [simage=photo_key,max_size,caption_yn,align,clear]
-     * php call: echo $photo->getPhotoMarkup(array(null,photo_key,max_size,'caption_yn','align','clear'));
+     * simage tag: [simage=photo_key,max_size,caption_yn,float,clear]
+     * php call: echo $photo->getPhotoMarkup(array(null,photo_key,max_size,'caption_yn','float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete simage tag
      * - Photo Key (required): the Shashin photo_key (not the Picasa image ID)
      * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
      * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Align (optional): a css float value (left, right, or none) (no default)
+     * - float (optional): a css float value (left, right, or none) (no default)
      * - Clear (optional): a css clear value (left, right, or both) (no default)
      *
      * Example:
@@ -220,8 +220,8 @@ class ShashinPhoto {
      * Translates the "srandom" Shashin tag into xhtml displaying a table of
      * random photos, each with a hyperlink to the photo at Picasa.
      *
-     * [srandom=album_key,max_size,max_cols,how_many,caption_yn,align,clear]
-     * php call: echo $photo::getRandomMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','align','clear'));
+     * [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear]
+     * php call: echo $photo::getRandomMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete simage tag
@@ -230,7 +230,7 @@ class ShashinPhoto {
      * - Max Cols (required): how many columns the table will have
      * - How Many (required): how many random pictures to show 
      * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Align (optional): a css float value (left, right, or none) (no default)
+     * - float (optional): a css float value (left, right, or none) (no default)
      * - Clear (optional): a css clear value (left, right, or both) (no default)
      *      
      * Note that if an album has include_in_random=n, no photos from it will be
@@ -304,8 +304,8 @@ class ShashinPhoto {
      * Translates the "snewest" Shashin tag into xhtml displaying a table of
      * your newest photos, each with a hyperlink to the photo at Picasa.
      *
-     * [snewest=album_key,max_size,max_cols,how_many,caption_yn,align,clear]
-     * php call: echo $photo->getNewestMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','align','clear'));
+     * [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear]
+     * php call: echo $photo->getNewestMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete simage tag
@@ -314,7 +314,7 @@ class ShashinPhoto {
      * - Max Cols (required): how many columns the table will have
      * - How Many (required): how many random pictures to show 
      * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Align (optional): a css float value (left, right, or none) (no default)
+     * - float (optional): a css float value (left, right, or none) (no default)
      * - Clear (optional): a css clear value (left, right, or both) (no default)
      *      
      * Example:
@@ -368,15 +368,15 @@ class ShashinPhoto {
      * table displaying the specified thumbnails, each with a hyperlink to the
      * photo at Picasa.
      *
-     * sthumbs tag: [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,align,clear]
-     * php call: echo ShashinPhoto::getThumbsMarkup(array(null,'photo_key1|photo_key2|etc',max_size,max_cols,caption_yn,'align','clear'));
+     * sthumbs tag: [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]
+     * php call: echo ShashinPhoto::getThumbsMarkup(array(null,'photo_key1|photo_key2|etc',max_size,max_cols,caption_yn,'float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete sthumbs tag
      * - Keys (required): Shashin photo keys, pipe delimited (not the Picasa image IDs)
      * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
      * - Columns (required): the number of colums for the thumbnail table
-     * - Align (optional): a css float value (left, right, or none) (no default)
+     * - float (optional): a css float value (left, right, or none) (no default)
      * - Clear (optional): a css clear value (left, right, or both) (no default)
      *
      * Example:
@@ -546,9 +546,9 @@ class ShashinPhoto {
             $caption = $this->data['description'];
         }
 
-        // set the align value
+        // set the float value
         if (strlen(trim($match[4]))) {
-            $align = $match[4];
+            $float = $match[4];
         }
 
         // set the clear value
@@ -570,8 +570,8 @@ class ShashinPhoto {
         $markup = '<div ' . $class . ' style="width: '
             . ($this->data['user_width'] + $padding) . 'px;';
             
-        if (strlen($align)) {
-            $markup .= ' float: ' . $align . ';';
+        if (strlen($float)) {
+            $markup .= ' float: ' . $float . ';';
         }
 
         if (strlen($clear)) {

@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 1.0
+Version: 1.0.2
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 1.0
+ * @version 1.0.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -35,11 +35,11 @@ Author URI: http://www.toppa.com
 
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_FILE', basename(__FILE__));
-define('SHASHIN_DIR', (DIRECTORY_SEPARATOR != '/') ? str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) : dirname(__FILE__));
-define('SHASHIN_PATH', SHASHIN_DIR . '/' . basename(__FILE__));
-define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(dirname(__FILE__)) . '/' . SHASHIN_FILE);
+define('SHASHIN_DIR', dirname(__FILE__));
+define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
+define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
-define('SHASHIN_VERSION', '0.6');
+define('SHASHIN_VERSION', '1.0.2');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -447,11 +447,11 @@ class Shashin {
      * requested images.
      *
      * Supported Shashin tags:
-     * - [simage=photo_key,max_size,caption_yn,align,clear]
-     * - [srandom=album_key,max_size,max_cols,how_many,caption_yn,align,clear]
-     * - [salbum=album_key,location_yn,pubdate_yn,align,clear]
-     * - [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,align,clear]
-     * - [snewest=album_key,max_size,max_cols,how_many,caption_yn,align,clear]
+     * - [simage=photo_key,max_size,caption_yn,float,clear]
+     * - [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear]
+     * - [salbum=album_key,location_yn,pubdate_yn,float,clear]
+     * - [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]
+     * - [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear]
      *
      * For srandom and snewest tags, you can use the word "any" instead of an
      * album key to get photos from any album.
