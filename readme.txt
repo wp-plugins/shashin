@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.2.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -14,8 +14,6 @@ Use Shashin to display individual Picasa images in your posts and pages, as well
 
 == Installation ==
 
-**Special Note to Upgraders:** 1. Deactivate your old installation, upload the new version, and then reactivate. This is necessary to set values for new options. 2. The srandom and sthumbs tags are not backwards compatible. You will need to change your markup anywhere you're currently using these tags (I won't do this again, now that Shashin is done with its initial beta testing). See the FAQ section for the new markup for these tags.
-
 Download the zip file, extract it into your plugin directory, and then activate it from your plugin panel. After successful activation, Shashin will appear under your "Manage" tab and under your "Options" tab.
 
 Go to the "Options" tab first and take a look at the default options, which for many people will not require any changes. If your Picasa server is outside the US, then change the server (e.g. to picasaweb.google.co.uk). As explained on the screen, you only need to adjust the other options if you make certain changes to shashin.css.
@@ -24,9 +22,11 @@ Now go to the "Manage" tab and follow the directions to add your first album!
 
 Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. You should include these tables when making backups of your WordPress tables.
 
+**Special Note to Upgraders:** 1. Deactivate your old installation, upload the new version, and then reactivate. This is necessary to set values for new options. 2. The srandom and sthumbs tags are not backwards compatible. You will need to change your markup anywhere you're currently using these tags (I won't do this again, now that Shashin is done with its initial beta testing). See the FAQ section for the new markup for these tags.
+
 == Frequently Asked Questions ==
 
-= I added my Picasa album to Shashin, and then after that I made a bunch of changes to the album. I changed some captions, added some new pictures, and deleted some pictures. How do I let Shashin know about the changes?
+= I added my Picasa album to Shashin, and then after that I made a bunch of changes to the album. I changed some captions, added some new pictures, and deleted some pictures. How do I let Shashin know about the changes? =
 
 In the Shashin admin panel, you'll want to click the icon to sync an album whenever you update it in Picasa. This will synchronize your Shashin tables with the Picasa RSS feed. If you delete a photo from Picasa, it will get deleted from the Shashin tables as well when you sychronize the album. 
 

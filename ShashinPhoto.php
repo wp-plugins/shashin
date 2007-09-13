@@ -3,7 +3,7 @@
  * ShashinPhoto class file.
  *
  * @author Michael Toppa
- * @version 1.0.2
+ * @version 1.0.3
  * @package Shashin
  * @subpackage Classes
  *
