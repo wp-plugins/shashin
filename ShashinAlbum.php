@@ -3,7 +3,7 @@
  * ShashinAlbum class file.
  *
  * @author Michael Toppa
- * @version 1.0.3
+ * @version 1.0.4
  * @package Shashin
  * @subpackage Classes
  *

@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.2.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -26,7 +26,7 @@ Note that Shashin will add two tables to your WordPress database, named wp\_shas
 
 == Frequently Asked Questions ==
 
-= I added my Picasa album to Shashin, and then after that I made a bunch of changes to the album. I changed some captions, added some new pictures, and deleted some pictures. How do I let Shashin know about the changes? =
+= I added my Picasa album to Shashin, and then I added som pictures to it. How do I let Shashin know about the changes? =
 
 In the Shashin admin panel, you'll want to click the icon to sync an album whenever you update it in Picasa. This will synchronize your Shashin tables with the Picasa RSS feed. If you delete a photo from Picasa, it will get deleted from the Shashin tables as well when you sychronize the album. 
 
@@ -111,7 +111,7 @@ In a post or page, use the srandom tag: <code>[srandom=album_key,max_size,max_co
 Example: <code>[srandom=any,288,2,6,n,none,both]</code>
 
 In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo $photo::getRandomMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
+<pre><code>&lt;?php echo ShashinPhoto::getRandomMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
 
 * album\_key: (required) either the word "any" or the the Album Key listed for an album on the Shashin admin page
 * max\_size: (required) the size you want, chosen from the list above
@@ -129,7 +129,7 @@ In a post or page, use the snewest tag: <code>[snewest=album_key,max_size,max_co
 Example: <code>[snewest=any,288,2,6,n,none,both]</code>
 
 In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo $photo-&gt;getNewestMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
+<pre><code>&lt;?php echo ShashinPhoto::getNewestMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
 
 * album\_key: (required) either the word "any" or the the Album Key listed for an album on the Shashin admin page
 * max\_size: (required) the size you want, chosen from the list above
