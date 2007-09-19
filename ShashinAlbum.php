@@ -3,7 +3,7 @@
  * ShashinAlbum class file.
  *
  * @author Michael Toppa
- * @version 1.0.4
+ * @version 1.0.5
  * @package Shashin
  * @subpackage Classes
  *
@@ -508,7 +508,7 @@ class ShashinAlbum {
             . ($this->data['geo_pos']
                 ? (' <a href="' . GOOGLE_MAPS_QUERY_URL
                     . str_replace(" ", "+", $this->data['geo_pos'])
-                    . '"><img src="' . SHASHIN_IMG_URL
+                    . '"><img src="' . SHASHIN_DISPLAY_URL
                     . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: text-bottom; border: none;" />')
                 : '')
             . ($this->data['geo_pos'] ? '</a>' : '')

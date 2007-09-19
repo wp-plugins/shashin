@@ -4,25 +4,25 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.2.2
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
 == Description ==
 
-Use Shashin to display individual Picasa images in your posts and pages, as well as tables of thumbnails, random images, your most recently uploaded pictures, and album thumbnails. You can do all this with Shashin's custom tags, which are documented in the FAQ section. Shashin stores data for your albums in local tables, which you can sync with Picasa's RSS feeds on demand. Shashin does not download your Picasa images - instead it displays them directly from Picasa. Shashin includes some nice extra features too, such as the ability to exclude specific albums or images from random displays, and a link to Google Maps for albums where you've specified a location in Picasa. There's also a stylesheet, which you are welcome to customize for your site. You can use Shashin in your sidebar as well - see the FAQ section for instructions. Note that Shashin currently supports only public Picasa albums (I hope to add support for private albums soon).
+Use Shashin to display individual Picasa images in your posts and pages, as well as tables of thumbnails, random images, your most recently uploaded pictures, and album thumbnails. You can do all this with Shashin's custom tags, which are documented in the FAQ section. Shashin stores data for your albums in local tables, which you can sync with Picasa's RSS feeds on demand. Shashin does not download your Picasa images - instead it displays them directly from Picasa. Shashin includes some nice extra features too, such as the ability to exclude specific albums or images from random displays, and a link to Google Maps for albums where you've specified a location in Picasa. There's also a stylesheet, which you are welcome to customize for your site. You can use Shashin in your sidebar as well (not as a widget though) - see the FAQ section for instructions. Note that Shashin currently supports only public Picasa albums (I hope to add support for private albums soon).
 
 == Installation ==
 
-Download the zip file, extract it into your plugin directory, and then activate it from your plugin panel. After successful activation, Shashin will appear under your "Manage" tab and under your "Options" tab.
+Download the zip file, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear under your "Manage" tab and under your "Options" tab.
 
-Go to the "Options" tab first and take a look at the default options, which for many people will not require any changes. If your Picasa server is outside the US, then change the server (e.g. to picasaweb.google.co.uk). As explained on the screen, you only need to adjust the other options if you make certain changes to shashin.css.
+Go to the "Options" tab first and take a look at the default options, which for many people will not require any changes. If your Picasa server is outside the US, then change the server (e.g. to picasaweb.google.co.uk).
 
 Now go to the "Manage" tab and follow the directions to add your first album!
 
 Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. You should include these tables when making backups of your WordPress tables.
 
-**Special Note to Upgraders:** 1. Deactivate your old installation, upload the new version, and then reactivate. This is necessary to set values for new options. 2. The srandom and sthumbs tags are not backwards compatible. You will need to change your markup anywhere you're currently using these tags (I won't do this again, now that Shashin is done with its initial beta testing). See the FAQ section for the new markup for these tags.
+**Special Note to Upgraders from Version 0.6:** 1. Deactivate your old installation, upload the new version, and then reactivate. This is necessary to set values for new options. 2. The srandom and sthumbs tags are not backwards compatible. You will need to change your markup anywhere you're currently using these tags (I won't do this again, now that Shashin is done with its initial beta testing). See the FAQ section for the new markup for these tags.
 
 == Frequently Asked Questions ==
 
@@ -158,3 +158,22 @@ I've <a href="http://www.toppa.com/shashin_phpdoc">thoroughly documented the Sha
 = What does "Shashin" mean? =
 
 I started working on this plugin while living in Tokyo. Shashin is the Japanese word for photograph, so it seemed fitting.
+
+== Change Log ==
+
+* 0.6 - Beta version. First public release.
+* 1.0
+    * Added "snewest" tag, which displays a table of thumbnails for a variable number of the latest photos in an album you specify (or from all albums). Thumbnail size, display of captions, and CSS "float" and "clear" for the table also can be specified.  
+    * "sthumbs" now includes option for showing a caption. Note this change is not backwards compatible, as the argument order has been changed slightly. You only need to change existing sthumbs tags if you set values for float or clear.
+    * Changed "srandom" to display a table of random thumbnails for a variable number of photos in an album you specify (or any album). Note this change is not backwards compatible as the arguments have been changed to support the new features.
+    * Added options admin menu: can now set options for your Picasa server URL, image div padding, and thumbnail div padding.
+    * Set default values for options listed above when installing
+    * Bug fix: now use htmlspecialchars on image alt text (which comes from the Picasa image description)
+    * Bug fix: now reads the Picasa feed with the correct character set (UTF-8)
+* 1.0.1 - bug fix: support arbitrary name for Shashin plugin directory
+* 1.0.2 - 1.0.4 - updates to readme.txt and minor code cleanup
+* 1.0.5 - bug fix: fixed display of icons on Shashin admin page; added this change log
+
+
+
+ 

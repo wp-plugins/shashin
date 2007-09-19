@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 1.0.4
+Version: 1.0.5
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 1.0.4
+ * @version 1.0.5
  * @package Shashin
  * @subpackage Classes
  *
@@ -39,7 +39,7 @@ define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
-define('SHASHIN_VERSION', '1.0.4');
+define('SHASHIN_VERSION', '1.0.5');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -47,7 +47,7 @@ define('SHASHIN_PICASA_SERVER', get_option('shashin_picasa_server'));
 define('SHASHIN_USER_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME?kind=album&alt=rss');
 define('SHASHIN_ALBUM_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
-define('SHASHIN_IMG_URL', '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
+define('SHASHIN_DISPLAY_URL', '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
 define('SHASHIN_DOWNLOAD_URL', 'http://www.toppa.com/shashin-wordpress-plugin/');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
 define('SHASHIN_DEFAULT_DIV_PADDING', 10);
@@ -439,7 +439,7 @@ class Shashin {
      * @access public
      */    
     function getCSS() {
-        echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_IMG_URL . 'shashin.css" />';
+        echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin.css" />';
     }
     
     /**

@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Michael Toppa
- * @version 1.0.4
+ * @version 1.0.5
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -90,10 +90,12 @@
             <td align="center"><a href="<?php
                 echo SHASHIN_ADMIN_URL ?>&amp;shashinAction=syncAlbum&amp;albumID=<?php
                 echo $allAlbum['album_id'] ?>&amp;user=<?php
-                echo $allAlbum['user'] ?>"><img src="/wp-content/plugins/Shashin/display/arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" /></a></td>    
+                echo $allAlbum['user'] ?>"><img src="<?php
+                echo SHASHIN_DISPLAY_URL ?>arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" /></a></td>    
             <td align="center"><a href="<?php
                 echo SHASHIN_ADMIN_URL ?>&amp;shashinAction=deleteAlbum&amp;albumID=<?php
-                echo $allAlbum['album_id'] ?>" onclick="return confirm('Are you sure you want to delete?')"><img src="/wp-content/plugins/Shashin/display/delete.png" alt="Delete Album" width="16" height="16" border="0" /></a></td>    
+                echo $allAlbum['album_id'] ?>" onclick="return confirm('Are you sure you want to delete?')"><img src="<?php
+                echo SHASHIN_DISPLAY_URL ?>delete.png" alt="Delete Album" width="16" height="16" border="0" /></a></td>    
             </tr>
         <?php } ?>
         
