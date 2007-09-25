@@ -54,7 +54,7 @@
     <li><strong>Random images:</strong> if you want to exclude an album's
     images when using the srandom tag, set "Include in Random?" to "No."</li>
     <li><strong>More Help:</strong> see the
-    <a href="<?php echo SHASHIN_DOWNLOAD_URL ?>">Shashin page</a> for detailed
+    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
     instructions</li>
     </ul>
 

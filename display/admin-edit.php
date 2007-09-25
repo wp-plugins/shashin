@@ -57,12 +57,12 @@
     [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>Display table of thumbnails:</strong>
-    [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,float,clear]</li>
+    [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]</li>
     <li><strong>Display newest images:</strong>
     [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>More Help:</strong> see the
-    <a href="<?php echo SHASHIN_DOWNLOAD_URL ?>">Shashin page</a> for detailed
+    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
     instructions</li>
     </ul>
     

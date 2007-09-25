@@ -48,7 +48,7 @@ define('SHASHIN_USER_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME
 define('SHASHIN_ALBUM_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
 define('SHASHIN_DISPLAY_URL', '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
-define('SHASHIN_DOWNLOAD_URL', 'http://www.toppa.com/shashin-wordpress-plugin/');
+define('SHASHIN_FAQ_URL', 'http://wordpress.org/extend/plugins/shashin/faq/');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
 define('SHASHIN_DEFAULT_DIV_PADDING', 10);
 define('SHASHIN_DEFAULT_THUMB_PADDING', 6);
