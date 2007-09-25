@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Michael Toppa
- * @version 1.0.5
+ * @version 1.0.6
  * @package Shashin
  * @subpackage AdminPanels
  *

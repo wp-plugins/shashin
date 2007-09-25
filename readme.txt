@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.2.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -173,6 +173,7 @@ I started working on this plugin while living in Tokyo. Shashin is the Japanese 
 * 1.0.1 - bug fix: support arbitrary name for Shashin plugin directory
 * 1.0.2 - 1.0.4 - updates to readme.txt and minor code cleanup
 * 1.0.5 - bug fix: fixed display of icons on Shashin admin page; added this change log
+* 1.0.6 - fixed documentation for sthumbs tag, and help link now points to the Shashin FAQ at wordpress.org
 
 
 
