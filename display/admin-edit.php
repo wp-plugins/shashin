@@ -44,7 +44,7 @@
     <p><a href="<?php echo SHASHIN_ADMIN_URL ?>">&laquo; Shashin Admin</a></p>
     
     
-    <h3>Tips</h3>
+    <h3>Photo Tips</h3>
 
     <ul>
     <li><strong>Display an image:</strong> copy and paste the code
@@ -62,7 +62,7 @@
     [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>More Help:</strong> see the
-    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
+    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin FAQ page</a> for detailed
     instructions</li>
     </ul>
     

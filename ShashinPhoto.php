@@ -3,7 +3,7 @@
  * ShashinPhoto class file.
  *
  * @author Michael Toppa
- * @version 1.0.6
+ * @version 1.0.7
  * @package Shashin
  * @subpackage Classes
  *
@@ -290,7 +290,16 @@ class ShashinPhoto {
                 . $match[4] . ' random photos</span>';
         }
         
-        $where = "WHERE PHOTO_KEY IN ('" . implode("','", array_values($randomPhotoKeys)) . "')"; 
+        // if we only asked for 1 random photo, $randomPhotoKeys will be a
+        // scalar - otherwise it's an array
+        if (is_array($randomPhotoKeys)) {
+            $where = "WHERE PHOTO_KEY IN ('" . implode("','", array_values($randomPhotoKeys)) . "')"; 
+        }
+        
+        else {
+            $where = "WHERE PHOTO_KEY = $randomPhotoKeys"; 
+        }
+        
         $photos = ShashinPhoto::getPhotos($where);
 
         if ($photos === false) {
