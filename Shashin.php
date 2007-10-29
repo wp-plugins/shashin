@@ -279,14 +279,13 @@ class Shashin {
                 $album = new ShashinAlbum();
                 // insert/update the album
                 if ($album->setAlbum($pieces[3], $pieces[4], null, $_REQUEST['include_in_random']) === false) {
-                    $message = "Album not added. SQL Error: ";
-                    $dbError = true;
+                    $message = "Failed tp add album. This was probably a bad connection trying to read the RSS feed. Please try again.";
                 }                
                 
                 // sync the photos
                 elseif ($album->setAlbumPhotos() === false) {
-                    $message = "Album metadata added, but failed to add photos. SQL Error: ";
-                    $dbError = true;
+                    $message = "Album metadata added, but failed to add photos.
+                        This was probably a bad connection trying to read the RSS feed. Please try again.";
                 }
                 
                 // all is well
@@ -343,25 +342,20 @@ class Shashin {
             $album = new ShashinAlbum();
 
             if ($album->setAlbum($_REQUEST['user'], null, $_REQUEST['albumID']) === false) {
-                $message = "Album sync failed. SQL Error: ";
-                $dbError = true;
+                $message = "Album sync failed. This was probably a bad connection trying to read the RSS feed. Please try again.";
             }
 
             elseif ($album->setAlbumPhotos() === false) {
-                $message = "Album metadata synced, but failed to sync photos. SQL Error: ";
-                $dbError = true;
+                $message = "Album metadata synced, but failed to sync photos.
+                    This was probably a bad connection trying to read the RSS feed. Please try again.";
             }
 
             else {
                 $message = "Album synchronized.";
             }
 
-            // photo counts may have changed
-            
-            if ($dbError !== true) {
-                $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
-            }
-            
+            // show the latest updates
+            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
       		require(SHASHIN_DIR . '/display/admin-main.php');
         }
 
@@ -444,7 +438,7 @@ class Shashin {
     
     
     /**
-     * Gets the Shashin CSS file, for inclusion in the document head.
+     * Gets the Shashin CSS file, for inclusion in the document head
      *
      * @static
      * @access public
@@ -563,9 +557,7 @@ class Shashin {
      * @uses ShashinPhoto::getPhotoMarkup()
      * @uses Shashin::_widgetDisplay()
      * @uses ShashinPhoto::getRandomMarkup()
-     
-     * 
-     */    
+     */     
     function initWidgets() {
     	// Check to see required Widget API functions are defined...
 	    if (!function_exists('register_sidebar_widget')

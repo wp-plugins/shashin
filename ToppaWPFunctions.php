@@ -340,6 +340,11 @@ class ToppaWPFunctions {
         $doLoop = false;
         $break = false;
         
+        # make sure there's something to parse
+        if (empty($feedContent->items)) {
+            return false;
+        }
+        
         foreach ($feedContent->items as $item) {
             // if there's a matchfield, that means we're parsing the user's feed
             // for all albums, and we want to return just the matching album 

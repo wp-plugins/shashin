@@ -190,12 +190,22 @@ class ShashinAlbum {
         
         if (strlen($albumName)) {
             $albumData = ToppaWPFunctions::parseFeed($feedContent, $this->refData, 'name', $albumName);
+
+            if (empty($albumData)) {
+                return false;
+            }
+
             $exists = $this->getAlbum(null, $albumName);
             $albumData['name'] = $albumName;
         }
         
         elseif (strlen($albumID)) {
             $albumData = ToppaWPFunctions::parseFeed($feedContent, $this->refData, 'album_id', $albumID);
+
+            if (empty($albumData)) {
+                return false;
+            }
+
             $exists = $this->getAlbum($albumID);
             $albumData['album_id'] = $albumID;
         }
@@ -304,7 +314,7 @@ class ShashinAlbum {
         $feedContent = ToppaWPFunctions::readFeed($feedURL, false);
         $newPhotos = ToppaWPFunctions::parseFeed($feedContent, $photo->refData);
 
-        if ($this->getAlbumPhotos() === false) {
+        if ($this->getAlbumPhotos() === false || empty($newPhotos)) {
             return false;
         }
 
