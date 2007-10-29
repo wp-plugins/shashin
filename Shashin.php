@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 1.0.7
+Version: 1.1
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 1.0.7
+ * @version 1.1
  * @package Shashin
  * @subpackage Classes
  *
@@ -39,7 +39,7 @@ define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
-define('SHASHIN_VERSION', '1.0.7');
+define('SHASHIN_VERSION', '1.1');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -52,6 +52,15 @@ define('SHASHIN_FAQ_URL', 'http://wordpress.org/extend/plugins/shashin/faq/');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
 define('SHASHIN_DEFAULT_DIV_PADDING', 10);
 define('SHASHIN_DEFAULT_THUMB_PADDING', 6);
+
+// workaround for constants not allowing arrays
+// use with eval, e.g. $imageSizes = eval(SHASHIN_IMAGE_SIZES);
+define('SHASHIN_IMAGE_SIZES', 'return '
+    . var_export(
+        array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800), 1)
+    . ';');
+define('SHASHIN_CROP_SIZES', 'return ' . var_export(array(32, 48, 64, 160), 1) . ';');
+
 
 // get required libraries
 require_once(SHASHIN_DIR . '/ShashinAlbum.php');
@@ -91,10 +100,12 @@ class Shashin {
 
 		// Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
+        add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
+        add_action('plugins_loaded', array(SHASHIN_PLUGIN_NAME, 'initWidgets'));
+        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getCSS'));
         // the 0 priority flag gets the div in before the autoformatter
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
-        add_filter('wp_head', array(SHASHIN_PLUGIN_NAME, 'getCSS'));
 	}
 
     /**
@@ -433,13 +444,24 @@ class Shashin {
     
     
     /**
-     * Gets the Shashin CSS file, for inclusion in the document head
+     * Gets the Shashin CSS file, for inclusion in the document head.
      *
      * @static
      * @access public
      */    
     function getCSS() {
         echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin.css" />';
+    }
+
+    /**
+     * Gets the Shashin Admin CSS file, for inclusion in the document head. This
+     * CSS supports the display of the widget form.
+     *
+     * @static
+     * @access public
+     */    
+    function getAdminCSS() {
+        echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin-admin.css" />';
     }
     
     /**
@@ -520,6 +542,187 @@ class Shashin {
         }
                 
         return $content;
+    }
+    
+    /**
+     * Registers all the Shashin widgets and their controls.
+     * 
+     * It first checks to make sure widgets are available in this WordPress
+     * installation. This function has several functions contained within it,
+     * which PHPDoc cannot see. They are:
+     *
+     * - widgetSingle()
+     * - widgetRandom()
+     * - widgetAlbum()
+     * - widgetThumbs()
+     * - widgetNewest()
+     *
+     * @static
+     * @access public
+     * @uses ShashinPhoto::ShashinPhoto()
+     * @uses ShashinPhoto::getPhotoMarkup()
+     * @uses Shashin::_widgetDisplay()
+     * @uses ShashinPhoto::getRandomMarkup()
+     
+     * 
+     */    
+    function initWidgets() {
+    	// Check to see required Widget API functions are defined...
+	    if (!function_exists('register_sidebar_widget')
+          || !function_exists('register_widget_control')) {
+		    return false;
+        }
+
+    	function widgetSingle($args) {
+    		// collect widget options, or define defaults.
+    		$options = get_option('shashin_widget_single');
+    		$widgetTitle = empty($options['shashin_single_title']) ? '' : $options['shashin_single_title'];
+            $photoKey = empty($options['shashin_single_photo_key']) ? 1 : $options['shashin_single_photo_key'];
+            $maxSize = empty($options['shashin_single_max_size']) ? 160 : $options['shashin_single_max_size'];
+            $captionYN = empty($options['shashin_single_caption_yn']) ? 'n' : $options['shashin_single_caption_yn'];
+            $photo = new ShashinPhoto;
+            $widget = $photo->getPhotoMarkup(array(null,$photoKey,$maxSize, $captionYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+
+    	function widgetRandom($args) {
+    		$options = get_option('shashin_widget_random');
+    		$widgetTitle = empty($options['shashin_random_title']) ? 'Random Image' : $options['shashin_random_title'];
+            $albumKey = empty($options['shashin_random_album_key']) ? 'any' : $options['shashin_random_album_key'];
+            $maxSize = empty($options['shashin_random_max_size']) ? 160 : $options['shashin_random_max_size'];
+            $maxCols = empty($options['shashin_random_max_cols']) ? 1 : $options['shashin_random_max_cols'];
+            $howMany = empty($options['shashin_random_how_many']) ? 1 : $options['shashin_random_how_many'];
+            $captionYN = empty($options['shashin_random_caption_yn']) ? 'n' : $options['shashin_random_caption_yn'];
+            $widget = ShashinPhoto::getRandomMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+
+    	function widgetAlbum($args) {
+    		$options = get_option('shashin_widget_album');
+    		$widgetTitle = empty($options['shashin_album_title']) ? '' : $options['shashin_album_title'];
+            $albumKey = empty($options['shashin_album_album_key']) ? 1 : $options['shashin_album_album_key'];
+            $locationYN = empty($options['shashin_album_location_yn']) ? 'n' : $options['shashin_album_location_yn'];
+            $pubdateYN = empty($options['shashin_album_pubdate_yn']) ? 'n' : $options['shashin_album_pubdate_yn'];
+            $album = new ShashinAlbum;
+            $widget = $album->getAlbumMarkup(array(null,$albumKey, $locationYN, $pubdateYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+
+    	function widgetThumbs($args) {
+    		$options = get_option('shashin_widget_thumbs');
+    		$widgetTitle = empty($options['shashin_thumbs_title']) ? '' : $options['shashin_thumbs_title'];
+            $photoKeys = empty($options['shashin_thumbs_photo_keys']) ? 1 : $options['shashin_thumbs_photo_keys'];
+            $maxSize = empty($options['shashin_thumbs_max_size']) ? 160 : $options['shashin_thumbs_max_size'];
+            $maxCols = empty($options['shashin_thumbs_max_cols']) ? 1 : $options['shashin_thumbs_max_cols'];
+            $captionYN = empty($options['shashin_thumbs_caption_yn']) ? 'n' : $options['shashin_thumbs_caption_yn'];
+            $widget = ShashinPhoto::getThumbsMarkup(array(null,$photoKeys,$maxSize,$maxCols,$captionYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+        
+    	function widgetNewest($args) {
+    		$options = get_option('shashin_widget_newest');
+    		$widgetTitle = empty($options['shashin_newest_title']) ? 'Random Image' : $options['shashin_newest_title'];
+            $albumKey = empty($options['shashin_newest_album_key']) ? 'any' : $options['shashin_newest_album_key'];
+            $maxSize = empty($options['shashin_newest_max_size']) ? 160 : $options['shashin_newest_max_size'];
+            $maxCols = empty($options['shashin_newest_max_cols']) ? 1 : $options['shashin_newest_max_cols'];
+            $howMany = empty($options['shashin_newest_how_many']) ? 1 : $options['shashin_newest_how_many'];
+            $captionYN = empty($options['shashin_newest_caption_yn']) ? 'n' : $options['shashin_newest_caption_yn'];
+            $widget = ShashinPhoto::getNewestMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+
+    	register_sidebar_widget('Shashin: Single Image', widgetSingle, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Random Images', widgetRandom, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Album Thumbnail', widgetAlbum, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Thumbnails', widgetThumbs, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Newest Images', widgetNewest, SHASHIN_PLUGIN_NAME);
+        register_widget_control('Shashin: Single Image', array(SHASHIN_PLUGIN_NAME, 'widgetSingleControl'), 500, 300); 
+        register_widget_control('Shashin: Random Images', array(SHASHIN_PLUGIN_NAME, 'widgetRandomControl'), 500, 300); 
+        register_widget_control('Shashin: Album Thumbnail', array(SHASHIN_PLUGIN_NAME, 'widgetAlbumControl'), 500, 300); 
+        register_widget_control('Shashin: Thumbnails', array(SHASHIN_PLUGIN_NAME, 'widgetThumbsControl'), 500, 300); 
+        register_widget_control('Shashin: Newest Images', array(SHASHIN_PLUGIN_NAME, 'widgetNewestControl'), 500, 300); 
+    }
+
+    function widgetSingleControl() {
+        Shashin::_widgetControl('single');
+    } 
+
+    function widgetRandomControl() {
+        $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
+        $albums = array('any' => 'Any');
+
+        foreach ($albumsFull as $album) {
+            $albums[$album['album_key']] = $album['title'];
+        }
+        
+        Shashin::_widgetControl('random', array($albums));
+    } 
+
+    function widgetAlbumControl() {
+        $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
+
+        foreach ($albumsFull as $album) {
+            $albums[$album['album_key']] = $album['title'];
+        }
+        
+        Shashin::_widgetControl('album', array($albums));
+    } 
+
+    function widgetThumbsControl() {
+        // strip out any whitespace
+        if ($_REQUEST["shashin_thumbs_photo_keys"]) {
+            $_REQUEST["shashin_thumbs_photo_keys"] = str_replace(" ","",$_REQUEST["shashin_thumbs_photo_keys"]);
+        }
+        
+        Shashin::_widgetControl('thumbs');
+    } 
+    
+    function widgetNewestControl() {
+        $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
+        $albums = array('any' => 'Any');
+
+        foreach ($albumsFull as $album) {
+            $albums[$album['album_key']] = $album['title'];
+        }
+        
+        Shashin::_widgetControl('newest', array($albums));
+    } 
+
+    function _widgetControl($name, $args = null) {
+        $options = $newOptions = get_option("shashin_widget_{$name}");
+        
+        // for handing the control form submission.
+        if ($_REQUEST["shashin_{$name}_submit"]) {
+            unset($_REQUEST["shashin_{$name}_submit"]);
+
+            foreach ($_REQUEST as $k=>$v) {
+                // make sure we're only capturing shashin data
+                if (strpos($k, 'shashin') !== false) {
+                    $newOptions[$k] = htmlspecialchars(strip_tags(stripslashes($v)));            
+                }
+            }
+            
+            if ($options != $newOptions) {
+                update_option("shashin_widget_{$name}", $newOptions);
+                // so the form data will be current if you re-open the form
+                // widget without reloading the page
+                $options = $newOptions;
+            }
+        }
+        
+        // for displaying the control form
+  		require(SHASHIN_DIR . "/display/widget-{$name}.php");
+    }
+    
+    function _widgetDisplay($args, $widgetTitle, $widget) {
+        // get the theme widget vars 
+		extract($args);
+        
+        // display widget
+		echo $before_widget;
+		echo $before_title . $widgetTitle . $after_title;
+		echo $widget;
+		echo $after_widget;
     }
 }
 
