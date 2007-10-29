@@ -257,22 +257,35 @@ class ShashinPhoto {
     function getRandomMarkup($match) {
         $albumKey = strtolower(trim($match[1]));
         $photosWhere = "";
+        $albumWhere = "WHERE INCLUDE_IN_RANDOM != 'N'";
         
-        // if a specific album was requested, include it in the where clause
-        // but need to get its Picasa ID first
-        if ($albumKey != 'any') {
-            $albumWhere = "WHERE INCLUDE_IN_RANDOM != 'N' AND ALBUM_KEY = '$albumKey'";
-            $albumID = ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, 'album_id', $albumWhere, 'get_var');
-
-            // there could be no album if they gave a nonexistent key, or a key
-            // for an album set to include_in_random = N
-            if (!strlen($albumID)) {
-                return '<span class="shashin_error">Error: unable to retrieve Picasa album ID based on album key '
-                    . $albumKey . '</span>';
-            }
+        // pick a random album if one wasn't specified
+        if ($albumKey == 'any') {
+            $albumKeys = ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, 'album_key', $albumWhere, 'get_col', ARRAY_N);
             
-            $photosWhere = "WHERE ALBUM_ID = '$albumID'";
+            if ($albumKeys === false) {
+                return '<span class="shashin_error">Error: unable to get album keys for random photo</span>';
+            }
+    
+            // overwrite $albumKey
+            // need to do array_flip, as array_rand returns an array of the keys
+            $albumKey = array_rand(array_flip($albumKeys));
         }
+
+        $albumWhere .= " AND ALBUM_KEY = '$albumKey'";
+
+        // the table join of albums to photos is done with the Picasa album id,
+        // so we need to get it
+        $albumID = ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, 'album_id', $albumWhere, 'get_var');
+
+        // there could be no album if they gave a nonexistent key, or a key
+        // for an album set to include_in_random = N
+        if (!strlen($albumID)) {
+            return '<span class="shashin_error">Error: unable to retrieve Picasa album ID based on album key '
+                . $albumKey . '</span>';
+        }
+        
+        $photosWhere = "WHERE INCLUDE_IN_RANDOM != 'N' AND ALBUM_ID = '$albumID'";
 
         // get the possible set of photo keys
         $photoKeys = ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE, 'photo_key', $photosWhere, 'get_col', ARRAY_N);
@@ -497,8 +510,10 @@ class ShashinPhoto {
     function _setDimensions($max) {
         // You have to use one of these  to get a picture back from Picasa
         // See http://code.google.com/apis/picasaweb/reference.html
-        $allowed = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
-        $cropped = array(32, 48, 64, 160);
+        $allowed = eval(SHASHIN_IMAGE_SIZES);
+        $cropped = eval(SHASHIN_CROP_SIZES);
+        // $allowed = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
+        // $cropped = array(32, 48, 64, 160);
 
         if (!in_array($max, $allowed)) {
             return false;

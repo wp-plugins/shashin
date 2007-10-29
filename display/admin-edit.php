@@ -50,9 +50,8 @@
     <li><strong>Display an image:</strong> copy and paste the code
     listed under <em>Markup</em>, and then edit it as needed.
     [simage=photo_key,max_size,caption_yn,float,clear]</li>
-    <li><strong>Valid Picasa image sizes:</strong> 32, 48, 64, 72, 144, 160,
-    200, 288, 320, 400, 512, 576, 640, 720, 800. For a cropped square image,
-    use sizes 32, 48, 64, or 160.</li>
+    <li><strong>Valid Picasa image sizes:</strong> <?php echo implode(", ", eval(SHASHIN_IMAGE_SIZES)); ?>. For a cropped square image,
+    use sizes <?php echo implode(", ", eval(SHASHIN_CROP_SIZES)); ?>.</li>
     <li><strong>Display random images:</strong>
     [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>

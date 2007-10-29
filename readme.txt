@@ -3,7 +3,7 @@ Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
-Tested up to: 2.2.2
+Tested up to: 2.3
 Stable tag: 1.0.7
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
@@ -94,7 +94,7 @@ In a post or page, use the sthumbs tag: <code>[sthumbs=photo_key1|photo_key2|etc
 Example: <code>[sthumbs=5|202|115|84|33|189,160,3,n,none,both]</code>
 
 In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo ShashinPhoto::getThumbsMarkup(array(null,'photo_key1|photo_key2|etc',max_size,max_cols,caption_yn,'float','clear')); ?&gt;</code></pre>
+<pre><code>&lt;?php echo ShashinPhoto::getThumbsMarkup(array(null,'photo_key1|photo_key2|etc',max_size,max_cols,'caption_yn','float','clear')); ?&gt;</code></pre>
 
 * photo\_key1|photo\_key2|etc: (required) as many photo keys as you want, separated by the | character
 * max\_size: (required) the image size you want, chosen from the list above
@@ -175,6 +175,9 @@ I started working on this plugin while living in Tokyo. Shashin is the Japanese 
 * 1.0.5 - bug fix: fixed display of icons on Shashin admin page; added this change log
 * 1.0.6 - fixed documentation for sthumbs tag, and help link now points to the Shashin FAQ at wordpress.org
 * 1.0.7 - bug fix: ShashinPhoto::getRandomMarkup() was failing when only 1 photo was requested
+* 1.1
+    * Added widgets for all the Shashin functions (single photos, random photos, newest photos, photo thumbnail tables, and album thumbnails)
+    * Bug fix: ShashinPhoto::getRandomMarkup() was including photos from excluded albums when the album key was set to "any"
 
 
  

@@ -223,6 +223,7 @@ class ToppaWPFunctions {
 
         if ($refData['inputType'] == 'text') {
             echo '<input type="text" name="' . $inputName
+                . '" id="' . $inputName
                 . '" value="' . htmlspecialchars($inputValue)
                 . '" size="' . $refData['inputSize'] . '"';
             
@@ -230,20 +231,37 @@ class ToppaWPFunctions {
                 echo ' maxlength="' . $refData['colParams']['length'] . '"';    
             }
             
-            echo ' />';
+            echo " />\n";
         }
         
         elseif ($refData['inputType'] == 'radio') {
             foreach ($refData['inputSubgroup'] as $value=>$label) {
                 echo '<input type="radio" name="' . $inputName
+                    . '" id="' . $inputName
                     . '" value="' . htmlspecialchars($value) . '"';
                 
                 if ($inputValue == $value) {
                     echo ' checked="checked"';
                 }
                 
-                echo ' /> ' . $label . ' ';
+                echo ' /> ' . $label . "\n";
             }
+        }
+        
+        elseif ($refData['inputType'] == 'select') {
+            echo '<select name="' . $inputName . '" id="' . $inputName . '">' . "\n";
+
+            foreach ($refData['inputSubgroup'] as $value=>$label) {
+                echo '<option value="' . htmlspecialchars($value) . '"';
+        
+                if ($inputValue == $value) {
+                    echo ' selected="selected"';
+                }
+        
+                echo '>' . $label . "</option>\n";
+            } 
+
+            echo "</select>\n";
         }
         
         elseif ($refData['inputType'] == 'textarea') {
