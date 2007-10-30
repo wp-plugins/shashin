@@ -5,25 +5,11 @@
  * indicating whether it should be included in any displays of random images. An
  * album object must be instantiated prior to displaying this panel. 
  *
- * Copyright 2007 Michael Toppa
- * 
- * This file is part of Shashin.
- *
- * Shashin is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Shashin is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Shashin. Please see the Shashin.php file for
+ * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.0.7
+ * @version 1.1
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()

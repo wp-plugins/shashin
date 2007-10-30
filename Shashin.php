@@ -68,7 +68,7 @@ require_once(SHASHIN_DIR . '/ShashinPhoto.php');
 require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
 
 /**
- * The main class - handles all incomign requests for displaying photos, as well
+ * The main class - handles all incoming requests for displaying photos, as well
  * as the admin and options menus.
  * 
  * All methods in this class are static. The methods handle installation,
@@ -539,11 +539,106 @@ class Shashin {
     }
     
     /**
+     * Wrapper for ShashinPhoto->getPhotoMarkup()
+     *
+     * @static
+     * @access public
+     * @param int $photoKey (required): the Shashin photo_key (not the Picasa image ID)
+     * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
+     * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinPhoto::ShashinPhoto()
+     * @uses ShashinPhoto::getPhotoMarkup()
+     * @return string xhtml to display photo
+     */    
+    function getSingle($photoKey, $maxSize, $captionYN = null, $float = null, $clear = null) {
+        $photo = new ShashinPhoto();
+        return $photo->getPhotoMarkup(array(null,$photoKey,$maxSize,$captionYN,$float,$clear));
+    }
+    
+    /**
+     * Wrapper for ShashinPhoto::getRandomMarkup()
+     *
+     * @static
+     * @access public
+     * @param int $albumKey (required): a Shashin album_key (not the Picasa album ID) or "any" for pictures from any album
+     * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
+     * @param int $maxCols (required): how many columns the table will have
+     * @param int $howMany (required): how many random pictures to show 
+     * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinPhoto::getRandomMarkup()
+     * @return string xhtml to display table of random photos
+     */    
+    function getRandom($albumKey, $maxSize, $maxCols, $howMany, $captionYN = null, $float = null, $clear = null) {
+        return ShashinPhoto::getRandomMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN,$float,$clear));
+    }
+    
+    /**
+     * Wrapper for ShashinAlbum->getAlbumMarkup()
+     *
+     * @static
+     * @access public
+     * @param int $albumKey (required): a Shashin album_key (not the Picasa album ID)
+     * @param string $location (optional): y or n to show the location of the image, with a link to Google Maps.
+     * @param string $pubDate (optional): y or n to show the pub date of the album
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinAlbum::ShashinAlbum()
+     * @uses ShashinAlbum::getAlbumMarkup()
+     * @return string xhtml to display album thumbnail
+     */    
+    function getAlbum($albumKey, $locationYN = null, $pubdateYN = null, $float = null, $clear = null) {
+        $album = new ShashinAlbum;
+        return $album->getAlbumMarkup(array(null,$albumKey,$locationYN,$pubdateYN,$float,$clear));
+    }
+
+    /**
+     * Wrapper for ShashinPhoto::getThumbsMarkup()
+     *
+     * @static
+     * @access public
+     * @param string $photoKeys (required): Shashin photo keys, pipe delimited (not the Picasa image IDs)
+     * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
+     * @param int $maxCols (required): how many columns the table will have
+     * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinPhoto::getThumbsMarkup()
+     * @return string xhtml to display table of thumbnails
+     */    
+    function getThumbs($photoKeys, $maxSize, $maxCols, $captionYN = null, $float = null, $clear = null) {
+        return ShashinPhoto::getThumbsMarkup(array(null,$photoKeys,$maxSize,$maxCols,$captionYN,$float,$clear));
+    }
+
+    /**
+     * Wrapper for ShashinPhoto::getNewestMarkup()
+     *
+     * @static
+     * @access public
+     * @param int $albumKey (required): a Shashin album_key (not the Picasa album ID)
+     * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
+     * @param int $maxCols (required): how many columns the table will have
+     * @param int $howMany (required): how many random pictures to show 
+     * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinPhoto::getNewestMarkup()
+     * @return string xhtml to display table of newest photos
+     */    
+    function getNewest($albumKey, $maxSize, $maxCols, $howMany, $captionYN = null, $float = null, $clear = null) {
+        return ShashinPhoto::getNewestMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN,$float,$clear));
+    }
+    
+    /**
      * Registers all the Shashin widgets and their controls.
      * 
      * It first checks to make sure widgets are available in this WordPress
      * installation. This function has several functions contained within it,
-     * which PHPDoc cannot see. They are:
+     * which PHPDoc cannot see. These functions get their respestive widget
+     * options and then display the widget. The functions are:
      *
      * - widgetSingle()
      * - widgetRandom()
@@ -553,10 +648,6 @@ class Shashin {
      *
      * @static
      * @access public
-     * @uses ShashinPhoto::ShashinPhoto()
-     * @uses ShashinPhoto::getPhotoMarkup()
-     * @uses Shashin::_widgetDisplay()
-     * @uses ShashinPhoto::getRandomMarkup()
      */     
     function initWidgets() {
     	// Check to see required Widget API functions are defined...
@@ -635,10 +726,25 @@ class Shashin {
         register_widget_control('Shashin: Newest Images', array(SHASHIN_PLUGIN_NAME, 'widgetNewestControl'), 500, 300); 
     }
 
+    /**
+     * Displays and processes the widget control form for single images.
+     *
+     * @static
+     * @access public
+     * @uses Shashin::_widgetControl()
+     */
     function widgetSingleControl() {
         Shashin::_widgetControl('single');
     } 
 
+    /**
+     * Displays and processes the widget control form for random images.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::getAlbums()
+     * @uses Shashin::_widgetControl()
+     */
     function widgetRandomControl() {
         $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
         $albums = array('any' => 'Any');
@@ -650,6 +756,14 @@ class Shashin {
         Shashin::_widgetControl('random', array($albums));
     } 
 
+    /**
+     * Displays and processes the widget control form for album thumbnails.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::getAlbums()
+     * @uses Shashin::_widgetControl()
+     */
     function widgetAlbumControl() {
         $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
 
@@ -660,6 +774,13 @@ class Shashin {
         Shashin::_widgetControl('album', array($albums));
     } 
 
+    /**
+     * Displays and processes the widget control form for a table of thumbnails.
+     *
+     * @static
+     * @access public
+     * @uses Shashin::_widgetControl()
+     */
     function widgetThumbsControl() {
         // strip out any whitespace
         if ($_REQUEST["shashin_thumbs_photo_keys"]) {
@@ -669,6 +790,14 @@ class Shashin {
         Shashin::_widgetControl('thumbs');
     } 
     
+    /**
+     * Displays and processes the widget control form for newest images.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::getAlbums()
+     * @uses Shashin::_widgetControl()
+     */
     function widgetNewestControl() {
         $albumsFull = ShashinAlbum::getAlbums("ORDER BY TITLE");
         $albums = array('any' => 'Any');
@@ -680,6 +809,12 @@ class Shashin {
         Shashin::_widgetControl('newest', array($albums));
     } 
 
+    /**
+     * Displays the widget control form.
+     *
+     * @static
+     * @access private
+     */
     function _widgetControl($name, $args = null) {
         $options = $newOptions = get_option("shashin_widget_{$name}");
         
@@ -706,6 +841,12 @@ class Shashin {
   		require(SHASHIN_DIR . "/display/widget-{$name}.php");
     }
     
+    /**
+     * Extracts widget args and displays a widget.
+     *
+     * @static
+     * @access private
+     */
     function _widgetDisplay($args, $widgetTitle, $widget) {
         // get the theme widget vars 
 		extract($args);
