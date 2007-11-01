@@ -1,0 +1,19 @@
+/**
+ * This file is part of Shashin. Please see the Shashin.php file for
+ * copyright and license information.
+ *
+ * @author Michael Toppa
+ * @version 1.1
+ */
+ 
+.shashin_widget dt {
+   clear:both;
+   width:8em;
+   float:left;
+   text-align:right;
+}
+
+.shashin_widget dd {
+   float:left;
+   margin:0 0 0.5em 0.25em;
+}
