@@ -10,7 +10,7 @@ Shashin is a powerful WordPress plugin that lets you display Picasa images anywh
 
 == Description ==
 
-Use Shashin to display individual Picasa images in your posts and pages, as well as tables of thumbnails, random images, your most recently uploaded pictures, and album thumbnails. You can do all this with Shashin's custom tags, which are documented in the FAQ section. Shashin stores data for your albums in local tables, which you can sync with Picasa's RSS feeds on demand. Shashin does not download your Picasa images - instead it displays them directly from Picasa. Shashin includes some nice extra features too, such as the ability to exclude specific albums or images from random displays, and a link to Google Maps for albums where you've specified a location in Picasa. There's also a stylesheet, which you are welcome to customize for your site. You can use Shashin in your sidebar as well (not as a widget though) - see the FAQ section for instructions. Note that Shashin currently supports only public Picasa albums (I hope to add support for private albums soon).
+Use Shashin to display individual Picasa images in your posts and pages, as well as tables of thumbnails, random images, your most recently uploaded pictures, and album thumbnails. You can do all this with Shashin's custom tags, which are documented in the FAQ section. Shashin now also offers widgets for use in your sidebar. Shashin stores data for your albums in local tables, which you can sync with Picasa's RSS feeds on demand. Shashin does not download your Picasa images - instead it displays them directly from Picasa. Shashin includes some nice extra features too, such as the ability to exclude specific albums or images from random displays, and a link to Google Maps for albums where you've specified a location in Picasa. There's also a stylesheet, which you are welcome to customize for your site. Note that Shashin currently supports only public Picasa albums (I hope to add support for private albums soon).
 
 == Installation ==
 
@@ -26,13 +26,30 @@ Note that Shashin will add two tables to your WordPress database, named wp\_shas
 
 == Frequently Asked Questions ==
 
-= I added my Picasa album to Shashin, and then I added som pictures to it. How do I let Shashin know about the changes? =
+* <a href="#shashin1">I added my Picasa album to Shashin, and then I added some pictures to it. How do I let Shashin know about the changes?</a>
+* <a href="#shashin2">What image sizes can I use?</a>
+* <a href="#shashin3">What general advise do you have for using Shashin tags?</a>
+* <a href="#shashin4">How do I display a single image?</a>
+* <a href="#shashin5">How do I display an album thumbnail?</a>
+* <a href="#shashin6">How do I display a table of thumbnails or images?</a>
+* <a href="#shashin7">How do I display random images?</a>
+* <a href="#shashin8">How do I display my most recently uploaded pictures?</a>
+* <a href="#shashin9">Why do the pictures always link to Picasa?</a>
+* <a href="#shashin10">How can I change the style that's applied to the pictures?</a>
+* <a href="#shashin11">Why store all the album and photo metadata locally? Why not just read the Picasa RSS feed on the fly?</a>
+* <a href="#shashin12">Why does Shashin use its own keys for photos and albums, instead of just using the IDs assigned by Picasa?</a>
+* <a href="#shashin13">I'm a programmer and I want to tweak your code - do you have documentation?</a>
+* <a href="#shashin14">What does "Shashin" mean?</a>
 
-In the Shashin admin panel, you'll want to click the icon to sync an album whenever you update it in Picasa. This will synchronize your Shashin tables with the Picasa RSS feed. If you delete a photo from Picasa, it will get deleted from the Shashin tables as well when you sychronize the album. 
+<hr />
+
+= <a name="shashin1">I added my Picasa album to Shashin, and then I added some pictures to it. How do I let Shashin know about the changes?</a> =
+
+In the Shashin admin panel, you'll want to click the icon to sync an album whenever you update it in Picasa. This will synchronize your Shashin tables with the Picasa RSS feed. If you delete a photo from Picasa, it will get deleted from the Shashin tables as well when you synchronize the album. 
 
 I've noticed that the Picasa RSS feed seems to not always update immediately. If you synchronize your album right after making changes to it, and Shashin doesn't reflect the changes, wait a few minutes and try again. (Shashin doesn't cache the RSS feed, so that's not the reason).
 
-= What image sizes can I use? =
+= <a name="shashin2">What image sizes can I use?</a> =
 
 Picasa supports only a specific set of image sizes. If you try to use a size not listed, your image will not display at all. The sizes are:
 
@@ -42,7 +59,7 @@ Note that these sizes represent a "maximum dimension." This means if you pick 64
 
 Note that 32, 48, 64, and 160 are special sizes. Picasa will crop them to a square shape. This makes them good sizes for displaying tables of thumbnails.
 
-= What general advise do you have for using Shashin tags? =
+= <a name="shashin3">What general advise do you have for using Shashin tags?</a> =
 
 There are a number of options to remember in Shashin tags. The easiest thing to do is to keep two windows or tabs open in your browser - one for writing your post and one for the Shashin admin page. The admin pages have markup for Shashin tags that you can copy and paste into your post. After pasting them you can then edit the options as needed.
 
@@ -50,16 +67,13 @@ A Shashin tag will be translated into an xhtml "div" container.  Always use a Sh
 
 All the Shashin tags have options that let you set a css "float" value and a "clear" value. Both are optional. If you set a float value, there's usually no need to set a clear value (e.g. floating left or right and then clearing margins typically defeats the point of the float). Remember that the purpose of a float is to let the floated container flow around other containers. If you float an image near the end of your post, it may flow down below the post. To avoid this, put a &lt;br clear="all" /&gt; tag at the very end of your post.
 
-= How do I display a single image? =
+= <a name="shashin4">How do I display a single image?</a> =
 
 In a post or page, use the simage tag: <code>[simage=photo_key,max_size,caption_yn,float,clear]</code>  
 Example: <code>[simage=268,200,n,left]</code>
 
-In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php
-$photo = new ShashinPhoto();
-echo $photo-&gt;getPhotoMarkup(array(null,photo_key,max_size,'caption_yn','float','clear'));
-?&gt;</code></pre>
+For your sidebar, you can pick the Single Image widget on your widget admin page, or use this code and substitute the desired values:  
+<pre><code>&lt;?php echo Shashin::getSingle(photo_key,max_size,'caption_yn','float','clear'); ?&gt;</code></pre>
 
 * photo\_key: (required) the Photo Key listed for the image in its Shashin admin page
 * max\_size: (required) the size you want, chosen from the list above
@@ -67,18 +81,15 @@ echo $photo-&gt;getPhotoMarkup(array(null,photo_key,max_size,'caption_yn','float
 * float: (optional) a CSS float value
 * clear: (optional) a CSS clear value
 
-= How do I display an album thumbnail? =
+= <a name="shashin5">How do I display an album thumbnail?</a> =
 
 With album thumbnails, the size is fixed by Picasa at 160x160, so adjusting the size is not an option. Shashin automatically displays the album title below the thumbnail. If you choose to display the location, it will appear under the title, and a linked Google Maps icon will appear next to the title as well.
 
 In a post or page, use the salbum tag: <code>[salbum=album_key,location_yn,pubdate_yn,float,clear]</code>  
 Example: <code>[salbum=2,y,n,left]</code>
 
-In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php
-$album = new ShashinAlbum;
-echo $album-&gt;getAlbumMarkup(array(null,album_key,'location_yn','pubdate_yn','float','clear'));
-?&gt;</code></pre>
+For your sidebar, you can pick the Album Thumbnail widget on your widget admin page, or use this code and substitute the desired values:  
+<pre><code>&lt;?php echo Shashin::getAlbum(album_key,'location_yn','pubdate_yn','float','clear'); ?&gt;</code></pre>
 
 * album\_key: (required) the Album Key listed for the album on the Shashin admin page
 * location\_yn: (optional, defaults to n) use y or n to indicate whether you want the location to appear under the title. A Google Maps icon will also be added
@@ -86,15 +97,15 @@ echo $album-&gt;getAlbumMarkup(array(null,album_key,'location_yn','pubdate_yn','
 * float: (optional) a CSS float value
 * clear: (optional) a CSS clear value
 
-= How do I display a table of thumbnails or images? =
+= <a name="shashin6">How do I display a table of thumbnails or images?</a> =
 
 Shashin can generate a table of thumbnails, containing the images you specify. You can also control how many columns the table will have, and whether or not to display captions. Note that this tag is typically used for thumbnails, but since you can specify the image size, you can use it to display larger images as well.
 
 In a post or page, use the sthumbs tag: <code>[sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]</code>  
 Example: <code>[sthumbs=5|202|115|84|33|189,160,3,n,none,both]</code>
 
-In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo ShashinPhoto::getThumbsMarkup(array(null,'photo_key1|photo_key2|etc',max_size,max_cols,'caption_yn','float','clear')); ?&gt;</code></pre>
+For your sidebar, you can pick the Thumbnails widget on your widget admin page, or use this code and substitute the desired values:  
+<pre><code>&lt;?php echo Shashin::getThumbs('photo_key1|photo_key2|etc',max_size,max_cols,'caption_yn','float','clear'); ?&gt;</code></pre>
 
 * photo\_key1|photo\_key2|etc: (required) as many photo keys as you want, separated by the | character
 * max\_size: (required) the image size you want, chosen from the list above
@@ -103,17 +114,17 @@ In your sidebar, use this code and substitute the desired values - note the quot
 * float: (optional) a CSS float value
 * clear: (optional) a CSS clear value
 
-= How do I display random images? =
+= <a name="shashin7">How do I display random images?</a> =
 
 You can display a table of random images. You can specify how many images to include in the table, and how many columns the table will have. You can indicate whether the random images should come from a specific album, or from any album. If you want to display a single random image, simply indicate 1 image and 1 column for the table. Note that, if in the admin pages you change an album's "Include in Random" flag to "No," then its photos will not appear in random images displays. The same is true for individual images where you set the flag to "No."
 
 In a post or page, use the srandom tag: <code>[srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear]</code>  
 Example: <code>[srandom=any,288,2,6,n,none,both]</code>
 
-In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo ShashinPhoto::getRandomMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
+For your sidebar, you can pick the Random Images widget on your widget admin page, or use this code and substitute the desired values:  
+<pre><code>&lt;?php echo Shashin::getRandom(album_key,max_size,max_cols,how_many,'caption_yn','float','clear'); ?&gt;</code></pre>
 
-* album\_key: (required) either the word "any" or the the Album Key listed for an album on the Shashin admin page
+* album\_key: (required) either the word "any" or the Album Key listed for an album on the Shashin admin page
 * max\_size: (required) the size you want, chosen from the list above
 * max\_cols: (required) how many columns the table should have
 * how\_many: (required) how many random images to display in the table
@@ -121,17 +132,17 @@ In your sidebar, use this code and substitute the desired values - note the quot
 * float: (optional) a CSS float value
 * clear: (optional) a CSS clear value
 
-= How do I display my most recently uploaded pictures? =
+= <a name="shashin8">How do I display my most recently uploaded pictures?</a> =
 
 You can display a table of your most recently uploaded pictures. You can specify how many images to include in the table, and how many columns the table will have. You can indicate whether the images should come from a specific album, or from any album. If you want to display only your newest image, simply indicate 1 image and 1 column for the table.
 
 In a post or page, use the snewest tag: <code>[snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear]</code>  
 Example: <code>[snewest=any,288,2,6,n,none,both]</code>
 
-In your sidebar, use this code and substitute the desired values - note the quote marks are important:  
-<pre><code>&lt;?php echo ShashinPhoto::getNewestMarkup(array(null,album_key,max_size,max_cols,how_many,'caption_yn','float','clear')); ?&gt;</code></pre>
+For your sidebar you can pick the Newest Images widget on your widget admin page, or use this code and substitute the desired values - note the quote marks are important:  
+<pre><code>&lt;?php echo Shashin::getNewest(album_key,max_size,max_cols,how_many,'caption_yn','float','clear'); ?&gt;</code></pre>
 
-* album\_key: (required) either the word "any" or the the Album Key listed for an album on the Shashin admin page
+* album\_key: (required) either the word "any" or the Album Key listed for an album on the Shashin admin page
 * max\_size: (required) the size you want, chosen from the list above
 * max\_cols: (required) how many columns the table should have
 * how\_many: (required) how many random images to display in the table
@@ -139,23 +150,27 @@ In your sidebar, use this code and substitute the desired values - note the quot
 * float: (optional) a CSS float value
 * clear: (optional) a CSS clear value
 
-= Why do the pictures always link to Picasa? =
+= <a name="shashin9">Why do the pictures always link to Picasa?</a> =
 
 Shashin displays your Picasa pictures directly from the Picasa servers. It does not store them on your web site. Shashin automatically links your photos to their regular size versions at Picasa. I'm not entirely sure of the legal requirements, but my guess is that it would be a violation of the Picasa user agreement to remove these links (as Google probably would not appreciate you using Picasa as an unacknowledged hard drive).
 
-= How can I change the style that's applied to the pictures? =
+= <a name="shashin10">How can I change the style that's applied to the pictures?</a> =
 
 Under your plugin directory, in Shashin/display/shashin.css you can edit the CSS for how Shashin styles its images. The commenting in that file explains which classes are applied where. **Important Note:** if you change the padding for ".shashin\_image img" or ".shashin\_thumb img" you will need to go to the Options menu for Shashin and adjust the "Image div padding" and "Thumbnail div padding."
 
-= Why does Shashin use its own keys for photos and albums, instead of just using the IDs assigned by Picasa? =
+= <a name="shashin11">Why store all the album and photo metadata locally? Why not just read the Picasa RSS feed on the fly?</a> =
+
+Two reasons: 1. Performance: parsing a feed, especially one for a large album, is much slower than local database queries, and 2. Scalability: if you happen to have a very popular site with a lot of images, hitting the Picasa RSS feed dozens or hundreds of times per minute would likely result in Picasa automatically blocking your access to the feed for a period of time (most RSS feeders do this to protect themselves against malicious or misconfigured feed readers).
+
+= <a name="shashin12">Why does Shashin use its own keys for photos and albums, instead of just using the IDs assigned by Picasa?</a> =
 
 Mainly just for the sake of practicality. Picasa IDs are now up to 20 digits long, which makes them difficult to deal with when writing a Shashin tag.
 
-= I'm a programmer and I want to tweak your code - do you have documentation? =
+= <a name="shashin13">I'm a programmer and I want to tweak your code - do you have documentation?</a> =
 
 I've <a href="http://www.toppa.com/shashin_phpdoc">thoroughly documented the Shashin code in PHPDoc</a>. Shashin is released under GPL, so feel free to extend it. <a href="http://www.toppa.com/contact">I'd like to hear about any features you add</a>.
 
-= What does "Shashin" mean? =
+= <a name="shashin14">What does "Shashin" mean?</a> =
 
 I started working on this plugin while living in Tokyo. Shashin is the Japanese word for photograph, so it seemed fitting.
 
@@ -179,4 +194,10 @@ I started working on this plugin while living in Tokyo. Shashin is the Japanese 
     * Added widgets for all the Shashin functions (single photos, random photos, newest photos, photo thumbnail tables, and album thumbnails)
     * Bug fix: ShashinPhoto::getRandomMarkup() was including photos from excluded albums when the album key was set to "any"
     * Fixed notification: if an album sync or album add fails, this is now correctly reported as a temporary failure to read the Picasa RSS feed, not as a Shashin database error.
+    * Added wrapper methods for calling Shashin functions directly. This means, if you want to use Shashin in your sidebar and you're not using widgets, the code you have to include is now less complicated.
 
+== Known Issues ==
+
+* I've received occasional reports of failed album syncs. I believe this is just intermittent connectivity issues with the Picasa RSS feed. I've adjusted the notification message to reflect this. If you ever have an album sync fail, please try it again in a few minutes (or a few hours) before reporting it as an error to me.
+
+* If you're on a Windows server and you get this error when adding an album "Fatal error: Cannot redeclare class Shashin in D:\Domains\xxxxx\wordpress\wp-content\plugins\Shashin\Shashin.php on line 74" then you need to upgrade to Wordpress 2.2. or higher. This is a known Wordpress bug -  see http://trac.wordpress.org/ticket/4408
