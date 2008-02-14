@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 1.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -60,7 +60,7 @@ class ShashinPhoto {
             'content_url' => array(
                 'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
                 'label' => 'Image URL', 'source' => 'feed',
-                'feedParam1' => 'media', 'feedParam2' => 'group_content@url'),
+                'feedParam1' => 'enclosure', 'attrs' => 'url'),
             'width' => array(
                 'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
                 'label' => 'Width', 'source' => 'feed',
@@ -70,22 +70,25 @@ class ShashinPhoto {
                 'label' => 'Height', 'source' => 'feed',
                 'feedParam1' => 'gphoto', 'feedParam2' => 'height'),
             'taken_timestamp' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '20',  'notNull' => 1),
+                'colParams' => array('type' => 'bigint unsigned',  'notNull' => 1),
                 'label' => 'Date taken', 'source' => 'feed',
-                'feedParam1' => 'exif', 'feedParam2' => 'tags_time'),
+                'feedParam1' => 'exif', 'feedParam2' => 'time'),
             'uploaded_timestamp' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '20',  'notNull' => 1),
+                'colParams' => array('type' => 'bigint unsigned',  'notNull' => 1),
                 'label' => 'Date Uploaded', 'source' => 'feed',
                 'feedParam1' => 'gphoto', 'feedParam2' => 'timestamp'),
             'tags' => array(
                 'colParams' => array('type' => 'varchar', 'length' => '255'),
                 'label' => 'Tags', 'source' => 'feed',
-                'feedParam1' => 'media', 'feedParam2' => 'group_keywords'),
+                'feedParam1' => 'media', 'feedParam2' => 'keywords'),
             'include_in_random' => array(
                 'colParams' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
                 'label' => 'Include in random photo display', 'source' => 'user',
                 'inputType' => 'radio',
                 'inputSubgroup' => array('Y' => 'Yes', 'N' => 'No')),
+            'deleted' => array(
+                'colParams' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
+                'label' => 'Deleted flag', 'source' => 'db'),
         );
     }
 
@@ -104,7 +107,7 @@ class ShashinPhoto {
      */
     function getPhoto($photoKey = null, $photoData = null) {
         if (strlen($photoKey)) {
-            $where = "WHERE PHOTO_KEY = '$photoKey'";
+            $where = "WHERE PHOTO_KEY = '$photoKey' AND DELETED = 'N'";
             $row = ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE, "*", $where);
             
             if (empty($row)) {
@@ -410,8 +413,19 @@ class ShashinPhoto {
         if ($photos === false) {
             return '<span class="shashin_error">Error: unable to retrive photos</span>';
         }
-
-        return ShashinPhoto::_getTableMarkup($photos, $match[2], $match[3], $match[4], $match[5], $match[6]);    
+        
+        // the data doesn't come back from the database in the order it was
+        // requested, so re-order it.
+        $ordered = array();
+        foreach ($photoKeys as $key) {
+            foreach ($photos as $photo) {
+                if ($key == $photo['photo_key']) {
+                    $ordered[] = $photo;
+                }
+            }
+        }
+        
+        return ShashinPhoto::_getTableMarkup($ordered, $match[2], $match[3], $match[4], $match[5], $match[6]);    
     }
 
     /**
