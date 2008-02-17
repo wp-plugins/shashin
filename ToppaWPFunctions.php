@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 1.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -29,7 +29,7 @@ class ToppaWPFunctions {
      * @return mixed passes along the return value of WordPress' dbDelta()
      */   
     function createTable(&$object, $tableName) {
-        $sql = "CREATE TABLE $tableName\n(";
+        $sql = "CREATE TABLE $tableName (";
         foreach ($object->refData as $k=>$v) {
             $sql .= $k . " " . $v['colParams']['type'];
             
@@ -51,14 +51,14 @@ class ToppaWPFunctions {
                 $sql .= " " . $v['colParams']['other'];
             }
             
-            $sql .= ",\n";
+            $sql .= ", ";
         }
 
         $sql = substr("$sql", 0, -2); 
-        $sql .= ");";
+        $sql .= ") DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
         require_once(ABSPATH . '/wp-admin/upgrade-functions.php');
-        $return = dbDelta($sql);
+        $return = dbDelta($sql, true);
     }
 
     /**
@@ -68,14 +68,15 @@ class ToppaWPFunctions {
      * @access public
      * @param string $table the table to query
      * @param string|array $fields the fields to return
-     * @param string $conditions a string containing any desired WHERE, ORDER BY, etc clauses
+     * @param string $conditions optional string containing any desired WHERE, ORDER BY, etc clauses
      * @param string $type the type of select query to run (supports get_results, get_col, get_var, and get_row)
      * @param string $return how to format the return value (defaults to ARRAY_A)
+     * @param string $keywords optional keywords for the select statement (e.g. DISTINCT)
      * @return mixed passes along the return value of the $wpdb call
      */   
-    function select($table, $fields = '*', $conditions, $type = null, $return = ARRAY_A) {
+    function select($table, $fields = '*', $conditions = null, $type = null, $return = ARRAY_A, $keywords = null) {
         global $wpdb;
-        $sql = "SELECT ";
+        $sql = "SELECT $keywords ";
         
         if (is_array($fields)) {
             $sql .= implode(", ", $fields);
@@ -158,7 +159,7 @@ class ToppaWPFunctions {
      * @param array $values an optional array of values to insert (required if $fields is set)
      * @return mixed passes along the return value of the $wpdb call
      */   
-    function insert($table, $assoc = null, $fields = null, $values = null) {
+    function insert($table, $assoc = null, $fields = null, $values = null, $update = null) {
         global $wpdb;
         $sql = "INSERT INTO $table (";
 
@@ -170,7 +171,15 @@ class ToppaWPFunctions {
         $sql .= implode(",", $fields);
         $sql .= ") VALUES ('";
         $sql .= implode("','", $values);
-        $sql .= "');";
+        $sql .= "')";
+        
+        // right now works with $assoc only
+        if ($update) {
+            $sql .= " ON DUPLICATE KEY UPDATE $update = '" . $assoc[$update] . "'";
+        }
+        
+        $sql .= ";";
+        
         return $wpdb->query($sql);
     }
     
@@ -297,21 +306,17 @@ class ToppaWPFunctions {
      * @param boolean $cache whether or not to cache the feed
      * @return array the content of the feed
      */   
-    function readFeed($feedURL, $cache = true) {
-        require_once(SHASHIN_DIR . '/rss-functions-mod.php');
-        #require_once(ABSPATH . WPINC . '/rss-functions.php');
-        
-        if ($cache === false) {
-            define('MAGPIE_CACHE_ON', null);
-        }
-        
-        $feedContent = @fetch_rss_mod($feedURL);
-        return $feedContent;
+    function readFeed($feedURL) {
+        $parser = new ToppaXMLParser();        
+        $feedContent;
+        return $parser->parse($feedURL);
     }
 
     /**
-     * The function is intended to be a fairly generic feed parser, but so far
-     * I've only used it with Picasa.
+     * The function is intended for parsing the Picasa RSS feed. It assumes an
+     * array of items, with keys that may have a : dividing the names of related
+     * items, and containing an array with a 'data' value and a possible 'attrs'
+     * subarray 
      *
      * @static
      * @access public
@@ -323,48 +328,48 @@ class ToppaWPFunctions {
      */   
     function parseFeed($feedContent, $refData, $matchField = null, $matchValue = null) {
         $allParsed = array();
-        $doLoop = false;
         $break = false;
         
         # make sure there's something to parse
-        if (empty($feedContent->items)) {
+        if (empty($feedContent)) {
             return false;
         }
         
-        foreach ($feedContent->items as $item) {
+        foreach ($feedContent as $item) {
             // if there's a matchfield, that means we're parsing the user's feed
             // for all albums, and we want to return just the matching album 
             if (strlen($matchField) && isset($refData[$matchField]['feedParam2'])
-              && $item[$refData[$matchField]['feedParam1']][$refData[$matchField]['feedParam2']] == $matchValue) {
-                $doLoop = true;
+              && $item[$refData[$matchField]['feedParam1'] . ":" . $refData[$matchField]['feedParam2']]['data'] == $matchValue) {
                 $break = true;
             }
                 
-            elseif (strlen($matchField) && $item[$refData[$matchField]['feedParam1']] == $matchValue) {
-                $doLoop = true;
+            elseif (strlen($matchField) && $item[$refData[$matchField]['feedParam1']]['data'] == $matchValue) {
                 $break = true;
             }
 
-            // if there's no album id passed in, then we're parsing a photo feed
-            // (i.e. the album is already known, based on the feed URL) and we
-            // want to get all the photos.
-            elseif ($albumName == null) {
-                $doLoop = true; 
-            }
-
-            if ($doLoop === false) {
-                return false;
-            }
-            
             $parsed = array();
             foreach ($refData as $refK=>$refV) {
                 if ($refV['source'] == 'feed') {
                     if (isset($refV['feedParam2'])) {
-                        $parsed[$refK] = addslashes($item[$refV['feedParam1']][$refV['feedParam2']]);
+                        // if attrs is set, then we're looking for a particular value in the attrs subarray
+                        // otherwise assume we're getting a string from 'data'
+                        if (isset($refV['attrs'])) {
+                            $parsed[$refK] = addslashes($item[$refV['feedParam1'] . ":" . $refV['feedParam2']]['attrs'][$refV['attrs']]);
+                        }
+                        
+                        else {
+                            $parsed[$refK] = addslashes($item[$refV['feedParam1'] . ":" . $refV['feedParam2']]['data']);
+                        }
                     }
                     
                     else {
-                        $parsed[$refK] = addslashes($item[$refV['feedParam1']]);
+                        if (isset($refV['attrs'])) {
+                            $parsed[$refK] = addslashes($item[$refV['feedParam1']]['attrs'][$refV['attrs']]);
+                        }
+                        
+                        else {
+                            $parsed[$refK] = addslashes($item[$refV['feedParam1']]['data']);
+                        }
                     }
                 }
             }
