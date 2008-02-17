@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 1.2.1
+Version: 1.2.3
 Author URI: http://www.toppa.com
 */
 
@@ -38,8 +38,8 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '1.2.1');
-define('SHASHIN_VERSION_COMPARABLE', '1.201');
+define('SHASHIN_VERSION', '1.2.3');
+define('SHASHIN_VERSION_COMPARABLE', '1.203');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
@@ -430,12 +430,14 @@ class Shashin {
             $album = new ShashinAlbum(); // needed in admin-main, for refData
             $users = ShashinAlbum::getUsers();
             // need to masssage the data for the select input...
-            $usernames = array();
-            foreach ($users as $k=>$v) {
-                $usernames[$v] = $v;
-            }
+            if (!empty($users)) {
+
+                $usernames = array();
+
+                foreach ($users as $k=>$v) {
+                    $usernames[$v] = $v;
+                }
             
-            if (!empty($usernames)) {
                 $syncAll = array('inputType' => 'select', 'inputSubgroup' => $usernames);
             }
 
