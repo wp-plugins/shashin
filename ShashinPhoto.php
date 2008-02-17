@@ -38,7 +38,8 @@ class ShashinPhoto {
                     'other' => 'auto_increment primary key'),
                 'label' => 'Photo Key', 'source' => 'db'),        
             'photo_id' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
+                'colParams' => array('type' => 'varchar', 'length' => '255',
+                    'notNull' => 1, 'other' => 'unique'),
                 'label' => 'Photo ID', 'source' => 'feed',
                 'feedParam1' => 'gphoto', 'feedParam2' => 'id'),
             'album_id' => array(
@@ -160,7 +161,7 @@ class ShashinPhoto {
      * @return array An array of hashes containing photo data
      */        
     function getPhotos($where = null) {
-        return ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE, '*', $where, 'get_results');
+        return ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE . " sp", "sp" . '.*', $where, 'get_results');
     }    
 
     /**
@@ -244,65 +245,20 @@ class ShashinPhoto {
      */
     function getRandomMarkup($match) {
         $albumKey = strtolower(trim($match[1]));
-        $photosWhere = "";
-        $albumWhere = "WHERE INCLUDE_IN_RANDOM != 'N'";
-        
-        // pick a random album if one wasn't specified
-        if ($albumKey == 'any') {
-            $albumKeys = ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, 'album_key', $albumWhere, 'get_col', ARRAY_N);
-            
-            if ($albumKeys === false) {
-                return '<span class="shashin_error">Error: unable to get album keys for random photo</span>';
-            }
-    
-            // overwrite $albumKey
-            // need to do array_flip, as array_rand returns an array of the keys
-            $albumKey = array_rand(array_flip($albumKeys));
-        }
 
-        $albumWhere .= " AND ALBUM_KEY = '$albumKey'";
+        $conditions = " INNER JOIN " . SHASHIN_ALBUM_TABLE . " sa"
+            . " WHERE sp.include_in_random = 'Y' AND sa.include_in_random = 'Y'"
+            . " AND sa.album_id = sp.album_id";
 
-        // the table join of albums to photos is done with the Picasa album id,
-        // so we need to get it
-        $albumID = ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, 'album_id', $albumWhere, 'get_var');
-
-        // there could be no album if they gave a nonexistent key, or a key
-        // for an album set to include_in_random = N
-        if (!strlen($albumID)) {
-            return '<span class="shashin_error">Error: unable to retrieve Picasa album ID based on album key '
-                . $albumKey . '</span>';
+        if ($albumKey != 'any') {
+            $conditions .= " AND sa.album_key = $albumKey";
         }
         
-        $photosWhere = "WHERE INCLUDE_IN_RANDOM != 'N' AND ALBUM_ID = '$albumID'";
-
-        // get the possible set of photo keys
-        $photoKeys = ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE, 'photo_key', $photosWhere, 'get_col', ARRAY_N);
+        $conditions .= " ORDER BY RAND() LIMIT " . $match[4];
         
-        if ($photoKeys === false) {
-            return '<span class="shashin_error">Error: unable to get photo keys for random photo</span>';
-        }
-
-        // need to do array_flip, as array_rand returns an array of the keys
-        $randomPhotoKeys = array_rand(array_flip($photoKeys), $match[4]);
-
-        // array_rand will automatically fail if the subject array is too small
-        if (empty($randomPhotoKeys)) {
-            return '<span class="shashin_error">Error: Not enough photos available to supply '
-                . $match[4] . ' random photos</span>';
-        }
+        // get the photos
+        $photos = ShashinPhoto::getPhotos($conditions);
         
-        // if we only asked for 1 random photo, $randomPhotoKeys will be a
-        // scalar - otherwise it's an array
-        if (is_array($randomPhotoKeys)) {
-            $where = "WHERE PHOTO_KEY IN ('" . implode("','", array_values($randomPhotoKeys)) . "')"; 
-        }
-        
-        else {
-            $where = "WHERE PHOTO_KEY = $randomPhotoKeys"; 
-        }
-        
-        $photos = ShashinPhoto::getPhotos($where);
-
         if ($photos === false) {
             return '<span class="shashin_error">Error: unable to retrive photos</span>';
         }

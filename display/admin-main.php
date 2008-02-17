@@ -53,17 +53,20 @@
     
     <div style="float: left;"><h3>Your Albums</h3></div>
 
-    <div style="float: right; border: solid thin; padding: 3px;">
-        <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
-        <input type="hidden" name="shashinAction" value="syncAll" />
-
-            <p>Sync all albums for Picasa username:<br />
-                <?php ToppaWPFunctions::displayInput('users', $syncAll) ?>
-                <input type="submit" name="submit_form" value="Sync All" />
-                </p> 
+    <?php if (isset($syncAll)) { ?>
+        <div style="float: right; border: solid thin; padding: 3px;">
+            <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
+            <input type="hidden" name="shashinAction" value="syncAll" />
     
-        </form>
-    </div>
+                <p>Sync all albums for Picasa username:<br />
+                    <?php ToppaWPFunctions::displayInput('users', $syncAll) ?>
+                    <input type="submit" name="submit_form" value="Sync All" />
+                    </p> 
+        
+            </form>
+        </div>
+    <?php } ?>
+    
     <br clear="all" />
     <?php if (isset($allAlbums)) { ?>
         <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
