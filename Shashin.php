@@ -131,9 +131,18 @@ class Shashin {
             $wpdb->query('ALTER TABLE wp_shashin_photo MODIFY taken_timestamp bigint unsigned');
             $wpdb->query('ALTER TABLE wp_shashin_photo MODIFY uploaded_timestamp bigint unsigned');
             $wpdb->query('ALTER TABLE wp_shashin_photo ADD deleted char(1) DEFAULT "N"');
-            $wpdb->query('ALTER TABLE wp_shashin_photo ADD UNIQUE (photo_id)');
         }
 
+        // there was a bug in v1.2 that caused upgraders to get the unique index
+        // on photo_id but not first time installers. So we need to check who
+        // has it and who doesn't (need to check as we don't want to add
+        // multiple unique indexes)
+        $row = $wpdb->get_row('DESCRIBE wp_shashin_photo photo_id', ARRAY_A); 
+
+        if ($row['Key'] != 'UNI') {
+            $wpdb->query('ALTER TABLE wp_shashin_photo ADD UNIQUE (photo_id)');
+        }
+        
         // latin-1 is a common default charset, which may be causing
         // problems with multibyte characters
         $wpdb->query('ALTER TABLE wp_shashin_photo DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
