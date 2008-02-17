@@ -10,7 +10,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 1.2
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -30,47 +30,78 @@
     <h3>Album Tips</h3>
     
     <ul>
-    <li><strong>Display an album thumbnail:</strong> copy and paste the code
-    listed under <em>Markup</em>, and then edit it as needed.
+    <li><strong>Display a single album thumbnail:</strong> copy and paste the
+    code listed under <em>Markup</em>, and then edit it as needed.
     [salbum=album_key,location_yn,pubdate_yn,float,clear] Note album
     thumbnail sizes are set by Picasa at 160x160.</li>
+    <li><strong>Display thumbnails for all your albums:</strong> you can choose
+    the sort order - options are 'pub_date', 'title', or 'last_updated' (add
+    ' desc' for reverse ordering).
+    [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]</li>
+    <li><strong>Display thumbnails for selected albums:</strong>
+    [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]</li>
     <li><strong>Syncing:</strong> sync an album after you upload new photos
-    to it in Picasa. Wait at least a few minutes between syncs for an album -
-    it seems the RSS feed doesn't always update immediately.</li>
+    to it in Picasa.</li>
     <li><strong>Random images:</strong> if you want to exclude an album's
     images when using the srandom tag, set "Include in Random?" to "No."</li>
     <li><strong>More Help:</strong> see the
-    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin FAQ page</a> for detailed
+    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
     instructions</li>
     </ul>
 
     <?php } ?>
     
-    <h3>Your Albums</h3>
+    <div style="float: left;"><h3>Your Albums</h3></div>
 
+    <?php if (isset($syncAll)) { ?>
+        <div style="float: right; border: solid thin; padding: 3px;">
+            <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
+            <input type="hidden" name="shashinAction" value="syncAll" />
+    
+                <p>Sync all albums for Picasa username:<br />
+                    <?php ToppaWPFunctions::displayInput('users', $syncAll) ?>
+                    <input type="submit" name="submit_form" value="Sync All" />
+                    </p> 
+        
+            </form>
+        </div>
+    <?php } ?>
+    
+    <br clear="all" />
     <?php if (isset($allAlbums)) { ?>
         <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
-        <input type="hidden" name="shashinAction" value="updateAlbums">
+        <input type="hidden" name="shashinAction" value="updateAlbums" />
         <table border="0" cellspacing="3" cellpadding="3">
         <tr>
         <th align="left">Title</th>
         <th>Album Key</th>
         <th>Photo Count</th>
-        <th>Last Updated</th>
+        <th>Last Sync</th>
         <th>Markup</th>
         <th>Include in Random?</th>
         <th>Sync</th>
         <th>Delete</th>
         </tr>
         
-        <?php foreach ($allAlbums as $allAlbum) { ?>
-            <tr>
+        <?php
+        $i = 0;
+        foreach ($allAlbums as $allAlbum) {
+            if ($i % 2 == 0) {
+                echo "<tr>\n";
+            } 
+
+            else {
+                echo "<tr class='alternate'>\n";
+            }
+            
+            $i++;
+        ?>
             <td><a href="<?php
                 echo SHASHIN_ADMIN_URL ?>&amp;shashinAction=editAlbumPhotos&amp;albumID=<?php
                 echo $allAlbum['album_id'] ?>"><?php echo $allAlbum['title'] ?></a></td>
             <td align="center"><?php echo $allAlbum['album_key'] ?></td>    
             <td align="center"><?php echo $allAlbum['photo_count'] ?></td>
-            <td align="center"><?php echo date("d-M-y H:i", $allAlbum['last_updated_timestamp']) ?></td>
+            <td align="center"><?php echo date("d-M-y H:i", $allAlbum['last_updated']) ?></td>
             <td align="center">[salbum=<?php echo $allAlbum['album_key'] ?>,y,y,left]</td>
             <td align="center"><?php echo ToppaWPFunctions::displayInput('include_in_random', $album->refData['include_in_random'], $allAlbum['include_in_random'], $allAlbum['album_id']) ?></td>
             <td align="center"><a href="<?php
@@ -86,7 +117,9 @@
         <?php } ?>
         
         <tr>
-        <td colspan="6"><input type="submit" name="submit" value="Submit" /></td>
+        <td colspan="5">&nbsp;</td>
+        <td align="center"><input type="submit" name="submit_form" value="Update" /></td>
+        <td colspan="2">&nbsp;</td>
         </tr>
         </table>
         </form>
@@ -98,21 +131,26 @@
 
     <hr />
     
-    <h3>Add an Album</h3>
+    <h3>Add Albums</h3>
 
     <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
     <input type="hidden" name="shashinAction" value="addAlbum" />
     
-    <p>Please enter the URL for viewing an album on Picasa, <strong>not the RSS URL</strong>.</p>
+    <p>Please enter the URL for your &quot;My Photos&quot; page on Picasa if you
+    want to add all your albums to Shashin, or enter the URL of an individual
+    album. Use the regular URL, <strong>not the RSS URL</strong>.</p>
     
-    <p>The URL should have this format:
-    <?php echo SHASHIN_PICASA_SERVER ?>/<strong>username</strong>/<strong>albumname</strong></p>
+    <p>The URL should have one of these formats:<p>
+    
+    <p><?php echo SHASHIN_PICASA_SERVER ?>/<em>username</em><br />
+    <strong>- OR -</strong><br />
+    <?php echo SHASHIN_PICASA_SERVER ?>/<em>username</em>/<em>albumname</em></p>
 
-    <p>Picasa Album URL: <?php ToppaWPFunctions::displayInput('link_url', $album->refData['link_url'], $_REQUEST['link_url']) ?><br />
-    Include photos from this album in random photo display?
+    <p>Picasa URL: <?php ToppaWPFunctions::displayInput('link_url', $album->refData['link_url'], $_REQUEST['link_url']) ?><br />
+    Include photos in random photo display?
     <?php ToppaWPFunctions::displayInput('include_in_random', $album->refData['include_in_random'], ($_REQUEST['include_in_random'] ? $_REQUEST['include_in_random'] : "Y")) ?></p>
 
-    <p><input type="submit" name="submit" value="Add Album" /></p>
+    <p><input type="submit" name="submit" value="Add Albums" /></p>
     </form>
 
     <h3>Tip Jar</h3>

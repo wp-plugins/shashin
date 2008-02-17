@@ -3,7 +3,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 1.2
  */
  
 /* The following are applied to the simage and srandom tags */
@@ -59,6 +59,17 @@
     font-size: x-small;
 }
 
+/* Applied to salbumthumbs tag */
+.shashin_album_thumbs_table {
+    margin: 5px;
+}
+
+.shashin_album_thumbs_table td {
+    text-align: center;
+    margin: 3px;
+    vertical-align: top;
+}
+
 /* Applied to sthumbs, srandom, and snewest tags */
 .shashin_thumbs_table {
     margin: 5px;
@@ -67,6 +78,7 @@
 .shashin_thumbs_table td {
     text-align: center;
     margin: 3px;
+    vertical-align: top;
 }
 
 .shashin_thumb {
