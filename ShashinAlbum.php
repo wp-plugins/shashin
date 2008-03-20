@@ -61,7 +61,7 @@ class ShashinAlbum {
                 'label' => 'Title', 'source' => 'feed',
                 'feedParam1' => 'title'),
             'description' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255'),
+                'colParams' => array('type' => 'text'),
                 'label' => 'Description', 'source' => 'feed',
                 'feedParam1' => 'description'),
             'location' => array(
@@ -139,9 +139,9 @@ class ShashinAlbum {
                 return false;
             }
             
-            else {
-                $this->data = $row;
-            }
+            $row['description'] = htmlspecialchars($row['description'], ENT_COMPAT, 'UTF-8');
+            $row['title'] = htmlspecialchars($row['title'], ENT_COMPAT, 'UTF-8');
+            $this->data = $row;
         }
         
         return true;
@@ -329,6 +329,9 @@ class ShashinAlbum {
      * successfully call getAlbum() first.
      *
      * @access public
+     * @param string $orderBy (optional) column name(s) to order by
+     * @param integer $limit (optional) a max number of records to return
+     * @param boolean $excludeDeleted (optional) whether to exclude photos flagged as deleted
      * @uses ToppaWPFunctions::select()
      * @return boolean true: retrieval succeeded; false: retrieval failed
      */    
@@ -473,7 +476,7 @@ class ShashinAlbum {
      * Sets the include_in_random flag for an album (y or n).
      *
      * @access public
-     * @param string $randomFlag y or n
+     * @param string $randomFlag (required) y or n
      * @uses ToppaWPFunctions::update()
      * @return boolean true: update succeeded; false: update failed
      */    
@@ -494,11 +497,10 @@ class ShashinAlbum {
      *
      * @static
      * @access public
-     * @param string $where an optional SQL where clause (can include order by, etc as well)
+     * @param string $where (optional) SQL "where" clause (can include order by, etc as well)
      * @uses ToppaWPFunctions::select()
      * @return array An array of hashes containing album data
      */        
-    // call this statically
     function getAlbums($where = null) {
         return ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, '*', $where, 'get_results');
     }
@@ -507,9 +509,6 @@ class ShashinAlbum {
      * Translates the "salbum" Shashin tag into xhtml displaying the thumbnail
      * and title of an album, with a hyperlink to the album at Picasa. Thumbnail
      * size is fixed at 160x160.
-     * 
-     * salbum tag: [salbum=album_key,location_yn,pubdate_yn,float,clear]
-     * php call: echo $photo->getAlbumMarkup(array(null,album_key,'location_yn','pubdate_yn','float','clear'));
      *
      * $match array elements are as follows:
      * - Tag (optional): the complete salbum tag
@@ -518,14 +517,6 @@ class ShashinAlbum {
      * - Pub Date (optional): y or n to show the pub date of the album
      * - float (optional): a css float value (left, right, or none)
      * - Clear (optional): a css clear value (left, right, or both)
-     *
-     * Example:
-     * - [0] => [salbum=1,y,y,left,both]
-     * - [1] => 1
-     * - [2] => y
-     * - [3] => y
-     * - [4] => left
-     * - [5] => both
      *
      * @access public
      * @param array $match the array returned by str_replace on the content in Shashin::parseContent() 
@@ -543,7 +534,99 @@ class ShashinAlbum {
         return $this->_getDivMarkup($match);
     }
     
-    function getAlbumThumbsMarkup($match) {
+    /**
+     * Returns xhtml markup for displaying album thumbnails in a table.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::_getOrderedAlbums()
+     * @uses ShashinAlbum::_getTableMarkup()
+     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @return string complete xhtml markup for displaying album thumbnails in a table
+     */
+     function getAlbumThumbsMarkup($match) {
+        $ordered = ShashinAlbum::_getOrderedAlbums($match);
+        return ShashinAlbum::_getTableMarkup($ordered, $match[2], $match[3], $match[4], $match[5], $match[6]);    
+    }
+
+    /**
+     * Returns xhtml markup for displaying album thumbnails paired with the album
+     * description, and optional other data to display.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::_getOrderedAlbums()
+     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @return string complete xhtml markup for albums thumbnails and descriptions
+     */
+     function getAlbumListMarkup($match) {
+        $albums = ShashinAlbum::_getOrderedAlbums($match);
+        
+        foreach ($albums as $al) {
+            $album = new ShashinAlbum();
+
+            if ($album->getAlbum(null, null, $al) === false) {
+                return '<span class="shashin_error">Error: unable to set album object for album_key ' . $al['album_key'] . '</span>';
+            }
+
+            $replace .= '<div class="shashin_album_list">' . "\n";
+            $replace .= '<div class="shashin_album_list_thumb">' . $album->getAlbumThumbTag() . "</div>\n";
+            $link = $album->getAlbumLink();
+            $replace .= '<strong><a href="' . $link . '">' . $album->data['title'] . '</strong></a><br \>';
+ 
+            // option to show album info
+            if (strtolower(trim($match[2])) == 'y') {
+                $replace .= date("M j, Y", $album->data['pub_date']) . ' &mdash; '
+                    . $album->data['photo_count'] . " picture"
+                    . (($album->data['photo_count'] > 1) ? 's' : '');
+                    
+                if ($album->data['location']) {
+                    $replace .= ' &mdash; ' . $album->data['location'];
+                
+                    if ($album->data['geo_pos']) {
+                        $replace .= ' <a href="' . GOOGLE_MAPS_QUERY_URL
+                            . str_replace(" ", "+", $album->data['geo_pos'])
+                            . '"><img src="' . SHASHIN_DISPLAY_URL
+                            . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
+                            . '</a>';
+                    }
+                }
+            }
+            
+            if ($album->data['description']) {
+                // need to remove line breaks so WordPress doesn't mess up
+                // the dl tagging
+                $replace .= preg_replace("/\s/", " ", $album->data['description']);
+            }
+            
+            $replace .= "</div>\n";
+        }
+        
+        return $replace;
+    }
+
+    /**
+     * Get all the usernames in the album table.
+     *
+     * @static
+     * @access public
+     * @uses ToppaWPFunctions::select()
+     * @return array a list of all the usernames in the album table, or false on failure
+     */   
+    function getUsers() {
+        return ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, "user", null, 'get_col', null, 'DISTINCT');
+    }
+
+    /**
+     * Returns the requested albums (either by specific keys, or a sort preference
+     * for all albums), in the desired order.
+     *
+     * @static
+     * @access private
+     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @return array ordered album data
+     */
+     function _getOrderedAlbums($match) {
         $useKeys = strpos($match[1], '|');
         if ($useKeys) {
             $albumKeys = explode('|', $match[1]);
@@ -577,20 +660,9 @@ class ShashinAlbum {
             $ordered = $albums;
         }
 
-        return ShashinAlbum::_getTableMarkup($ordered, $match[2], $match[3], $match[4], $match[5], $match[6]);    
+        return $ordered;
     }
-
-    /**
-     * Generates the xhtml div for displaying an album thumbnail.
-     *
-     * @static
-     * @access public
-     * @return array a list of all the usernames in the album table, or false on failure
-     */   
-    function getUsers() {
-        return ToppaWPFunctions::select(SHASHIN_ALBUM_TABLE, "user", null, null, ARRAY_A, 'DISTINCT');
-    }
-    
+        
     /**
      * Generates the xhtml div for displaying an album thumbnail.
      *
@@ -615,8 +687,8 @@ class ShashinAlbum {
         }
 
         // set the clear value
-        if (strlen(trim($match[5]))) {
-            $clear = $match[5];
+        if (strlen(trim($match[4]))) {
+            $clear = $match[4];
         }
         
         $divPadding = get_option("shashin_div_padding");
@@ -632,38 +704,82 @@ class ShashinAlbum {
         }
         
         $replace .=  '">';
-        $replace .= '<a href="' . $this->data['link_url'] .'">';
-        $replace .= '<img src="' . $this->data['cover_photo_url']
-            . '" alt="' . htmlspecialchars($this->data['description'])
-            . '" width="' . SHASHIN_ALBUM_THUMB_SIZE
-            . '" height="' . SHASHIN_ALBUM_THUMB_SIZE . '" />';
-        $replace .= '</a>';
+        
+        $replace .= $this->getAlbumThumbTag();
 
         $replace .= '<span class="shashin_album_title">'
-            . '<a href="' . $this->data['link_url'] .'">'
+            . '<a href="' . $this->getAlbumLink() .'">'
             . $this->data['title']
-            . '</a> (' . $this->data['photo_count'] . ')</span>';
+            . "</a></span>";
+            
+        $replace .= '<span class="shashin_album_count">' . $this->data['photo_count'] . " picture";
+        $replace .= ($this->data['photo_count'] > 1) ? 's' : '';
+        $replace .= '</span>';
 
         if (strlen($location)) {
             $replace .= '<span class="shashin_album_location">'
-            . $location
             . ($this->data['geo_pos']
                 ? (' <a href="' . GOOGLE_MAPS_QUERY_URL
                     . str_replace(" ", "+", $this->data['geo_pos'])
                     . '"><img src="' . SHASHIN_DISPLAY_URL
-                    . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: text-bottom; border: none;" />')
+                    . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')
                 : '')
-            . ($this->data['geo_pos'] ? '</a>' : '')
-            . '</span>'; 
+            . ($this->data['geo_pos'] ? '</a><br />' : '')
+            . $location
+            . "</span>"; 
         }
         
         if (strlen($date)) {
-            $replace .= '<span class="shashin_album_date">' . date("M j, Y", $date) . '</span>'; 
+            $replace .= '<span class="shashin_album_date">' . date("M j, Y", $date) . "</span>"; 
         }
 
         $replace .= "</div>";
 
         return $replace;
+    }
+    
+    /**
+     * Generates the xhtml markup for an album thumbnail, with an appropriate
+     * link for accessing the album photos
+     *
+     * @uses ShashinAlbum::getAlbumLink()
+     * @return string xhtml markup for album thumbnail
+     */
+     function getAlbumThumbTag() {
+        $link = $this->getAlbumLink();
+        $markup = '<a href="' . $link .'">';
+        $markup .= '<img src="' . $this->data['cover_photo_url']
+            . '" alt="' . $this->data['title']
+            . '" width="' . SHASHIN_ALBUM_THUMB_SIZE
+            . '" height="' . SHASHIN_ALBUM_THUMB_SIZE . '" />';
+        $markup .= "</a>";
+    
+        return $markup;
+    }
+    
+    /**
+     * Generates a link to an album's photo, either at Picasa or locally,
+     * depending on the option shashin_album_photos_url
+     *
+     * @return string url ready for use in an anchor tag
+     */
+    function getAlbumLink() {
+        $albumUrl = get_option('shashin_album_photos_url');
+        
+        if (strlen($albumUrl)) {
+            
+            $link = $albumUrl
+                . ((strpos($albumUrl, "?") === false) ? "?" : "&amp;")
+                . "album_id="
+                . $this->data['album_id'] . '&amp;title='
+                . urlencode($this->data['title']);
+        }
+        
+        else {
+            $link = $this->data['link_url'];
+        }
+
+        return $link;
     }
     
     /**

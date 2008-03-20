@@ -3,7 +3,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.2
+ * @version 2.0
  */
  
 /* The following are applied to the simage and srandom tags */
@@ -47,6 +47,12 @@
     font-weight: bold;
 }
 
+.shashin_album_count {
+    display: block;
+    padding: 0px 5px 0px 5px;
+    font-size: x-small;
+}
+
 .shashin_album_location {
     display: block;
     padding: 0px 5px 0px 5px;
@@ -81,13 +87,17 @@
     vertical-align: top;
 }
 
+.shashin_thumbs_table caption {
+    text-align: left;
+    margin: 5px;
+}
+
 .shashin_thumb {
     margin-left: auto;
     margin-right: auto;
     background-color: White;
     border: thin solid;
 }
-
 
 .shashin_thumb img {
     padding: 3px; /* double this for shashin_thumb_padding option */
@@ -98,5 +108,22 @@
 .shashin_error {
     color: Red;
     font-weight: bold;
+}
+
+/* Applied to salbumlist */
+.shashin_album_list {
+    clear: both;
+}
+
+.shashin_album_list_thumb {
+    float: left;
+    margin: 5px;
+    background-color: White;
+    border: thin solid;
+}
+
+.shashin_album_list_thumb img {
+    padding: 5px;
+    border: none;
 }
 
