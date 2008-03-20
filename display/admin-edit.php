@@ -9,7 +9,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 2.0
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()
@@ -41,13 +41,13 @@
     <li><strong>Display random images:</strong>
     [srandom=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
-    <li><strong>Display table of thumbnails:</strong>
+    <li><strong>Display a group of thumbnails:</strong>
     [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]</li>
     <li><strong>Display newest images:</strong>
     [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear] Enter
     "any" for the album_key for any album</li>
     <li><strong>More Help:</strong> see the
-    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin FAQ page</a> for detailed
+    <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
     instructions</li>
     </ul>
     
@@ -65,10 +65,22 @@
     </tr>
     
     <?php
+    $i = 0;
+    
     foreach ($album->data['photos'] as $photoArray) {
+
         $photo = new ShashinPhoto();
         $photo->getPhoto(null, $photoArray);
-        echo "<tr align=\"center\">\n";
+        if ($i % 2 == 0) {
+            echo "<tr align=\"center\">\n";
+        } 
+
+        else {
+            echo "<tr align=\"center\" class=\"alternate\">\n";
+        }
+        
+        $i++;
+
         echo "<td>" . $photo->getPhotoMarkup(array(null,null,160,'n')) . "</td>\n";
         echo "<td>" . $photo->data['photo_key'] . "</td>\n";
         echo "<td>" . $photo->data['description'] . "</td>\n";
