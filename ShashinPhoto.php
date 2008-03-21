@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0
+ * @version 2.0.1
  * @package Shashin
  * @subpackage Classes
  */
@@ -607,13 +607,13 @@ class ShashinPhoto {
         }
 
         else {
-            $markup .= '<a href="' . $this->data['link_url'];
+            $markup .= '<a href="' . $this->data['link_url'] . '"';
 
             if ($display == 'new_window') {
                 $markup .= ' target="_blank"';
             }
-
-            $markup .= '">';
+            
+            $markup .= '>';
         }
 
         $markup .= '<img src="' . $this->data['content_url']
