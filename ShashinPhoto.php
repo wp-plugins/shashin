@@ -60,7 +60,7 @@ class ShashinPhoto {
             'content_url' => array(
                 'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
                 'label' => 'Image URL', 'source' => 'feed',
-                'feedParam1' => 'enclosure', 'attrs' => 'url'),
+                'feedParam1' => 'media', 'feedParam2' => 'content', 'attrs' => 'url'),
             'width' => array(
                 'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
                 'label' => 'Width', 'source' => 'feed',

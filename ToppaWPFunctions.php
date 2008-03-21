@@ -307,7 +307,6 @@ class ToppaWPFunctions {
      */
     function readFeed($feedURL) {
         $parser = new ToppaXMLParser();
-        $feedContent;
         return $parser->parse($feedURL);
     }
 
