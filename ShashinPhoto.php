@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.2
+ * @version 2.0.3
  * @package Shashin
  * @subpackage Classes
  */
@@ -60,7 +60,7 @@ class ShashinPhoto {
             'content_url' => array(
                 'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
                 'label' => 'Image URL', 'source' => 'feed',
-                'feedParam1' => 'media', 'feedParam2' => 'content', 'attrs' => 'url'),
+                'feedParam1' => 'enclosure', 'attrs' => 'url'),
             'width' => array(
                 'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
                 'label' => 'Width', 'source' => 'feed',
@@ -589,7 +589,7 @@ class ShashinPhoto {
         $markup .=  '">';
 
         // display with highslide if requested, but we can't for videos
-        $ext = strtoupper(substr($this->data['content_url'], -3));
+        $ext = strtoupper(substr($this->data['title'], -3));
         $videos = eval(PICASA_VIDEO_TYPES);
 
         if ($display == 'highslide' && !in_array($ext, $videos)) {
@@ -615,7 +615,7 @@ class ShashinPhoto {
             
             $markup .= '>';
         }
-
+        
         $markup .= '<img src="' . $this->data['content_url']
             . '?imgmax='. $this->data['user_max']
             . '" alt="' . $caption
@@ -624,6 +624,7 @@ class ShashinPhoto {
             . '" height="' . $this->data['user_height'] . '" />';
         $markup .= '</a>';
 
+        
         // highslide always gets the caption if there is one
         if (strlen($caption) && $display == 'highslide' && $controller == false) {
             $markup .= '<div class="highslide-caption">' . $caption . '</div>';

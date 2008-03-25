@@ -10,7 +10,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.2
+ * @version 2.0.3
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -30,6 +30,8 @@
     <h3>Album Tips</h3>
     
     <ul>
+    <li><strong>Syncing:</strong> sync an album after you upload new photos
+    to it in Picasa.</li>
     <li><strong>Display a single album thumbnail:</strong> copy and paste the
     code listed under <em>Markup</em>, and then edit it as needed.
     [salbum=album_key,location_yn,pubdate_yn,float,clear] Note album
@@ -40,11 +42,14 @@
     [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]</li>
     <li><strong>Display thumbnails for selected albums:</strong>
     [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]</li>
-    <li><strong>Syncing:</strong> sync an album after you upload new photos
-    to it in Picasa.</li>
+    <li><strong>Display thumbnails and descriptions for all your albums:</strong> you can choose
+    the sort order - options are 'pub_date', 'title', or 'last_updated' (add
+    ' desc' for reverse ordering). [salbumlist=order_option,info_yn]</li>
+    <li><strong>Display thumbnails and descriptions for selected albums:</strong>
+    [salbumlist=album_key1|album_key2|etc,info_yn]</li>
     <li><strong>Random images:</strong> if you want to exclude an album's
     images when using the srandom tag, set "Include in Random?" to "No."</li>
-    <li><strong>More Help:</strong> see the
+    <li><strong>Displaying all the phots in an album, and more help:</strong> see the
     <a href="<?php echo SHASHIN_FAQ_URL ?>">Shashin page</a> for detailed
     instructions</li>
     </ul>

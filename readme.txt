@@ -2,9 +2,9 @@
 Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
-Requires at least: 2.0.2
+Requires at least: 2.0.3
 Tested up to: 2.3.3
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
