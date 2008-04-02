@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 1.1
+Version: 2.0.4
 Author URI: http://www.toppa.com
 */
 
@@ -13,11 +13,11 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 1.1
+ * @version 2.0.4
  * @package Shashin
  * @subpackage Classes
  *
- * Copyright 2007 Michael Toppa
+ * Copyright 2007-2008 Michael Toppa
  *
  * Shashin is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,13 +33,15 @@ Author URI: http://www.toppa.com
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+global $wpdb;
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
-define('SHASHIN_ADMIN_URL', $_SERVER[PHP_SELF] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
+define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
+define('SHASHIN_VERSION', '2.0.4');
+define('SHASHIN_VERSION_COMPARABLE', '2.0.4');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
-define('SHASHIN_VERSION', '1.1');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -47,12 +49,14 @@ define('SHASHIN_PICASA_SERVER', get_option('shashin_picasa_server'));
 define('SHASHIN_USER_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME?kind=album&alt=rss');
 define('SHASHIN_ALBUM_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
-define('SHASHIN_DISPLAY_URL', '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
-define('SHASHIN_FAQ_URL', 'http://wordpress.org/extend/plugins/shashin/faq/');
+define('SHASHIN_DISPLAY_URL', get_bloginfo('wpurl') . '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
+define('SHASHIN_FAQ_URL', 'http://www.toppa.com/shashin-wordpress-plugin');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
 define('SHASHIN_DEFAULT_DIV_PADDING', 10);
 define('SHASHIN_DEFAULT_THUMB_PADDING', 6);
-
+define('SHASHIN_DEFAULT_IMAGE_DISPLAY', 'same_window');
+define('SHASHIN_DEFAULT_HIGHSLIDE_MAX', 640);
+define('SHASHIN_DEFAULT_PREFIX_CAPTIONS', 'n');
 // workaround for constants not allowing arrays
 // use with eval, e.g. $imageSizes = eval(SHASHIN_IMAGE_SIZES);
 define('SHASHIN_IMAGE_SIZES', 'return '
@@ -60,17 +64,19 @@ define('SHASHIN_IMAGE_SIZES', 'return '
         array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800), 1)
     . ';');
 define('SHASHIN_CROP_SIZES', 'return ' . var_export(array(32, 48, 64, 160), 1) . ';');
+define('PICASA_VIDEO_TYPES', 'return ' . var_export(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV', 'MP4'), 1) . ';');
 
 
 // get required libraries
 require_once(SHASHIN_DIR . '/ShashinAlbum.php');
 require_once(SHASHIN_DIR . '/ShashinPhoto.php');
 require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
+require_once(SHASHIN_DIR . '/ToppaXMLParser.php');
 
 /**
  * The main class - handles all incoming requests for displaying photos, as well
  * as the admin and options menus.
- * 
+ *
  * All methods in this class are static. The methods handle installation,
  * configuration, display of administrative menus, administrative requests,
  * parsing of content, and directing requests to the ShashinAlbum and
@@ -91,7 +97,7 @@ class Shashin {
      * @uses uninstall
      * @uses initAdminMenu
      * @uses parseContent
-     * @uses getCSS
+     * @uses getHeadTags
      */
 	function bootstrap() {
 		// Add the installation and uninstallation hooks
@@ -102,11 +108,40 @@ class Shashin {
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
         add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array(SHASHIN_PLUGIN_NAME, 'initWidgets'));
-        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getCSS'));
+        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
         // the 0 priority flag gets the div in before the autoformatter
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
-	}
+
+        $albumPhotos = get_option('shashin_album_photos_url');
+        if ($albumPhotos) {
+            $parts = explode("/", $albumPhotos);
+
+            // if we're displaying a page of album photos, add the album title
+            // to the page title
+            if (preg_match('/\b' . preg_quote(array_pop($parts)) . '\b/', $_SERVER['REQUEST_URI']) == 1) {
+                // the title as displayed in the page
+                add_filter('the_title', array(SHASHIN_PLUGIN_NAME, 'setAlbumPhotosTitle'));
+                // the title shown in the page's title tag
+                add_filter('wp_title', array(SHASHIN_PLUGIN_NAME, 'setAlbumPhotosPageTitle'));
+            }
+        }
+
+        if (get_option('shashin_image_display') == 'highslide') {
+            // counter for assigning unique IDs to highslide images
+            if (!$_SESSION['hs_id_counter']) {
+               $_SESSION['hs_id_counter'] = 1;
+	        }
+
+            // counter for distinguishing groups of Highslide photos on a page
+            if (!$_SESSION['hs_group_counter']) {
+               $_SESSION['hs_group_counter'] = 1;
+	        }
+
+            // div for Highslide nav controller
+            add_action('wp_footer', array(SHASHIN_PLUGIN_NAME, 'getHighslideController'));
+        }
+    }
 
     /**
      * Updates options and creates the Shashin tables if they don't already
@@ -121,7 +156,83 @@ class Shashin {
 	function install() {
         global $wpdb;
 
+        // make needed table changes for upgraders, or create tables for new users
+        if ($wpdb->get_var("show tables like '" . SHASHIN_ALBUM_TABLE . "'") == SHASHIN_ALBUM_TABLE) {
+            $describeAlbum = $wpdb->get_results('DESCRIBE ' . SHASHIN_ALBUM_TABLE, ARRAY_A);
+            
+            foreach ($describeAlbum as $describe) {
+                if ($describe['Field'] == 'description' && strpos($describe['Type'], 'text') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_ALBUM_TABLE . ' MODIFY description text');
+                }
+    
+                if ($describe['Field'] == 'last_updated_timestamp') {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_ALBUM_TABLE . ' MODIFY last_updated_timestamp bigint unsigned');
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_ALBUM_TABLE . ' CHANGE last_updated_timestamp last_updated bigint unsigned');
+                }
+    
+                if ($describe['Field'] == 'pub_date' && strpos($describe['Type'], 'bigint') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_ALBUM_TABLE . ' MODIFY pub_date bigint unsigned');
+                }
+            }
+            
+            // latin-1 is a common default charset, which may be causing
+            // problems for some users with multibyte characters
+            $albumStruct = $wpdb->get_row('SHOW CREATE TABLE ' . SHASHIN_ALBUM_TABLE, ARRAY_A);
+            
+            if (strpos($albumStruct['Create Table'], 'DEFAULT CHARSET=utf8') === false) {
+                $wpdb->query('ALTER TABLE ' . SHASHIN_ALBUM_TABLE . ' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+            }
+        }
+
+        else {
+            $album = new ShashinAlbum();
+            ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE);
+        }
+
+        if ($wpdb->get_var("show tables like '" . SHASHIN_PHOTO_TABLE . "'") == SHASHIN_PHOTO_TABLE) {
+            $describePhotos = $wpdb->get_results('DESCRIBE ' . SHASHIN_PHOTO_TABLE, ARRAY_A);
+    
+            $foundDeleted = false;    
+            foreach ($describePhotos as $describe) {
+                if ($describe['Field'] == 'photo_id' && strpos($describe['Key'], 'UNI') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' ADD UNIQUE (photo_id)');
+                }
+    
+                if ($describe['Field'] == 'taken_timestamp' && strpos($describe['Type'], 'bigint') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY taken_timestamp bigint unsigned');
+                }
+    
+                if ($describe['Field'] == 'uploaded_timestamp' && strpos($describe['Type'], 'bigint') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY uploaded_timestamp bigint unsigned');
+                }
+    
+                if ($describe['Field'] == 'description' && strpos($describe['Type'], 'text') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY description text');
+                }
+
+                if ($describe['Field'] == 'deleted') {
+                    $foundDeleted = true;
+                }
+            }
+    
+            if ($foundDeleted === false) {
+                $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' ADD deleted char(1) DEFAULT "N"');
+            }
+                
+            $photoStruct = $wpdb->get_row('SHOW CREATE TABLE ' . SHASHIN_PHOTO_TABLE, ARRAY_A);
+            
+            if (strpos($photoStruct['Create Table'], 'DEFAULT CHARSET=utf8') === false) {
+                $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+            }
+        }
+        
+        else {
+            $photo = new ShashinPhoto();
+            ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE);
+        }
+
         update_option('shashin_version', SHASHIN_VERSION);
+        update_option('shashin_version_comparable', SHASHIN_VERSION_COMPARABLE);
 
         // this controls how much width to add to the shashin_image div, to
         // accommodate the padding applied to the image (since the width can
@@ -129,9 +240,9 @@ class Shashin {
         if (!strlen(get_option('shashin_div_padding'))) {
             update_option('shashin_div_padding', SHASHIN_DEFAULT_DIV_PADDING);
         }
-        
+
         // same as above, but for images in a thumbnail table
-        if (!strlen(get_option('shashin_div_padding'))) {
+        if (!strlen(get_option('shashin_thumb_padding'))) {
             update_option('shashin_thumb_padding', SHASHIN_DEFAULT_THUMB_PADDING);
         }
 
@@ -139,28 +250,36 @@ class Shashin {
         if (!strlen(get_option('shashin_picasa_server'))) {
             update_option('shashin_picasa_server', SHASHIN_DEFAULT_SERVER);
         }
-        
-        if ($wpdb->get_var("show tables like '" . SHASHIN_ALBUM_TABLE . "'") != SHASHIN_ALBUM_TABLE) {
-            $album = new ShashinAlbum();
-            ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE);
+
+        // set the fullsize image display option (same window, new window, or highslide)
+        if (!strlen(get_option('shashin_image_display'))) {
+            update_option('shashin_image_display', SHASHIN_DEFAULT_IMAGE_DISPLAY);
         }
-        
-        if ($wpdb->get_var("show tables like '" . SHASHIN_PHOTO_TABLE . "'") != SHASHIN_PHOTO_TABLE) {
-            $photo = new ShashinPhoto();
-            ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE);
+
+        // set the highslide preferred fullsize dimension)
+        if (!strlen(get_option('shashin_highslide_max'))) {
+            update_option('shashin_highslide_max', SHASHIN_DEFAULT_HIGHSLIDE_MAX);
+        }
+
+        // set the default option for prefixing album titles to photo captions
+        if (!strlen(get_option('shashin_prefix_captions'))) {
+            update_option('shashin_prefix_captions', SHASHIN_DEFAULT_PREFIX_CAPTIONS);
         }
     }
 
     /**
-     * Not currently implemented
+     * Nothing to see here - it would be nice if WordPress supported
+     * options for deactivation, so users could choose whether to drop
+     * the shashin tables or not.
      *
+     * @static
      * @access public
      */
 	function uninstall() {
 	}
-        
+
     /**
-     * Adds the Shashin management and option pages
+     * Adds the Shashin management and option pages.
      *
      * @static
      * @access public
@@ -171,7 +290,7 @@ class Shashin {
         add_options_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getOptionsMenu'));
         add_management_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getAdminMenu'));
     }
-    
+
     /**
      * Generates and echoes the HTML for the appropriate admin page, based on
      * $_REQUEST values.
@@ -182,8 +301,9 @@ class Shashin {
      * - editAlbumPhotos (shows album photos for updating)
      * - updateAlbumPhotos (handles submit from editAlbumPhotos)
      * - addAlbum
+     * - syncAll (for syncing all local albums with Picasa)
      * - updateAlbums (handles submit from main admin page)
-     * - syncAlbum (for syncing local album and photo data with Picasa)
+     * - syncAlbum (for syncing one local album with Picasa)
      * - deleteAlbum
      *
      * @static
@@ -211,15 +331,14 @@ class Shashin {
             if ($album->getAlbum($_REQUEST['albumID']) === false) {
                 $message = "Unable to retrieve album";
             }
-            
+
             elseif ($album->getAlbumPhotos() === false) {
                 $message = "Unable to retrieve album photos";
             }
 
             // so we don't have to query for the album again on the next page
             $_SESSION['album'] = $album;
-            
-       		require(SHASHIN_DIR . '/display/admin-edit.php');
+            $display = 'admin-edit';
         }
 
         // save updated album photos - the only thing editable is the
@@ -233,7 +352,7 @@ class Shashin {
                       && $photoArray['include_in_random'] != $v) {
                         $photo = new ShashinPhoto();
                         $photo->getPhoto(null, $photoArray);
-                        
+
                         if ($photo->setIncludeInRandom($v) === false) {
                             $message = "Unable to update record for Photo "
                                 . $photo->data['photo_key'] . '. SQL Error:';
@@ -242,68 +361,84 @@ class Shashin {
                         }
                     }
                 }
-                
+
                 if ($dbError === true) {
                     break;
                 }
             }
-            
+
             if ($dbError !== true) {
                 $message = "Updates saved.";
             }
-            
+
             // don't need the album in the session anymore
             unset($_SESSION['album']);
-      		require(SHASHIN_DIR . '/display/admin-main.php');
+            $display = 'admin-main';
         }
-        
-        
-        // add an album
+
+
+        // add an album (or all albums)
         elseif ($_REQUEST['shashinAction'] == 'addAlbum') {
             $linkURL = trim($_REQUEST['link_url']);
-            
+
             // validate the URL
             $pieces = explode("/", $linkURL);
-            
+
             // send user back to the form if there are validation errors
-            if ((($pieces[0] . "//" . $pieces[2]) != SHASHIN_PICASA_SERVER)
-              || count($pieces) != 5
-              || !strlen($pieces[3])
-              || !strlen($pieces[4])) {
-                $message = "That is not a valid Picasa album URL";
-        		require(SHASHIN_DIR . '/display/admin-main.php');
+            if ((($pieces[0] . "//" . $pieces[2]) != SHASHIN_PICASA_SERVER) || !$pieces[3]) {
+                $message = "That is not a valid Picasa URL";
             }
-            
-            // if no validation errors, add the album
-            else {
+
+            // if no validation errors, and we have a single album, add it
+            else if (strlen($pieces[4])) {
                 $album = new ShashinAlbum();
                 // insert/update the album
                 if ($album->setAlbum($pieces[3], $pieces[4], null, $_REQUEST['include_in_random']) === false) {
-                    $message = "Failed tp add album. This was probably a bad connection trying to read the RSS feed. Please try again.";
-                }                
-                
+                    $message = "Failed to add album. This was probably a bad connection trying to read the RSS feed. Please try again.";
+                }
+
                 // sync the photos
                 elseif ($album->setAlbumPhotos() === false) {
                     $message = "Album metadata added, but failed to add photos.
                         This was probably a bad connection trying to read the RSS feed. Please try again.";
                 }
-                
+
                 // all is well
                 else {
                     $message = "Album added";
-                    
                     // clear user inputs so they're not displayed again
                     unset($_REQUEST['include_in_random']);
                     unset($_REQUEST['link_url']);
-    
-                    // refresh $allAlbums so the new album will appear
-                    $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
                 }
-                
-          		require(SHASHIN_DIR . '/display/admin-main.php');
             }
+
+            // if no validation errors, and we're adding all albums
+            else {
+                if (ShashinAlbum::setAlbums($pieces[3], $_REQUEST['include_in_random'], true) === false) {
+                    $message = "Failed to add albums. This was probably a bad connection trying to read the RSS feed. Please try again.";
+                }
+
+                else {
+                    $message = "Albums added";
+                }
+            }
+
+            $display = 'admin-main';
         }
-        
+
+        // sync all albums
+        elseif ($_REQUEST['shashinAction'] == 'syncAll') {
+            if (ShashinAlbum::setAlbums($_REQUEST['users']) === false) {
+                $message = "Failed to sync albums. This was probably a bad connection trying to read the RSS feed. Please try again.";
+            }
+
+            else {
+                $message = "All albums synced for " . $_REQUEST['users'];
+            }
+
+            $display = 'admin-main';
+        }
+
         // update albums' include_in_random flag
         elseif ($_REQUEST['shashinAction'] == 'updateAlbums') {
             $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
@@ -322,7 +457,7 @@ class Shashin {
                         }
                     }
                 }
-            
+
                 if ($dbError === true) {
                    break;
                 }
@@ -331,10 +466,8 @@ class Shashin {
             if ($dbError !== true) {
                 $message = "Updates saved.";
             }
-            
-            // need to refresh allAlbums
-            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
-      		require(SHASHIN_DIR . '/display/admin-main.php');
+
+            $display = 'admin-main';
         }
 
         // sync album and its photos
@@ -354,16 +487,14 @@ class Shashin {
                 $message = "Album synchronized.";
             }
 
-            // show the latest updates
-            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
-      		require(SHASHIN_DIR . '/display/admin-main.php');
+            $display = 'admin-main';
         }
 
         // delete requested album
         elseif ($_REQUEST['shashinAction'] == 'deleteAlbum') {
             $album = new ShashinAlbum();
             $album->getAlbum($_REQUEST['albumID']);
-            
+
             if ($album->deleteAlbum() === false) {
                 $message = "Failed to delete album. SQL Error: ";
                 $dbError = true;
@@ -372,18 +503,36 @@ class Shashin {
             else {
                 $message = "Album deleted.";
             }
-            
-            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
-      		require(SHASHIN_DIR . '/display/admin-main.php');
+
+            $display = 'admin-main';
         }
-        
+
         // show summary of albums, and form to add a new one
         else {
-            $album = new ShashinAlbum(); # needed in admin-main, for refData
-            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
-    		require(SHASHIN_DIR . '/display/admin-main.php');
+            $display = 'admin-main';
         }
-        
+
+        // decide which admin menu to show
+        if ($display == 'admin-edit') {
+       		require(SHASHIN_DIR . '/display/admin-edit.php');
+        }
+
+        else {
+            $users = ShashinAlbum::getUsers();
+            $allAlbums = ShashinAlbum::getAlbums("ORDER BY TITLE");
+            $album = new ShashinAlbum(); // needed in admin-main, for refData
+
+            foreach ($users as $user) {
+                $usernames[$user] = $user;
+            }
+            
+            if (!empty($users)) {
+                $syncAll = array('inputType' => 'select', 'inputSubgroup' => $usernames);
+            }
+
+      		require(SHASHIN_DIR . '/display/admin-main.php');
+        }
+
 		// Get the markup and display
 		$adminMenuHTML = ob_get_contents();
 		ob_end_clean();
@@ -406,28 +555,33 @@ class Shashin {
 		// Start the cache
 		ob_start();
 
+        $allowed = eval(SHASHIN_IMAGE_SIZES);
+        
         // validate form inputs
         if ($_REQUEST['shashinAction'] == 'updateOptions') {
-            $pieces = explode("/", $_REQUEST['picasaServer']);
-            
+            $pieces = explode("/", trim($_REQUEST['shashin_picasa_server']));
+
             // send user back to the form if there are validation errors
             if ($pieces[0] != "http:" || !strlen($pieces[2]) || strlen($pieces[3])) {
                 $message = "Invalid URL for Picasa Server";
             }
-            
+
+            else if (!in_array(trim($_REQUEST['shashin_highslide_max']), $allowed)) {
+                $message = "Invalid Picasa image size. Size must be one of the following: "
+                    . implode(", ", $allowed);
+            }
+
             // otherwise save the options
             else {
-                update_option('shashin_picasa_server', $pieces[0] . "//" . $pieces[2]);
-                update_option('shashin_div_padding', $_REQUEST['divPadding']);
-                update_option('shashin_thumb_padding', $_REQUEST['thumbPadding']);
+                foreach ($_REQUEST as $k=>$v) {
+                    if ($k != 'shashinAction' && $k != 'save') {
+                        update_option($k, trim($v));
+                    }
+                }
+
                 $message = "Options saved.";
             }
         }
-
-        // get option values
-        $picasaServer = get_option('shashin_picasa_server');
-        $divPadding = get_option('shashin_div_padding');
-        $thumbPadding = get_option('shashin_thumb_padding');
 
 		// Get the markup and display
   		require(SHASHIN_DIR . '/display/options-main.php');
@@ -435,16 +589,91 @@ class Shashin {
 		ob_end_clean();
 		echo $optionsMenuHTML;
     }
-    
-    
+
+
     /**
-     * Gets the Shashin CSS file, for inclusion in the document head
+     * Gets the Shashin CSS file, and the optional Highslide CSS and
+     * JS, for inclusion in the document head.
      *
      * @static
      * @access public
-     */    
-    function getCSS() {
-        echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin.css" />';
+     */
+    function getHeadTags() {
+        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin.css" />' . "\n";
+
+        if (get_option('shashin_image_display') == 'highslide') {
+            echo '
+                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/highslide.js"></script>
+                <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'highslide.css" />
+                <script type="text/javascript">
+
+            	hs.registerOverlay({
+    		        thumbnailId: null,
+    		        overlayId: \'controlbar\',
+    		        position: \'top right\',
+    		        hideOnMouseOut: true,
+                    opacity: 0.9
+		        });
+
+                // disables the navbar for stand-alone images
+                hs.Expander.prototype.onCreateOverlay = function (sender, e) {
+                    if (!sender.slideshowGroup) return false;
+                };
+
+                hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . 'highslide/graphics/\';
+                hs.outlineType = \'rounded-white\';
+                hs.captionEval = \'this.thumb.title\';
+
+                </script>
+            ';
+        }
+    }
+
+    /**
+     * When displaying the page for an album's photos, add the album
+     * title to the title displayed on the page, separated by a colon.
+     *
+     * It's stupid to need this function and not just use
+     * setAlbumPhotosPageTitle, but the_title filter can't distinguish between
+     * the actual page title and titles in sidebar links
+     *
+     * @static
+     * @access public
+     */
+    function setAlbumPhotosTitle($title) {
+        global $post;
+        if ($title == $post->post_title) {
+            return $title . ": " . $_REQUEST['title'];
+        }
+    }
+
+    /**
+     * When displaying the page for an album's photos, add the album
+     * title to the title tag for the page, separated by a colon.
+     *
+     * @static
+     * @access public
+     */
+    function setAlbumPhotosPageTitle($title) {
+        return $title . ": " . $_REQUEST['title'];
+    }
+    
+    /**
+     * Gets the div that generates the Highslide nav controller - only
+     * need one for the page (call with wp_footer).
+     *
+     * @static
+     * @access public
+     */
+    function getHighslideController() {
+        echo '
+        <div id="controlbar" class="highslide-overlay controlbar">
+        <a href="#" class="previous" onclick="return hs.previous(this)" title="Previous (left arrow key)"></a>
+        <a href="#" class="next" onclick="return hs.next(this)" title="Next (right arrow key)"></a>
+        <a href="#" class="highslide-move" onclick="return false" title="Click and drag to move"></a>
+        <a href="#" class="close" onclick="return hs.close(this)" title="Close"></a>
+        </div>
+        ';
     }
 
     /**
@@ -453,14 +682,14 @@ class Shashin {
      *
      * @static
      * @access public
-     */    
+     */
     function getAdminCSS() {
         echo '        <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin-admin.css" />';
     }
-    
+
     /**
-     * Replaces Shashin tags in posts and pages with XHTML displaying the
-     * requested images.
+     * Replaces Shashin tags in posts and pages with XHTML displaying
+     * the requested images.
      *
      * Supported Shashin tags:
      * - [simage=photo_key,max_size,caption_yn,float,clear]
@@ -468,12 +697,16 @@ class Shashin {
      * - [salbum=album_key,location_yn,pubdate_yn,float,clear]
      * - [sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]
      * - [snewest=album_key,max_size,max_cols,how_many,caption_yn,float,clear]
+     * - [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]
+     * - [salbumphotos=max_size,max_cols,caption_yn,description_yn,order_by,float,clear]
+     * - [salbumlist=album_key1|album_key2|etc,info_yn]
      *
-     * For srandom and snewest tags, you can use the word "any" instead of an
-     * album key to get photos from any album.
-     *
-     * For salbum, note that the thumbnail size is fixed by Picasa at 160x160,
-     * and that you automaticaly get the album title and photo count.
+     * For srandom and snewest tags, you can use the word "any" instead
+     * of an album key to get photos from any album. For salbum,
+     * salbumthumbs, and salbumlist, note that the thumbnail size is
+     * fixed by Picasa at 160x160. For salbumthumbs and salbumlist, you
+     * can substitute a column name to order by for the keys, if you
+     * want all the albums.
      *
      * @static
      * @access public
@@ -483,13 +716,16 @@ class Shashin {
      * @uses ShashinPhoto::getRandomMarkup()
      * @uses ShashinPhoto::getPhotoMarkup()
      * @uses ShashinAlbum::ShashinAlbum()
-     * @uses ShashinPhoto::getAlbumMarkup()
+     * @uses ShashinAlbum::getAlbumMarkup()
      * @uses ShashinPhoto::getThumbsMarkup()
-     * @uses ShashinPhoto::getNewestMarkup
+     * @uses ShashinPhoto::getNewestMarkup()
+     * @uses ShashinAlbum::getAlbumThumbsMarkup()
+     * @uses ShashinPhoto::getAlbumPhotosMarkup()
+     * @uses ShashinAlbum::getAlbumListMarkup()
      */
     function parseContent($content) {
         $onePhoto = "/\[simage=(\d+),(\d{2,4}),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
-        
+
         if (preg_match_all($onePhoto, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 $photo = new ShashinPhoto;
@@ -499,7 +735,7 @@ class Shashin {
         }
 
         $randomPhoto = "/\[srandom=(\w+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
-        
+
         if (preg_match_all($randomPhoto, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 $markup = ShashinPhoto::getRandomMarkup($match);
@@ -508,7 +744,7 @@ class Shashin {
         }
 
         $oneAlbum = "/\[salbum=(\d+),?(\w?),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
-        
+
         if (preg_match_all($oneAlbum, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 $album = new ShashinAlbum;
@@ -518,7 +754,7 @@ class Shashin {
         }
 
         $thumbPhotos = "/\[sthumbs=([\d\|]+),(\d{2,4}),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
-        
+
         if (preg_match_all($thumbPhotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 $markup = ShashinPhoto::getThumbsMarkup($match);
@@ -527,17 +763,44 @@ class Shashin {
         }
 
         $newestPhotos = "/\[snewest=(\w+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
-        
+
         if (preg_match_all($newestPhotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 $markup = ShashinPhoto::getNewestMarkup($match);
                 $content = str_replace($match[0], $markup, $content);
             }
         }
-                
+
+        $albumsPhotos = "/\[salbumthumbs=([\w+\|\ ]+),(\d+),?(\w?),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+
+        if (preg_match_all($albumsPhotos, $content, $matches, PREG_SET_ORDER) > 0) {
+            foreach ($matches as $match) {
+                $markup = ShashinAlbum::getAlbumThumbsMarkup($match);
+                $content = str_replace($match[0], $markup, $content);
+            }
+        }
+
+        $albumsAllPhotos = "/\[salbumphotos=(\d+),(\d+),?(\w?),?(\w?),?(\w{0,}),?(\w{0,5}),?(\w{0,5})\]/";
+
+        if (preg_match_all($albumsAllPhotos, $content, $matches, PREG_SET_ORDER) > 0) {
+            foreach ($matches as $match) {
+                $markup = ShashinPhoto::getAlbumPhotosMarkup($match);
+                $content = str_replace($match[0], $markup, $content);
+            }
+        }
+
+        $albumList = "/\[salbumlist=([\w+\|\ ]+),?(\w?)\]/";
+
+        if (preg_match_all($albumList, $content, $matches, PREG_SET_ORDER) > 0) {
+            foreach ($matches as $match) {
+                $markup = ShashinAlbum::getAlbumListMarkup($match);
+                $content = str_replace($match[0], $markup, $content);
+            }
+        }
+
         return $content;
     }
-    
+
     /**
      * Wrapper for ShashinPhoto->getPhotoMarkup()
      *
@@ -551,12 +814,12 @@ class Shashin {
      * @uses ShashinPhoto::ShashinPhoto()
      * @uses ShashinPhoto::getPhotoMarkup()
      * @return string xhtml to display photo
-     */    
+     */
     function getSingle($photoKey, $maxSize, $captionYN = null, $float = null, $clear = null) {
         $photo = new ShashinPhoto();
         return $photo->getPhotoMarkup(array(null,$photoKey,$maxSize,$captionYN,$float,$clear));
     }
-    
+
     /**
      * Wrapper for ShashinPhoto::getRandomMarkup()
      *
@@ -565,17 +828,17 @@ class Shashin {
      * @param int $albumKey (required): a Shashin album_key (not the Picasa album ID) or "any" for pictures from any album
      * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
      * @param int $maxCols (required): how many columns the table will have
-     * @param int $howMany (required): how many random pictures to show 
+     * @param int $howMany (required): how many random pictures to show
      * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
      * @param string $float (optional): a css float value (left, right, or none) (no default)
      * @param string $clear (optional): a css clear value (left, right, or both) (no default)
      * @uses ShashinPhoto::getRandomMarkup()
      * @return string xhtml to display table of random photos
-     */    
+     */
     function getRandom($albumKey, $maxSize, $maxCols, $howMany, $captionYN = null, $float = null, $clear = null) {
         return ShashinPhoto::getRandomMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN,$float,$clear));
     }
-    
+
     /**
      * Wrapper for ShashinAlbum->getAlbumMarkup()
      *
@@ -589,7 +852,7 @@ class Shashin {
      * @uses ShashinAlbum::ShashinAlbum()
      * @uses ShashinAlbum::getAlbumMarkup()
      * @return string xhtml to display album thumbnail
-     */    
+     */
     function getAlbum($albumKey, $locationYN = null, $pubdateYN = null, $float = null, $clear = null) {
         $album = new ShashinAlbum;
         return $album->getAlbumMarkup(array(null,$albumKey,$locationYN,$pubdateYN,$float,$clear));
@@ -608,7 +871,7 @@ class Shashin {
      * @param string $clear (optional): a css clear value (left, right, or both) (no default)
      * @uses ShashinPhoto::getThumbsMarkup()
      * @return string xhtml to display table of thumbnails
-     */    
+     */
     function getThumbs($photoKeys, $maxSize, $maxCols, $captionYN = null, $float = null, $clear = null) {
         return ShashinPhoto::getThumbsMarkup(array(null,$photoKeys,$maxSize,$maxCols,$captionYN,$float,$clear));
     }
@@ -621,20 +884,52 @@ class Shashin {
      * @param int $albumKey (required): a Shashin album_key (not the Picasa album ID)
      * @param int $maxSize (required): the desired max dimension. Note Picasa allows only certain sizes.
      * @param int $maxCols (required): how many columns the table will have
-     * @param int $howMany (required): how many random pictures to show 
+     * @param int $howMany (required): how many random pictures to show
      * @param string $captionYN (optional): y or n to show the image description as a caption (defaults to n)
      * @param string $float (optional): a css float value (left, right, or none) (no default)
      * @param string $clear (optional): a css clear value (left, right, or both) (no default)
      * @uses ShashinPhoto::getNewestMarkup()
      * @return string xhtml to display table of newest photos
-     */    
+     */
     function getNewest($albumKey, $maxSize, $maxCols, $howMany, $captionYN = null, $float = null, $clear = null) {
         return ShashinPhoto::getNewestMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN,$float,$clear));
     }
-    
+
+    /**
+     * Wrapper for ShashinAlbum->getAlbumThumbsMarkup()
+     *
+     * @static
+     * @access public
+     * @param string $albumKeys (required): Shashin album keys (not the Picasa album ID), or a column name to order by
+     * @param int $maxCols (required): how many columns the table will have
+     * @param string $locationYN (optional): y or n to show the location of the image, with a link to Google Maps.
+     * @param string $pubDateYN (optional): y or n to show the pub date of the album
+     * @param string $float (optional): a css float value (left, right, or none) (no default)
+     * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @uses ShashinAlbum::getAlbumThumbsMarkup()
+     * @return string xhtml to display album thumbnail
+     */
+    function getAlbumThumbs($albumKeys, $maxCols, $locationYN = null, $pubdateYN = null, $float = null, $clear = null) {
+        return ShashinAlbum::getAlbumThumbsMarkup(array(null,$albumKeys,$maxCols,$locationYN,$pubdateYN,$float,$clear));
+    }
+
+    /**
+     * Wrapper for ShashinAlbum->getAlbumListMarkup()
+     *
+     * @static
+     * @access public
+     * @param string $albumKeys (required): Shashin album keys (not the Picasa album ID), or a column name to order by
+     * @param string $infoYN (optional): y or n to show the album location, pub date, and number of pictures.
+     * @uses ShashinAlbum::getAlbumThumbsMarkup()
+     * @return string xhtml to display album thumbnail
+     */
+    function getAlbumList($albumKeys, $infoYN = null) {
+        return ShashinAlbum::getAlbumListMarkup(array(null, $albumKeys, $infoYN, $picsYN));
+    }
+
     /**
      * Registers all the Shashin widgets and their controls.
-     * 
+     *
      * It first checks to make sure widgets are available in this WordPress
      * installation. This function has several functions contained within it,
      * which PHPDoc cannot see. These functions get their respestive widget
@@ -645,10 +940,11 @@ class Shashin {
      * - widgetAlbum()
      * - widgetThumbs()
      * - widgetNewest()
+     * - widgetAlbumThumbs()
      *
      * @static
      * @access public
-     */     
+     */
     function initWidgets() {
     	// Check to see required Widget API functions are defined...
 	    if (!function_exists('register_sidebar_widget')
@@ -701,7 +997,7 @@ class Shashin {
             $widget = ShashinPhoto::getThumbsMarkup(array(null,$photoKeys,$maxSize,$maxCols,$captionYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
     	}
-        
+
     	function widgetNewest($args) {
     		$options = get_option('shashin_widget_newest');
     		$widgetTitle = empty($options['shashin_newest_title']) ? 'Random Image' : $options['shashin_newest_title'];
@@ -714,16 +1010,29 @@ class Shashin {
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
     	}
 
+    	function widgetAlbumThumbs($args) {
+    		$options = get_option('shashin_widget_album_thumbs');
+    		$widgetTitle = empty($options['shashin_album_thumbs_title']) ? '' : $options['shashin_album_thumbs_title'];
+            $albumKeys = empty($options['shashin_album_thumbs_keys']) ? 1 : $options['shashin_album_thumbs_keys'];
+            $maxCols = empty($options['shashin_album_thumbs_max_cols']) ? 1 : $options['shashin_album_thumbs_max_cols'];
+            $locationYN = empty($options['shashin_album_thumbs_location_yn']) ? 'n' : $options['shashin_album_thumbs_location_yn'];
+            $pubdateYN = empty($options['shashin_album_thumbs_pubdate_yn']) ? 'n' : $options['shashin_album_thumbs_pubdate_yn'];
+            $widget = ShashinAlbum::getAlbumThumbsMarkup(array(null,$albumKeys,$maxCols,$locationYN,$pubdateYN));
+            Shashin::_widgetDisplay($args, $widgetTitle, $widget);
+    	}
+
     	register_sidebar_widget('Shashin: Single Image', widgetSingle, SHASHIN_PLUGIN_NAME);
     	register_sidebar_widget('Shashin: Random Images', widgetRandom, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Album Thumbnail', widgetAlbum, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Thumbnails', widgetThumbs, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Single Album Thumbnail', widgetAlbum, SHASHIN_PLUGIN_NAME);
+    	register_sidebar_widget('Shashin: Image Thumbnails', widgetThumbs, SHASHIN_PLUGIN_NAME);
     	register_sidebar_widget('Shashin: Newest Images', widgetNewest, SHASHIN_PLUGIN_NAME);
-        register_widget_control('Shashin: Single Image', array(SHASHIN_PLUGIN_NAME, 'widgetSingleControl'), 500, 300); 
-        register_widget_control('Shashin: Random Images', array(SHASHIN_PLUGIN_NAME, 'widgetRandomControl'), 500, 300); 
-        register_widget_control('Shashin: Album Thumbnail', array(SHASHIN_PLUGIN_NAME, 'widgetAlbumControl'), 500, 300); 
-        register_widget_control('Shashin: Thumbnails', array(SHASHIN_PLUGIN_NAME, 'widgetThumbsControl'), 500, 300); 
-        register_widget_control('Shashin: Newest Images', array(SHASHIN_PLUGIN_NAME, 'widgetNewestControl'), 500, 300); 
+    	register_sidebar_widget('Shashin: Album Thumbnails', widgetAlbumThumbs, SHASHIN_PLUGIN_NAME);
+        register_widget_control('Shashin: Single Image', array(SHASHIN_PLUGIN_NAME, 'widgetSingleControl'), 500, 300);
+        register_widget_control('Shashin: Random Images', array(SHASHIN_PLUGIN_NAME, 'widgetRandomControl'), 500, 300);
+        register_widget_control('Shashin: Single Album Thumbnail', array(SHASHIN_PLUGIN_NAME, 'widgetAlbumControl'), 500, 300);
+        register_widget_control('Shashin: Image Thumbnails', array(SHASHIN_PLUGIN_NAME, 'widgetThumbsControl'), 500, 300);
+        register_widget_control('Shashin: Newest Images', array(SHASHIN_PLUGIN_NAME, 'widgetNewestControl'), 500, 300);
+        register_widget_control('Shashin: Album Thumbnails', array(SHASHIN_PLUGIN_NAME, 'widgetAlbumThumbsControl'), 500, 300);
     }
 
     /**
@@ -735,7 +1044,7 @@ class Shashin {
      */
     function widgetSingleControl() {
         Shashin::_widgetControl('single');
-    } 
+    }
 
     /**
      * Displays and processes the widget control form for random images.
@@ -752,9 +1061,9 @@ class Shashin {
         foreach ($albumsFull as $album) {
             $albums[$album['album_key']] = $album['title'];
         }
-        
+
         Shashin::_widgetControl('random', array($albums));
-    } 
+    }
 
     /**
      * Displays and processes the widget control form for album thumbnails.
@@ -770,9 +1079,9 @@ class Shashin {
         foreach ($albumsFull as $album) {
             $albums[$album['album_key']] = $album['title'];
         }
-        
+
         Shashin::_widgetControl('album', array($albums));
-    } 
+    }
 
     /**
      * Displays and processes the widget control form for a table of thumbnails.
@@ -786,10 +1095,10 @@ class Shashin {
         if ($_REQUEST["shashin_thumbs_photo_keys"]) {
             $_REQUEST["shashin_thumbs_photo_keys"] = str_replace(" ","",$_REQUEST["shashin_thumbs_photo_keys"]);
         }
-        
+
         Shashin::_widgetControl('thumbs');
-    } 
-    
+    }
+
     /**
      * Displays and processes the widget control form for newest images.
      *
@@ -805,9 +1114,24 @@ class Shashin {
         foreach ($albumsFull as $album) {
             $albums[$album['album_key']] = $album['title'];
         }
-        
+
         Shashin::_widgetControl('newest', array($albums));
-    } 
+    }
+
+    /**
+     * Displays and processes the widget control form for a table of album thumbnails.
+     *
+     * @static
+     * @access public
+     * @uses Shashin::_widgetControl()
+     */
+    function widgetAlbumThumbsControl() {
+        if ($_REQUEST["shashin_album_thumbs_keys"]) {
+            $_REQUEST["shashin_album_thumbs_keys"] = trim($_REQUEST["shashin_album_thumbs_keys"]);
+        }
+
+        Shashin::_widgetControl('album_thumbs');
+    }
 
     /**
      * Displays the widget control form.
@@ -817,7 +1141,7 @@ class Shashin {
      */
     function _widgetControl($name, $args = null) {
         $options = $newOptions = get_option("shashin_widget_{$name}");
-        
+
         // for handing the control form submission.
         if ($_REQUEST["shashin_{$name}_submit"]) {
             unset($_REQUEST["shashin_{$name}_submit"]);
@@ -825,10 +1149,10 @@ class Shashin {
             foreach ($_REQUEST as $k=>$v) {
                 // make sure we're only capturing shashin data
                 if (strpos($k, 'shashin') !== false) {
-                    $newOptions[$k] = htmlspecialchars(strip_tags(stripslashes($v)));            
+                    $newOptions[$k] = htmlspecialchars(strip_tags(stripslashes($v)));
                 }
             }
-            
+
             if ($options != $newOptions) {
                 update_option("shashin_widget_{$name}", $newOptions);
                 // so the form data will be current if you re-open the form
@@ -836,11 +1160,11 @@ class Shashin {
                 $options = $newOptions;
             }
         }
-        
+
         // for displaying the control form
   		require(SHASHIN_DIR . "/display/widget-{$name}.php");
     }
-    
+
     /**
      * Extracts widget args and displays a widget.
      *
@@ -848,9 +1172,8 @@ class Shashin {
      * @access private
      */
     function _widgetDisplay($args, $widgetTitle, $widget) {
-        // get the theme widget vars 
+        // get the theme widget vars
 		extract($args);
-        
         // display widget
 		echo $before_widget;
 		echo $before_title . $widgetTitle . $after_title;
