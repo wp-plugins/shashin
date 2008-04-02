@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.0.3
+Version: 2.0.4
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 1.2
+ * @version 2.0.4
  * @package Shashin
  * @subpackage Classes
  *
@@ -33,13 +33,14 @@ Author URI: http://www.toppa.com
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+global $wpdb;
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.0.3');
-define('SHASHIN_VERSION_COMPARABLE', '2.0.3');
+define('SHASHIN_VERSION', '2.0.4');
+define('SHASHIN_VERSION_COMPARABLE', '2.0.4');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
@@ -63,7 +64,7 @@ define('SHASHIN_IMAGE_SIZES', 'return '
         array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800), 1)
     . ';');
 define('SHASHIN_CROP_SIZES', 'return ' . var_export(array(32, 48, 64, 160), 1) . ';');
-define('PICASA_VIDEO_TYPES', 'return ' . var_export(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV'), 1) . ';');
+define('PICASA_VIDEO_TYPES', 'return ' . var_export(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV', 'MP4'), 1) . ';');
 
 
 // get required libraries

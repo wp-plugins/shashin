@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 1.2
+ * @version 2.0.4
  * @package Shashin
  * @subpackage Classes
  */
