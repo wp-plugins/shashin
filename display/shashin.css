@@ -3,7 +3,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  */
  
 /* The following are applied to the simage and srandom tags */
@@ -22,8 +22,7 @@
 .shashin_caption {
     display: block;
     padding: 0px 5px 0px 5px;
-    font-size: x-small;
-    font-weight: bold;
+    font-size: small;
 }
 
 /* Applied to salbum tag */

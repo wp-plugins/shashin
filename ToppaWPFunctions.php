@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  * @package Shashin
  * @subpackage Classes
  */
@@ -157,6 +157,7 @@ class ToppaWPFunctions {
      * @param array $assoc an optional associative array of field and values to insert
      * @param array $fields an optional array of field names (required if $assoc is null)
      * @param array $values an optional array of values to insert (required if $fields is set)
+     * @param string $update an optional field to update if the insert would cause a duplicate key on a unique index
      * @return mixed passes along the return value of the $wpdb call
      */
     function insert($table, $assoc = null, $fields = null, $values = null, $update = null) {
@@ -174,6 +175,7 @@ class ToppaWPFunctions {
         $sql .= "')";
 
         // right now works with $assoc only
+        // comment out the next three lines if you are on a version of mySQL prior to 4.1
         if ($update) {
             $sql .= " ON DUPLICATE KEY UPDATE $update = '" . $assoc[$update] . "'";
         }

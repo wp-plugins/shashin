@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.5
-Stable tag: 2.0.4
+Stable tag: 2.1
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -34,9 +34,9 @@ Now go to the "Manage" tab and follow the directions to add your first album!
 
 Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **You should include these tables when making backups of your WordPress tables.**
 
-**Special Note to Upgraders:** Deactivate your old installation, upload the new version, and then reactivate. This is necessary for required updates to the Shashin tables.
+**Special note to upgraders from versions prior to 2.0:** Deactivate your old installation, upload the new version, and then reactivate. This is necessary for required updates to the Shashin tables.
 
-**Special Note for WordPress installations that are in a subdirectory:** For the most part Shashin is smart about detecting the location of files, but if your WordPress installation is in a subdirectory of your web site, you will need to edit the 5 URL paths listed in shashin/display/highslide.css to correctly reflect the location of your WordPress installation.
+**Special note for WordPress installations that are in a subdirectory:** For the most part Shashin is smart about detecting the location of files, but if your WordPress installation is in a subdirectory of your web site, you will need to edit the 5 URL paths listed in shashin/display/highslide.css to correctly reflect the location of your WordPress installation.
 
 == Frequently Asked Questions ==
 

@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.0.4
+Version: 2.1
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  * @package Shashin
  * @subpackage Classes
  *
@@ -39,8 +39,8 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.0.4');
-define('SHASHIN_VERSION_COMPARABLE', '2.0.4');
+define('SHASHIN_VERSION', '2.1');
+define('SHASHIN_VERSION_COMPARABLE', '2.1');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
@@ -112,20 +112,6 @@ class Shashin {
         // the 0 priority flag gets the div in before the autoformatter
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
-
-        $albumPhotos = get_option('shashin_album_photos_url');
-        if ($albumPhotos) {
-            $parts = explode("/", $albumPhotos);
-
-            // if we're displaying a page of album photos, add the album title
-            // to the page title
-            if (preg_match('/\b' . preg_quote(array_pop($parts)) . '\b/', $_SERVER['REQUEST_URI']) == 1) {
-                // the title as displayed in the page
-                add_filter('the_title', array(SHASHIN_PLUGIN_NAME, 'setAlbumPhotosTitle'));
-                // the title shown in the page's title tag
-                add_filter('wp_title', array(SHASHIN_PLUGIN_NAME, 'setAlbumPhotosPageTitle'));
-            }
-        }
 
         if (get_option('shashin_image_display') == 'highslide') {
             // counter for assigning unique IDs to highslide images
@@ -574,8 +560,8 @@ class Shashin {
             // otherwise save the options
             else {
                 foreach ($_REQUEST as $k=>$v) {
-                    if ($k != 'shashinAction' && $k != 'save') {
-                        update_option($k, trim($v));
+                    if (strpos($k, 'shashin') !== false && $k != 'shashinAction') {
+                        update_option($k, htmlspecialchars(stripslashes(trim($v))));
                     }
                 }
 
@@ -629,35 +615,6 @@ class Shashin {
         }
     }
 
-    /**
-     * When displaying the page for an album's photos, add the album
-     * title to the title displayed on the page, separated by a colon.
-     *
-     * It's stupid to need this function and not just use
-     * setAlbumPhotosPageTitle, but the_title filter can't distinguish between
-     * the actual page title and titles in sidebar links
-     *
-     * @static
-     * @access public
-     */
-    function setAlbumPhotosTitle($title) {
-        global $post;
-        if ($title == $post->post_title) {
-            return $title . ": " . $_REQUEST['title'];
-        }
-    }
-
-    /**
-     * When displaying the page for an album's photos, add the album
-     * title to the title tag for the page, separated by a colon.
-     *
-     * @static
-     * @access public
-     */
-    function setAlbumPhotosPageTitle($title) {
-        return $title . ": " . $_REQUEST['title'];
-    }
-    
     /**
      * Gets the div that generates the Highslide nav controller - only
      * need one for the page (call with wp_footer).
@@ -1148,8 +1105,8 @@ class Shashin {
 
             foreach ($_REQUEST as $k=>$v) {
                 // make sure we're only capturing shashin data
-                if (strpos($k, 'shashin') !== false) {
-                    $newOptions[$k] = htmlspecialchars(strip_tags(stripslashes($v)));
+                if (strpos($k, 'shashin') !== false && strpos($k, 'submit') === false) {
+                    $newOptions[$k] = htmlspecialchars(stripslashes(trim($v)));
                 }
             }
 

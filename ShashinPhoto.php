@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  * @package Shashin
  * @subpackage Classes
  */
@@ -181,7 +181,7 @@ class ShashinPhoto {
      * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
      * @uses ShashinPhoto::getPhoto()
      * @uses ShashinPhoto::_getDivMarkup()
-     * @return string the xhtml markup to replace the salbum tag with
+     * @return string xhtml markup for displaying a single image
      */
     function getPhotoMarkup($match) {
         // get the image, if we don't have it already
@@ -194,6 +194,32 @@ class ShashinPhoto {
         return $this->_getDivMarkup($match);
     }
 
+    /**
+     * Same as getPhotoMarkup, but suppresses calls to Highslide, since 
+     * Highslide isn't running in the admin panels
+     *
+     * @static
+     * @access public
+     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @uses ShashinPhoto::getPhoto()
+     * @uses ShashinPhoto::_getDivMarkup()
+     * @return string xhtml markup for displaying a single image
+     */
+    function getAdminPhotoMarkup($match) {
+        // get the image, if we don't have it already
+        if (!strlen($this->data['photo_id'])) {
+            if ($this->getPhoto($match[1]) === false) {
+                return '<span class="shashin_error">Error: unable to find photo key ' . $match[1] . '</span>';
+            }
+        }
+
+        // set the last arg (for the highslide controller) to true
+        // we don't really have one on the admin side, but this will force
+        // the correct behavior for captions, since we don't have highslide
+        // running on the admin side.
+        return $this->_getDivMarkup($match, false, null, true);
+    }    
+    
     /**
      * Translates the "srandom" Shashin tag into xhtml displaying a
      * table of random photos, each with a hyperlink to the photo
@@ -362,6 +388,11 @@ class ShashinPhoto {
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getAlbumPhotosMarkup($match) {
+        // if no album id was supplied, then we'll show thumbnails for all the albums
+        if (!$_REQUEST['album_id']) {
+            return ShashinAlbum::getAlbumThumbsMarkup(array(null,'pub_date',$match[2],'n','n',$match[5],$match[6]));
+        }
+        
         if ($match[5]) {
             $order = $match[5];
         }
@@ -379,11 +410,16 @@ class ShashinPhoto {
             return '<span class="shashin_error">Error: unable to retrive photos</span>';
         }
 
+        $desc = '<strong>' . $_REQUEST['title']  . '</strong>';
+
         // query for the album description if we want to show it
         if (strtolower(trim($match[4])) == 'y') {
             $album = new ShashinAlbum();
             $album->getAlbum($_REQUEST['album_id']);
-            $desc .= preg_replace("/\s/", " ", $album->data['description']);
+            
+            if ($album->data['description']) {
+                $desc .= " - " . preg_replace("/\s/", " ", $album->data['description']);
+            }
         }
 
         return ShashinPhoto::_getTableMarkup($photos, $match[1], $match[2], $match[3], $match[6], $match[7], $desc);
@@ -479,8 +515,6 @@ class ShashinPhoto {
         // See http://code.google.com/apis/picasaweb/reference.html
         $allowed = eval(SHASHIN_IMAGE_SIZES);
         $cropped = eval(SHASHIN_CROP_SIZES);
-        // $allowed = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
-        // $cropped = array(32, 48, 64, 160);
 
         if (!in_array($max, $allowed)) {
             return false;
@@ -624,14 +658,14 @@ class ShashinPhoto {
             . '" height="' . $this->data['user_height'] . '" />';
         $markup .= '</a>';
 
-        
-        // highslide always gets the caption if there is one
-        if (strlen($caption) && $display == 'highslide' && $controller == false) {
-            $markup .= '<div class="highslide-caption">' . $caption . '</div>';
+        // whether to display the caption under the photo
+        if (strlen($optCaption)) {
+            $markup .= '<span class="shashin_caption">' . $optCaption . '</span>';
         }
 
-        else if (strlen($optCaption)) {
-            $markup .= '<span class="shashin_caption">' . $optCaption . '</span>';
+        // the highslide display always gets the caption if there is one
+        if (strlen($caption) && $display == 'highslide' && $controller == false) {
+            $markup .= '<div class="highslide-caption">' . $caption . '</div>';
         }
 
         $markup .= "</div>";

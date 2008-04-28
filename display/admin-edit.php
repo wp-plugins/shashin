@@ -9,7 +9,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()
@@ -81,7 +81,7 @@
         
         $i++;
 
-        echo "<td>" . $photo->getPhotoMarkup(array(null,null,160,'n')) . "</td>\n";
+        echo "<td>" . $photo->getAdminPhotoMarkup(array(null,null,160,'n')) . "</td>\n";
         echo "<td>" . $photo->data['photo_key'] . "</td>\n";
         echo "<td>" . $photo->data['description'] . "</td>\n";
         echo "<td>[simage=" . $photo->data['photo_key'] . ",640,y,left]</td>\n";

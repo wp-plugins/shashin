@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.0.4
+ * @version 2.1
  * @package Shashin
  * @subpackage Classes
  */
@@ -572,7 +572,7 @@ class ShashinAlbum {
             $replace .= '<div class="shashin_album_list">' . "\n";
             $replace .= '<div class="shashin_album_list_thumb">' . $album->getAlbumThumbTag() . "</div>\n";
             $link = $album->getAlbumLink();
-            $replace .= '<strong><a href="' . $link . '">' . $album->data['title'] . '</strong></a><br \>';
+            $replace .= '<strong><a href="' . $link . '">' . $album->data['title'] . '</a></strong><br />';
  
             // option to show album info
             if (strtolower(trim($match[2])) == 'y') {
@@ -770,9 +770,8 @@ class ShashinAlbum {
             
             $link = $albumUrl
                 . ((strpos($albumUrl, "?") === false) ? "?" : "&amp;")
-                . "album_id="
-                . $this->data['album_id'] . '&amp;title='
-                . urlencode($this->data['title']);
+                . "album_id=" . $this->data['album_id']
+                . '&amp;title=' . urlencode($this->data['title']);
         }
         
         else {
