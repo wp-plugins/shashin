@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.1
+ * @version 2.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -584,7 +584,7 @@ class ShashinAlbum {
                     $replace .= ' &mdash; ' . $album->data['location'];
                 
                     if ($album->data['geo_pos']) {
-                        $replace .= ' <a href="' . GOOGLE_MAPS_QUERY_URL
+                        $replace .= ' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                             . str_replace(" ", "+", $album->data['geo_pos'])
                             . '"><img src="' . SHASHIN_DISPLAY_URL
                             . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
@@ -719,7 +719,7 @@ class ShashinAlbum {
         if (strlen($location)) {
             $replace .= '<span class="shashin_album_location">'
             . ($this->data['geo_pos']
-                ? (' <a href="' . GOOGLE_MAPS_QUERY_URL
+                ? (' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                     . str_replace(" ", "+", $this->data['geo_pos'])
                     . '"><img src="' . SHASHIN_DISPLAY_URL
                     . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')

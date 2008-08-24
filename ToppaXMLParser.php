@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.1
+ * @version 2.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -60,8 +60,13 @@ class ToppaXMLParser {
 
     function startElement($parser, $name, $attrs) {
     	if ($this->insideItem === true) {
+            $attrs = str_replace('%and%', '&', $attrs); // sucky
             $this->allTags[$this->counter][$name] = array();
-            $this->allTags[$this->counter][$name]['attrs'] = $attrs;
+            
+            foreach ($attrs as $k=>$v) {
+                $this->allTags[$this->counter][$name]['attrs'][$k] .= $v;
+            }            
+
             $this->tag = $name;
         }
     	if ($name == "item") {
@@ -85,7 +90,7 @@ class ToppaXMLParser {
             //    data falls in the middle of chunk, this function is called
             //    again, so you need to concatenate the data
             // 2. entities, newlines, and tabs cause it to stop scanning and
-            //    and call this method again, so you need to concatenate the
+            //    call this method again, so you need to concatenate the
             //    data from each call
             $this->allTags[$this->counter][$this->tag]['data'] .= $data;
     	}

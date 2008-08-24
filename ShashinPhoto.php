@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.1
+ * @version 2.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -54,13 +54,13 @@ class ShashinPhoto {
                 'label' => 'Description', 'source' => 'feed',
                 'feedParam1' => 'description'),
             'link_url' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
+                'colParams' => array('type' => 'text', 'notNull' => 1),
                 'label' => 'Link URL', 'source' => 'feed',
                 'feedParam1' => 'link'),
             'content_url' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
-                'label' => 'Image URL', 'source' => 'feed',
-                'feedParam1' => 'enclosure', 'attrs' => 'url'),
+                'colParams' => array('type' => 'text', 'notNull' => 1),
+                'label' => 'Content URL', 'source' => 'feed',
+                'feedParam1' => 'media', 'feedParam2' => 'content', 'attrs' => 'url'),
             'width' => array(
                 'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
                 'label' => 'Width', 'source' => 'feed',
@@ -89,6 +89,14 @@ class ShashinPhoto {
             'deleted' => array(
                 'colParams' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
                 'label' => 'Deleted flag', 'source' => 'db'),
+            'enclosure_url' => array(
+                'colParams' => array('type' => 'text', 'notNull' => 1),
+                'label' => 'Enclosure URL', 'source' => 'feed',
+                'feedParam1' => 'enclosure', 'attrs' => 'url'),
+            'enclosure_type' => array(
+                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
+                'label' => 'Enclosure Type', 'source' => 'feed',
+                'feedParam1' => 'enclosure', 'attrs' => 'type'),
         );
     }
 
@@ -490,6 +498,7 @@ class ShashinPhoto {
         }
 
         $replace .= "</table>";
+        $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['hs_group_counter'] . "');\n</script>\n";
         $_SESSION['hs_group_counter']++;
         return $replace;
     }
@@ -588,6 +597,11 @@ class ShashinPhoto {
             $optCaption = $caption;
         }
 
+        // 'enlarge' or 'play' as a caption option
+        else if (strtolower(trim($match[3])) == 'c') {
+            $optCaption = $this->_isVideo() ? 'Click picture to play video' : 'Click picture to enlarge';
+        }
+        
         // set the float value
         if (strlen(trim($match[4]))) {
             $float = $match[4];
@@ -622,24 +636,49 @@ class ShashinPhoto {
 
         $markup .=  '">';
 
-        // display with highslide if requested, but we can't for videos
-        $ext = strtoupper(substr($this->data['title'], -3));
-        $videos = eval(PICASA_VIDEO_TYPES);
+        $autoplay = get_option('shashin_highslide_autoplay');
+        
+        // videos in highslide
+        if ($display == 'highslide' && $this->_isVideo()) {
+            $videoURL = SHASHIN_GOOGLE_PLAYER_URL
+                . urlencode(html_entity_decode($this->data['content_url']))
+                . '&amp;autoPlay=true';
+            $width = get_option('shashin_highslide_video_width');
+            $height = get_option('shashin_highslide_video_height');
+            // need minWidth because width was not autosizing for content
+            // need "preserveContent: false" so the video and audio will stop when the window is closed
+            $markup .= "<a href=\"$videoURL\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
+                . ($width+20) . ", minHeight: " . ($height+20) 
+                . ", objectWidth: $width, objectHeight: $height, allowSizeReduction: false, preserveContent: false";
+                
+            if ($group) {
+                $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "'";
+            }
+                
+            $markup .= ' } )" class="highslide">';
+            $_SESSION['hs_id_counter']++;
+        }
 
-        if ($display == 'highslide' && !in_array($ext, $videos)) {
-            $markup .= '<a href="' . $this->data['content_url']
+        // images in highslide
+        else if ($display == 'highslide') {
+            $markup .= '<a href="' . $this->data['enclosure_url']
                 . '?imgmax=' . get_option('shashin_highslide_max')
                 . '" class="highslide" id="thumb' . $_SESSION['hs_id_counter']
                 . '" onclick="return hs.expand(this';
 
             if ($group) {
-                $markup .= ", { slideshowGroup: 'group-" . $_SESSION['hs_group_counter'] . "' }";
+                $markup .= ", { autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "' }";
             }
 
             $markup .= ')">';
             $_SESSION['hs_id_counter']++;
         }
-
+        
+        else if ($display == 'none') {
+            $markup .= ''; // no link! :-)
+        }
+        
+        // images or videos at Picasa
         else {
             $markup .= '<a href="' . $this->data['link_url'] . '"';
 
@@ -650,26 +689,42 @@ class ShashinPhoto {
             $markup .= '>';
         }
         
-        $markup .= '<img src="' . $this->data['content_url']
+        $markup .= '<img src="' . $this->data['enclosure_url']
             . '?imgmax='. $this->data['user_max']
             . '" alt="' . $caption
             . '" title="' . $caption
             . '" width="' . $this->data['user_width']
             . '" height="' . $this->data['user_height'] . '" />';
-        $markup .= '</a>';
-
+        
+        if ($display != 'none') {    
+            $markup .= '</a>';
+        }
+        
         // whether to display the caption under the photo
         if (strlen($optCaption)) {
             $markup .= '<span class="shashin_caption">' . $optCaption . '</span>';
         }
 
-        // the highslide display always gets the caption if there is one
-        if (strlen($caption) && $display == 'highslide' && $controller == false) {
+        if (strlen($caption) && $display == 'highslide') {
             $markup .= '<div class="highslide-caption">' . $caption . '</div>';
         }
 
         $markup .= "</div>";
         return $markup;
+    }
+
+    /**
+     * Test to see whether we're dealing with a picture or a video
+     *
+     * @access private
+     * @return boolean
+     */    
+    function _isVideo() {
+        $ext = strtoupper(substr($this->data['title'], -3));
+        if (in_array($ext, eval(SHASHIN_PICASA_VIDEO_TYPES))) {
+            return true;
+        }
+        return false;
     }
 }
 

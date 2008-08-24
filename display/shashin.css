@@ -3,7 +3,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.1
+ * @version 2.2
  */
  
 /* The following are applied to the simage and srandom tags */
@@ -11,7 +11,7 @@
     display: block;
     margin: 5px;
     background-color: White;
-    border: thin solid;
+    border: thin solid Black;
 }
 
 .shashin_image img {
@@ -19,10 +19,15 @@
     border: none;
 }
 
+.shashin_image:hover {
+	border-color: Silver;
+}
+
 .shashin_caption {
     display: block;
     padding: 0px 5px 0px 5px;
-    font-size: small;
+    font-size: x-small;
+    font-weight: bold;
 }
 
 /* Applied to salbum tag */
@@ -95,7 +100,11 @@
     margin-left: auto;
     margin-right: auto;
     background-color: White;
-    border: thin solid;
+    border: thin solid Black;
+}
+
+.shashin_thumb:hover {
+	border-color: Silver;
 }
 
 .shashin_thumb img {

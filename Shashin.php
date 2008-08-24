@@ -5,7 +5,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.1
+Version: 2.2
 Author URI: http://www.toppa.com
 */
 
@@ -13,7 +13,7 @@ Author URI: http://www.toppa.com
  * Shashin Class File
  *
  * @author Michael Toppa
- * @version 2.1
+ * @version 2.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -39,8 +39,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.1');
-define('SHASHIN_VERSION_COMPARABLE', '2.1');
+define('SHASHIN_VERSION', '2.2');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160);
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
@@ -48,7 +47,7 @@ define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
 define('SHASHIN_PICASA_SERVER', get_option('shashin_picasa_server'));
 define('SHASHIN_USER_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME?kind=album&alt=rss');
 define('SHASHIN_ALBUM_RSS', SHASHIN_PICASA_SERVER . '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
-define('GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
+define('SHASHIN_GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
 define('SHASHIN_DISPLAY_URL', get_bloginfo('wpurl') . '/wp-content/plugins/' . basename(SHASHIN_DIR) . '/display/');
 define('SHASHIN_FAQ_URL', 'http://www.toppa.com/shashin-wordpress-plugin');
 define('SHASHIN_DEFAULT_SERVER', 'http://picasaweb.google.com');
@@ -57,6 +56,12 @@ define('SHASHIN_DEFAULT_THUMB_PADDING', 6);
 define('SHASHIN_DEFAULT_IMAGE_DISPLAY', 'same_window');
 define('SHASHIN_DEFAULT_HIGHSLIDE_MAX', 640);
 define('SHASHIN_DEFAULT_PREFIX_CAPTIONS', 'n');
+define('SHASHIN_DEFAULT_HIGHSLIDE_VIDEO_WIDTH', 640);
+define('SHASHIN_DEFAULT_HIGHSLIDE_VIDEO_HEIGHT', 480);
+define('SHASHIN_DEFAULT_HIGHSLIDE_AUTOPLAY', 'false');
+define('SHASHIN_DEFAULT_HIGHSLIDE_INTERVAL', 5000);
+define('SHASHIN_GOOGLE_PLAYER_URL', 'http://video.google.com/googleplayer.swf?videoUrl=');
+
 // workaround for constants not allowing arrays
 // use with eval, e.g. $imageSizes = eval(SHASHIN_IMAGE_SIZES);
 define('SHASHIN_IMAGE_SIZES', 'return '
@@ -64,7 +69,7 @@ define('SHASHIN_IMAGE_SIZES', 'return '
         array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800), 1)
     . ';');
 define('SHASHIN_CROP_SIZES', 'return ' . var_export(array(32, 48, 64, 160), 1) . ';');
-define('PICASA_VIDEO_TYPES', 'return ' . var_export(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV', 'MP4'), 1) . ';');
+define('SHASHIN_PICASA_VIDEO_TYPES', 'return ' . var_export(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV', 'MP4'), 1) . ';');
 
 
 // get required libraries
@@ -99,12 +104,12 @@ class Shashin {
      * @uses parseContent
      * @uses getHeadTags
      */
-	function bootstrap() {
-		// Add the installation and uninstallation hooks
-		register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
-		register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'uninstall'));
+    function bootstrap() {
+        // Add the installation and uninstallation hooks
+        register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
+        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'uninstall'));
 
-		// Add the actions and filters
+        // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
         add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array(SHASHIN_PLUGIN_NAME, 'initWidgets'));
@@ -117,15 +122,12 @@ class Shashin {
             // counter for assigning unique IDs to highslide images
             if (!$_SESSION['hs_id_counter']) {
                $_SESSION['hs_id_counter'] = 1;
-	        }
+            }
 
             // counter for distinguishing groups of Highslide photos on a page
             if (!$_SESSION['hs_group_counter']) {
                $_SESSION['hs_group_counter'] = 1;
-	        }
-
-            // div for Highslide nav controller
-            add_action('wp_footer', array(SHASHIN_PLUGIN_NAME, 'getHighslideController'));
+            }
         }
     }
 
@@ -139,7 +141,7 @@ class Shashin {
      * @uses ShashinPhoto::ShashinPhoto()
      * @uses ToppaWPFunctions::createTable()
      */
-	function install() {
+    function install() {
         global $wpdb;
 
         // make needed table changes for upgraders, or create tables for new users
@@ -178,7 +180,9 @@ class Shashin {
         if ($wpdb->get_var("show tables like '" . SHASHIN_PHOTO_TABLE . "'") == SHASHIN_PHOTO_TABLE) {
             $describePhotos = $wpdb->get_results('DESCRIBE ' . SHASHIN_PHOTO_TABLE, ARRAY_A);
     
-            $foundDeleted = false;    
+            $foundDeleted = false;
+            $foundEnclosure = false;    
+    
             foreach ($describePhotos as $describe) {
                 if ($describe['Field'] == 'photo_id' && strpos($describe['Key'], 'UNI') === false) {
                     $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' ADD UNIQUE (photo_id)');
@@ -196,11 +200,27 @@ class Shashin {
                     $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY description text');
                 }
 
+                if ($describe['Field'] == 'content_url' && strpos($describe['Type'], 'text') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY content_url text');
+                }
+
+                if ($describe['Field'] == 'link_url' && strpos($describe['Type'], 'text') === false) {
+                    $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' MODIFY link_url text');
+                }
+                
                 if ($describe['Field'] == 'deleted') {
                     $foundDeleted = true;
                 }
+
+                if ($describe['Field'] == 'enclosure_url') {
+                    $foundEnclosure = true;
+                }
             }
     
+            if ($foundEnclosure === false) {
+                $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' ADD enclosure_url text NOT NULL');
+            }
+
             if ($foundDeleted === false) {
                 $wpdb->query('ALTER TABLE ' . SHASHIN_PHOTO_TABLE . ' ADD deleted char(1) DEFAULT "N"');
             }
@@ -218,7 +238,6 @@ class Shashin {
         }
 
         update_option('shashin_version', SHASHIN_VERSION);
-        update_option('shashin_version_comparable', SHASHIN_VERSION_COMPARABLE);
 
         // this controls how much width to add to the shashin_image div, to
         // accommodate the padding applied to the image (since the width can
@@ -242,7 +261,7 @@ class Shashin {
             update_option('shashin_image_display', SHASHIN_DEFAULT_IMAGE_DISPLAY);
         }
 
-        // set the highslide preferred fullsize dimension)
+        // set the highslide preferred fullsize dimension
         if (!strlen(get_option('shashin_highslide_max'))) {
             update_option('shashin_highslide_max', SHASHIN_DEFAULT_HIGHSLIDE_MAX);
         }
@@ -250,6 +269,26 @@ class Shashin {
         // set the default option for prefixing album titles to photo captions
         if (!strlen(get_option('shashin_prefix_captions'))) {
             update_option('shashin_prefix_captions', SHASHIN_DEFAULT_PREFIX_CAPTIONS);
+        }
+
+        // set the highslide width for videos
+        if (!strlen(get_option('shashin_highslide_video_width'))) {
+            update_option('shashin_highslide_video_width', SHASHIN_DEFAULT_HIGHSLIDE_VIDEO_WIDTH);
+        }
+
+        // set the highslide height for videos
+        if (!strlen(get_option('shashin_highslide_video_height'))) {
+            update_option('shashin_highslide_video_height', SHASHIN_DEFAULT_HIGHSLIDE_VIDEO_HEIGHT);
+        }
+
+        // set highslide autoplay
+        if (!strlen(get_option('shashin_highslide_autoplay'))) {
+            update_option('shashin_highslide_autoplay', SHASHIN_DEFAULT_HIGHSLIDE_AUTOPLAY);
+        }
+
+        // set highslide interval for slideshow image display
+        if (!strlen(get_option('shashin_highslide_interval'))) {
+            update_option('shashin_highslide_interval', SHASHIN_DEFAULT_HIGHSLIDE_INTERVAL);
         }
     }
 
@@ -261,8 +300,8 @@ class Shashin {
      * @static
      * @access public
      */
-	function uninstall() {
-	}
+    function uninstall() {
+    }
 
     /**
      * Adds the Shashin management and option pages.
@@ -307,8 +346,8 @@ class Shashin {
      * @uses ShashinAlbum::deleteAlbum()
      */
     function getAdminMenu() {
-		// Start the cache
-		ob_start();
+        // Start the cache
+        ob_start();
 
         // show selected album for editing
         if ($_REQUEST['shashinAction'] == 'editAlbumPhotos') {
@@ -500,7 +539,7 @@ class Shashin {
 
         // decide which admin menu to show
         if ($display == 'admin-edit') {
-       		require(SHASHIN_DIR . '/display/admin-edit.php');
+               require(SHASHIN_DIR . '/display/admin-edit.php');
         }
 
         else {
@@ -516,13 +555,13 @@ class Shashin {
                 $syncAll = array('inputType' => 'select', 'inputSubgroup' => $usernames);
             }
 
-      		require(SHASHIN_DIR . '/display/admin-main.php');
+              require(SHASHIN_DIR . '/display/admin-main.php');
         }
 
-		// Get the markup and display
-		$adminMenuHTML = ob_get_contents();
-		ob_end_clean();
-		echo $adminMenuHTML;
+        // Get the markup and display
+        $adminMenuHTML = ob_get_contents();
+        ob_end_clean();
+        echo $adminMenuHTML;
     }
 
     /**
@@ -538,8 +577,8 @@ class Shashin {
      * @access public
      */
     function getOptionsMenu() {
-		// Start the cache
-		ob_start();
+        // Start the cache
+        ob_start();
 
         $allowed = eval(SHASHIN_IMAGE_SIZES);
         
@@ -569,11 +608,11 @@ class Shashin {
             }
         }
 
-		// Get the markup and display
-  		require(SHASHIN_DIR . '/display/options-main.php');
-		$optionsMenuHTML = ob_get_contents();
-		ob_end_clean();
-		echo $optionsMenuHTML;
+        // Get the markup and display
+          require(SHASHIN_DIR . '/display/options-main.php');
+        $optionsMenuHTML = ob_get_contents();
+        ob_end_clean();
+        echo $optionsMenuHTML;
     }
 
 
@@ -585,52 +624,61 @@ class Shashin {
      * @access public
      */
     function getHeadTags() {
-        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin.css" />' . "\n";
+        if (file_exists(TEMPLATEPATH . '/shashin.css')) {
+            $shashinCSS = get_stylesheet_directory_uri() . '/shashin.css';
+        }
+        
+        else {
+            $shashinCSS = SHASHIN_DISPLAY_URL . '/shashin.css';
+        }
+        
+        echo '<link rel="stylesheet" type="text/css" href="' . $shashinCSS . '" />' . "\n";
 
         if (get_option('shashin_image_display') == 'highslide') {
+            if (file_exists(TEMPLATEPATH . '/highslide.css')) {
+                $highslideCSS = get_stylesheet_directory_uri() . '/highslide.css';
+            }
+            
+            else {
+                $highslideCSS = SHASHIN_DISPLAY_URL . '/highslide.css';
+            }
+
             echo '
+                <link rel="stylesheet" type="text/css" href="' . $highslideCSS . '" />
                 <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/highslide.js"></script>
-                <link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'highslide.css" />
+                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/swfobject.js"></script>
                 <script type="text/javascript">
-
-            	hs.registerOverlay({
-    		        thumbnailId: null,
-    		        overlayId: \'controlbar\',
-    		        position: \'top right\',
-    		        hideOnMouseOut: true,
-                    opacity: 0.9
-		        });
-
-                // disables the navbar for stand-alone images
-                hs.Expander.prototype.onCreateOverlay = function (sender, e) {
-                    if (!sender.slideshowGroup) return false;
-                };
-
-                hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . 'highslide/graphics/\';
-                hs.outlineType = \'rounded-white\';
-                hs.captionEval = \'this.thumb.title\';
-
+                    hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . 'highslide/graphics/\';
+                    hs.align = \'center\';
+                    hs.transitions = [\'expand\', \'crossfade\'];
+                    hs.outlineType = \'rounded-white\';
+                    hs.fadeInOut = true;
+                    //hs.dimmingOpacity = 0.75;
+                    
+                    // Add the controlbar for slideshows
+                    function addHSSlideshow(groupID) {
+                        hs.addSlideshow({
+                            slideshowGroup: groupID,
+                            interval: ' . get_option('shashin_highslide_interval') . ',
+                            repeat: true,
+                            useControls: true,
+                            fixedControls: true,
+                            overlayOptions: {
+                                opacity: .75,
+                                position: \'top center\',
+                                hideOnMouseOut: false
+                            }
+                        });
+                    }
+                    
+                    // for Flash
+	                hs.outlineWhileAnimating = true;
+	                hs.allowSizeReduction = false;
+	                // always use this with flash, else the movie will not stop on close:
+	                hs.preserveContent = false;
                 </script>
             ';
         }
-    }
-
-    /**
-     * Gets the div that generates the Highslide nav controller - only
-     * need one for the page (call with wp_footer).
-     *
-     * @static
-     * @access public
-     */
-    function getHighslideController() {
-        echo '
-        <div id="controlbar" class="highslide-overlay controlbar">
-        <a href="#" class="previous" onclick="return hs.previous(this)" title="Previous (left arrow key)"></a>
-        <a href="#" class="next" onclick="return hs.next(this)" title="Next (right arrow key)"></a>
-        <a href="#" class="highslide-move" onclick="return false" title="Click and drag to move"></a>
-        <a href="#" class="close" onclick="return hs.close(this)" title="Close"></a>
-        </div>
-        ';
     }
 
     /**
@@ -903,27 +951,27 @@ class Shashin {
      * @access public
      */
     function initWidgets() {
-    	// Check to see required Widget API functions are defined...
-	    if (!function_exists('register_sidebar_widget')
+        // Check to see required Widget API functions are defined...
+        if (!function_exists('register_sidebar_widget')
           || !function_exists('register_widget_control')) {
-		    return false;
+            return false;
         }
 
-    	function widgetSingle($args) {
-    		// collect widget options, or define defaults.
-    		$options = get_option('shashin_widget_single');
-    		$widgetTitle = empty($options['shashin_single_title']) ? '' : $options['shashin_single_title'];
+        function widgetSingle($args) {
+            // collect widget options, or define defaults.
+            $options = get_option('shashin_widget_single');
+            $widgetTitle = empty($options['shashin_single_title']) ? '' : $options['shashin_single_title'];
             $photoKey = empty($options['shashin_single_photo_key']) ? 1 : $options['shashin_single_photo_key'];
             $maxSize = empty($options['shashin_single_max_size']) ? 160 : $options['shashin_single_max_size'];
             $captionYN = empty($options['shashin_single_caption_yn']) ? 'n' : $options['shashin_single_caption_yn'];
             $photo = new ShashinPhoto;
             $widget = $photo->getPhotoMarkup(array(null,$photoKey,$maxSize, $captionYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	function widgetRandom($args) {
-    		$options = get_option('shashin_widget_random');
-    		$widgetTitle = empty($options['shashin_random_title']) ? 'Random Image' : $options['shashin_random_title'];
+        function widgetRandom($args) {
+            $options = get_option('shashin_widget_random');
+            $widgetTitle = empty($options['shashin_random_title']) ? 'Random Image' : $options['shashin_random_title'];
             $albumKey = empty($options['shashin_random_album_key']) ? 'any' : $options['shashin_random_album_key'];
             $maxSize = empty($options['shashin_random_max_size']) ? 160 : $options['shashin_random_max_size'];
             $maxCols = empty($options['shashin_random_max_cols']) ? 1 : $options['shashin_random_max_cols'];
@@ -931,33 +979,33 @@ class Shashin {
             $captionYN = empty($options['shashin_random_caption_yn']) ? 'n' : $options['shashin_random_caption_yn'];
             $widget = ShashinPhoto::getRandomMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	function widgetAlbum($args) {
-    		$options = get_option('shashin_widget_album');
-    		$widgetTitle = empty($options['shashin_album_title']) ? '' : $options['shashin_album_title'];
+        function widgetAlbum($args) {
+            $options = get_option('shashin_widget_album');
+            $widgetTitle = empty($options['shashin_album_title']) ? '' : $options['shashin_album_title'];
             $albumKey = empty($options['shashin_album_album_key']) ? 1 : $options['shashin_album_album_key'];
             $locationYN = empty($options['shashin_album_location_yn']) ? 'n' : $options['shashin_album_location_yn'];
             $pubdateYN = empty($options['shashin_album_pubdate_yn']) ? 'n' : $options['shashin_album_pubdate_yn'];
             $album = new ShashinAlbum;
             $widget = $album->getAlbumMarkup(array(null,$albumKey, $locationYN, $pubdateYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	function widgetThumbs($args) {
-    		$options = get_option('shashin_widget_thumbs');
-    		$widgetTitle = empty($options['shashin_thumbs_title']) ? '' : $options['shashin_thumbs_title'];
+        function widgetThumbs($args) {
+            $options = get_option('shashin_widget_thumbs');
+            $widgetTitle = empty($options['shashin_thumbs_title']) ? '' : $options['shashin_thumbs_title'];
             $photoKeys = empty($options['shashin_thumbs_photo_keys']) ? 1 : $options['shashin_thumbs_photo_keys'];
             $maxSize = empty($options['shashin_thumbs_max_size']) ? 160 : $options['shashin_thumbs_max_size'];
             $maxCols = empty($options['shashin_thumbs_max_cols']) ? 1 : $options['shashin_thumbs_max_cols'];
             $captionYN = empty($options['shashin_thumbs_caption_yn']) ? 'n' : $options['shashin_thumbs_caption_yn'];
             $widget = ShashinPhoto::getThumbsMarkup(array(null,$photoKeys,$maxSize,$maxCols,$captionYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	function widgetNewest($args) {
-    		$options = get_option('shashin_widget_newest');
-    		$widgetTitle = empty($options['shashin_newest_title']) ? 'Random Image' : $options['shashin_newest_title'];
+        function widgetNewest($args) {
+            $options = get_option('shashin_widget_newest');
+            $widgetTitle = empty($options['shashin_newest_title']) ? 'Random Image' : $options['shashin_newest_title'];
             $albumKey = empty($options['shashin_newest_album_key']) ? 'any' : $options['shashin_newest_album_key'];
             $maxSize = empty($options['shashin_newest_max_size']) ? 160 : $options['shashin_newest_max_size'];
             $maxCols = empty($options['shashin_newest_max_cols']) ? 1 : $options['shashin_newest_max_cols'];
@@ -965,25 +1013,25 @@ class Shashin {
             $captionYN = empty($options['shashin_newest_caption_yn']) ? 'n' : $options['shashin_newest_caption_yn'];
             $widget = ShashinPhoto::getNewestMarkup(array(null,$albumKey,$maxSize,$maxCols,$howMany,$captionYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	function widgetAlbumThumbs($args) {
-    		$options = get_option('shashin_widget_album_thumbs');
-    		$widgetTitle = empty($options['shashin_album_thumbs_title']) ? '' : $options['shashin_album_thumbs_title'];
+        function widgetAlbumThumbs($args) {
+            $options = get_option('shashin_widget_album_thumbs');
+            $widgetTitle = empty($options['shashin_album_thumbs_title']) ? '' : $options['shashin_album_thumbs_title'];
             $albumKeys = empty($options['shashin_album_thumbs_keys']) ? 1 : $options['shashin_album_thumbs_keys'];
             $maxCols = empty($options['shashin_album_thumbs_max_cols']) ? 1 : $options['shashin_album_thumbs_max_cols'];
             $locationYN = empty($options['shashin_album_thumbs_location_yn']) ? 'n' : $options['shashin_album_thumbs_location_yn'];
             $pubdateYN = empty($options['shashin_album_thumbs_pubdate_yn']) ? 'n' : $options['shashin_album_thumbs_pubdate_yn'];
             $widget = ShashinAlbum::getAlbumThumbsMarkup(array(null,$albumKeys,$maxCols,$locationYN,$pubdateYN));
             Shashin::_widgetDisplay($args, $widgetTitle, $widget);
-    	}
+        }
 
-    	register_sidebar_widget('Shashin: Single Image', widgetSingle, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Random Images', widgetRandom, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Single Album Thumbnail', widgetAlbum, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Image Thumbnails', widgetThumbs, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Newest Images', widgetNewest, SHASHIN_PLUGIN_NAME);
-    	register_sidebar_widget('Shashin: Album Thumbnails', widgetAlbumThumbs, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Single Image', widgetSingle, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Random Images', widgetRandom, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Single Album Thumbnail', widgetAlbum, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Image Thumbnails', widgetThumbs, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Newest Images', widgetNewest, SHASHIN_PLUGIN_NAME);
+        register_sidebar_widget('Shashin: Album Thumbnails', widgetAlbumThumbs, SHASHIN_PLUGIN_NAME);
         register_widget_control('Shashin: Single Image', array(SHASHIN_PLUGIN_NAME, 'widgetSingleControl'), 500, 300);
         register_widget_control('Shashin: Random Images', array(SHASHIN_PLUGIN_NAME, 'widgetRandomControl'), 500, 300);
         register_widget_control('Shashin: Single Album Thumbnail', array(SHASHIN_PLUGIN_NAME, 'widgetAlbumControl'), 500, 300);
@@ -1119,7 +1167,7 @@ class Shashin {
         }
 
         // for displaying the control form
-  		require(SHASHIN_DIR . "/display/widget-{$name}.php");
+          require(SHASHIN_DIR . "/display/widget-{$name}.php");
     }
 
     /**
@@ -1130,12 +1178,12 @@ class Shashin {
      */
     function _widgetDisplay($args, $widgetTitle, $widget) {
         // get the theme widget vars
-		extract($args);
+        extract($args);
         // display widget
-		echo $before_widget;
-		echo $before_title . $widgetTitle . $after_title;
-		echo $widget;
-		echo $after_widget;
+        echo $before_widget;
+        echo $before_title . $widgetTitle . $after_title;
+        echo $widget;
+        echo $after_widget;
     }
 }
 
