@@ -44,7 +44,7 @@ Now go to the "Manage" tab and follow the directions to add your first album!
 
 Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **You should include these tables when making backups of your WordPress tables.**
 
-**Special note to upgraders:** Deactivate your old installation, upload the new version, and then reactivate. This is necessary for required updates to the Shashin tables. Also, **you need to sync all your albums** - click the "Sync All" button (under the "Manager" tab).
+**Special note to upgraders:** Deactivate your old installation, upload the new version, and then reactivate. This is necessary for required updates to the Shashin tables. Also, **you need to sync all your albums** - click the "Sync All" button (under the "Manage" tab).
 
 == Frequently Asked Questions ==
 
