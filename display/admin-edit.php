@@ -9,7 +9,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2
+ * @version 2.2.1
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()

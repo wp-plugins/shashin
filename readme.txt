@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: images, photos, Picasa
 Requires at least: 2.0.2
 Tested up to: 2.6.1
-Stable tag: 2.2
+Stable tag: 2.2.1
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -29,6 +29,7 @@ New features in Shashin 2.2:
 * Includes new options in the Settings menu for autoplaying Highslide slideshows, how long to display each slideshow image, and the dimensions for displaying videos.
 * Checks for shashin.css and highslide.css in your active theme directory - this allows you to customize the stylesheets without worrying about losing your customizations the next time you upgrade Shashin.
 * No longer necessary to update image paths in highslide.css if you have WordPress installed in a subdirectory on your site.
+* For the caption in Shashin's tags, in addition to "y" or "n" you can now use "c", which means all pictures will get the caption "Click picture to enlarge" and all videos will get the caption "Click picture to play video." The actual caption will be displayed in the Highslide window.
 * Option to make thumbnails not clickable, if you don't want to display a larger version.
 
 == Installation ==
