@@ -630,7 +630,7 @@ class Shashin {
         }
         
         else {
-            $shashinCSS = SHASHIN_DISPLAY_URL . '/shashin.css';
+            $shashinCSS = SHASHIN_DISPLAY_URL . 'shashin.css';
         }
         
         echo '<link rel="stylesheet" type="text/css" href="' . $shashinCSS . '" />' . "\n";
@@ -641,7 +641,7 @@ class Shashin {
             }
             
             else {
-                $highslideCSS = SHASHIN_DISPLAY_URL . '/highslide.css';
+                $highslideCSS = SHASHIN_DISPLAY_URL . 'highslide.css';
             }
 
             echo '
