@@ -6,19 +6,19 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  * @package Shashin
  * @subpackage AdminPanels
  *
  */
- 
+
 echo '<div id="message" class="updated fade"><p>' . $message .'</p></div>';
 unset($message);
 
-if ($dbError == true) {
+if ($db_error == true) {
     global $wpdb;
     $wpdb->print_error();
-    $dbError = false;
+    $db_error = false;
 }
 
 ?>

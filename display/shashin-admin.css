@@ -3,17 +3,18 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  */
- 
+
 .shashin_widget dt {
-   clear:both;
-   width:9em;
-   float:left;
-   text-align:right;
+   float: left;
+   clear: left;
+   width: 100px;
+   text-align: right;
 }
 
 .shashin_widget dd {
-   float:left;
-   margin:0 0 0.5em 0.25em;
+   padding: 0 0 0.5em 0;
+   margin: 0 0 0 110px;
 }
+ 

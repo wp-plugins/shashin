@@ -6,13 +6,13 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  * @package Shashin
  * @subpackage Classes
  */
 
 /**
- * A collection of static methods covering common tasks in WordPress plugins.
+ * A collection of static methods facilitating common tasks for WordPress plugins.
  *
  * @author Michael Toppa
  * @package Shashin
@@ -20,185 +20,308 @@
  */
 class ToppaWPFunctions {
     /**
-     * Creates a WordPress table, based on refData in a passed-in object.
+     * Creates or updates a WordPress table, based on ref_data in a
+     * passed-in object. Note that dbDelta is very picky about formatting - see
+     * http://codex.wordpress.org/Creating_Tables_with_Plugins
      *
      * @static
      * @access public
-     * @param object an object containing the refData needed for defining the table.
-     * @param string $tableName
+     * @param object an object containing the ref_data needed for defining the table.
+     * @param string $table The name of the table to create
      * @return mixed passes along the return value of WordPress' dbDelta()
      */
-    function createTable(&$object, $tableName) {
-        $sql = "CREATE TABLE $tableName (";
-        foreach ($object->refData as $k=>$v) {
-            $sql .= $k . " " . $v['colParams']['type'];
+    function createTable(&$object, $table) {
+        $sql = "CREATE TABLE $table (\n";
+        foreach ($object->ref_data as $k=>$v) {
+            $sql .= $k . " " . $v['col_params']['type'];
 
-            if (strlen($v['colParams']['length'])) {
-                $sql .= "(" . $v['colParams']['length'];
+            if (strlen($v['col_params']['length'])) {
+                $sql .= "(" . $v['col_params']['length'];
 
-                if (strlen($v['colParams']['precision'])) {
-                    $sql .= "," . $v['colParams']['precision'];
+                if (strlen($v['col_params']['precision'])) {
+                    $sql .= "," . $v['col_params']['precision'];
                 }
 
                 $sql .= ")";
             }
 
-            if (strlen($v['colParams']['notNull'])) {
+            if ($v['col_params']['not_null']) {
                 $sql .= " NOT NULL";
             }
 
-            if (strlen($v['colParams']['other'])) {
-                $sql .= " " . $v['colParams']['other'];
+            // dbDelta requires 2 spaces in front of primary key declaration
+            if ($v['col_params']['primary_key']) {
+                $sql .= "  PRIMARY KEY";
             }
 
-            $sql .= ", ";
+            if (strlen($v['col_params']['other'])) {
+                $sql .= " " . $v['col_params']['other'];
+            }
+
+            $sql .= ",\n";
         }
 
-        $sql = substr("$sql", 0, -2);
-        $sql .= ") DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
-
+        $sql = substr($sql, 0, -2);
+        $sql .= "\n)\nDEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
         require_once(ABSPATH . '/wp-admin/upgrade-functions.php');
-        $return = dbDelta($sql, true);
+        return dbDelta($sql, true);
     }
 
     /**
-     * Creates and executes a SQL select statement based on passed-in parameters.
+     * Creates and executes a SQL select statement based on passed-in
+     * parameters.
+     *
+     * If $conditions is an array, it will escape values. If it's a string, it
+     * must contain the WHERE keyword, and the values must be escaped before
+     * calling this function.
      *
      * @static
      * @access public
-     * @param string $table the table to query
-     * @param string|array $fields the fields to return
-     * @param string $conditions optional string containing any desired WHERE, ORDER BY, etc clauses
-     * @param string $type the type of select query to run (supports get_results, get_col, get_var, and get_row)
-     * @param string $return how to format the return value (defaults to ARRAY_A)
-     * @param string $keywords optional keywords for the select statement (e.g. DISTINCT)
+     * @param string $table the name of the table to query
+     * @param string|array $keywords the fields to return
+     * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
+     * @param string $other (optional) any additional conditions for the query (GROUP BY, etc.)
+     * @param string $type (optional) the WP type of select query to run (default: get_row)
+     * @param string $return (optional) how to format the return value (default: ARRAY_A)
      * @return mixed passes along the return value of the $wpdb call
      */
-    function select($table, $fields = '*', $conditions = null, $type = null, $return = ARRAY_A, $keywords = null) {
+    function sqlSelect($table, $keywords = null, $conditions = null, $other = null, $type = 'get_row', $return = ARRAY_A) {
         global $wpdb;
-        $sql = "SELECT $keywords ";
+        $sql = "select ";
 
-        if (is_array($fields)) {
-            $sql .= implode(", ", $fields);
+        if (is_string($keywords)) {
+            $sql .= $keywords;
+        }
+
+        elseif (is_array($keywords)) {
+            $sql .= implode(", ", $keywords);
         }
 
         else {
-            $sql .= $fields;
+            return false;
         }
 
-        $sql .= " FROM $table $conditions";
+        if (is_string($table)) {
+            $sql .= " from $table ";
+        }
+
+        else {
+            return false;
+        }
+
+        if (is_array($conditions)) {
+            $sql .= "where ";
+            $sql .= ToppaWPFunctions::_sqlPrepare($conditions);
+        }
+
+        elseif (is_string($conditions)) {
+            $sql .= $conditions;
+        }
+
+        if (is_string($other)) {
+            $sql .= " " . $other;
+        }
+
+        $sql .= ";";
+        //var_dump($sql);
+        //exit;
+
+        $result = false;
 
         switch ($type) {
         case "get_results":
-            $retVal = $wpdb->get_results($sql, $return);
+            $result = $wpdb->get_results($sql, $return);
             break;
         case "get_col":
-            $retVal = $wpdb->get_col($sql);
+            $result = $wpdb->get_col($sql);
             break;
         case "get_var":
-            $retVal = $wpdb->get_var($sql);
+            $result = $wpdb->get_var($sql);
             break;
-        default:
-            $retVal = $wpdb->get_row($sql, $return);
+        case "get_row":
+            $result = $wpdb->get_row($sql, $return);
+            break;
         }
 
-        return $retVal;
+        return $result;
     }
 
     /**
      * Creates and executes a SQL update statement based on passed-in parameters.
      *
-     * Incoming values need to have been escaped already (since we can't tell
-     * here whether data came from form input or somewhere else). Fields and
-     * values can be passed as a single associative array, or two separate
-     * arrays.
+     * It will escape values in the $fields array. If $conditions is an array,
+     * it will escape values. If it's a string, it must contain the WHERE
+     * keyword, and the values must be escaped before calling this function.
      *
      * @static
      * @access public
-     * @param string $table the table to query
-     * @param string $where a SQL where clause (not including the WHERE keyword)
-     * @param array $assoc an optional associative array of field and values to update
-     * @param array $fields an optional array of field names (required if $assoc is null)
-     * @param array $values an optional array of values to set (required if $fields is set)
+     * @param string $table the name of the table to query
+     * @param array $fields name-value pairs of the fields to update
+     * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
      * @return mixed passes along the return value of the $wpdb call
      */
-    function update($table, $where, $assoc = null, $fields = null, $values = null) {
+    function sqlUpdate($table, $fields, $conditions = null) {
         global $wpdb;
-        $sql = "UPDATE $table SET";
 
-        if ($assoc) {
-            foreach ($assoc as $k=>$v) {
-                $sql .= " $k = '$v',";
-            }
+        if (is_string($table)) {
+            $sql = "update $table set ";
         }
 
         else {
-            for ($i = 0; $i < count($fields); $i++) {
-                $sql .= $fields[$i] . " = '" . $values[$i] . "',";
-            }
+            return false;
         }
 
-        $sql = substr("$sql", 0, -1);
-        $sql .= " WHERE $where";
+        if (is_array($fields)) {
+            $sql .= ToppaWPFunctions::_sqlPrepare($fields, ",");
+            $sql .= " ";
+        }
+
+        else {
+            return false;
+        }
+
+        if (is_array($conditions)) {
+            $sql .= "where ";
+            $sql .= ToppaWPFunctions::_sqlPrepare($conditions);
+        }
+
+        elseif (is_string($conditions)) {
+            $sql .= $conditions;
+        }
+
+        $sql .=";";
         return $wpdb->query($sql);
     }
 
     /**
      * Creates and executes a SQL insert statement based on passed-in parameters.
      *
-     * Incoming values need to have been escaped already (since we can't tell
-     * here whether data came from form input or somewhere else). Fields and
-     * values can be passed as a single associative array, or two separate
-     * arrays.
+     * If you pass $keys and $values, they are treated as the name-value pairs
+     * to update, and are related positionally. If you pass $keys only, it
+     * assumes its actually a hash of key-value pairs. All values are escaped.
      *
      * @static
      * @access public
-     * @param string $table the table to query
-     * @param array $assoc an optional associative array of field and values to insert
-     * @param array $fields an optional array of field names (required if $assoc is null)
-     * @param array $values an optional array of values to insert (required if $fields is set)
-     * @param string $update an optional field to update if the insert would cause a duplicate key on a unique index
+     * @param string $table the name of the table to query
+     * @param array $keys column names or a hash of key-value pairs
+     * @param array $values (optional) the values to insert if $keys is only a list of columns
+     * @param string $update (optional) field to update if the insert would cause a duplicate key on a unique index
      * @return mixed passes along the return value of the $wpdb call
      */
-    function insert($table, $assoc = null, $fields = null, $values = null, $update = null) {
+    function sqlInsert($table, $keys, $values = null, $update = null) {
         global $wpdb;
-        $sql = "INSERT INTO $table (";
 
-        if ($assoc) {
-            $fields = array_keys($assoc);
-            $values = array_values($assoc);
+        if (is_string($table)) {
+            $sql = "insert into $table (";
         }
 
-        $sql .= implode(",", $fields);
-        $sql .= ") VALUES ('";
-        $sql .= implode("','", $values);
-        $sql .= "')";
+        else {
+            return false;
+        }
 
-        // right now works with $assoc only
+        if (is_array($keys) && !$values) {
+            $values = array_values($keys);
+            $new_keys = array_keys($keys);
+        }
+
+        if (!is_array($values)) {
+            return false;
+        }
+
+        $sql .= implode(",", $new_keys);
+        $sql .= ") values (";
+        $sql .= ToppaWPFunctions::_sqlPrepare($values, ",", true);
+        $sql .= ")";
+
         // comment out the next three lines if you are on a version of mySQL prior to 4.1
-        if ($update) {
-            $sql .= " ON DUPLICATE KEY UPDATE $update = '" . $assoc[$update] . "'";
+        if (is_string($update)) {
+            $sql .= " on duplicate key update $update = ";
+            $sql .= ToppaWPFunctions::_sqlEscape($new_keys[$update]);
         }
 
         $sql .= ";";
-
         return $wpdb->query($sql);
     }
 
     /**
      * Creates and executes a SQL delete statement based on passed-in parameters.
      *
+     * If $conditions is an array, it will escape values. If it's a string, it
+     * must contain the WHERE keyword, and the values must be escaped before
+     * calling this function.
+     *
      * @static
      * @access public
-     * @param string $table the table to query
-     * @param string $where a SQL where clause (not including the WHERE keyword)
+     * @param string $table the name of the table to query
+     * @param string|array $conditions array of key-values pairs, or a string containing its own WHERE clause
      * @return mixed passes along the return value of the $wpdb call
      */
-    function delete($table, $where) {
+    function sqlDelete($table, $conditions) {
         global $wpdb;
-        $sql = "DELETE FROM $table WHERE ";
-        $sql .= $where;
+
+        if (is_string($table)) {
+            $sql = "delete from $table ";
+        }
+
+        else {
+            return false;
+        }
+
+        if (is_array($conditions)) {
+            $sql .= "where ";
+            $sql .= ToppaWPFunctions::_sqlPrepare($conditions);
+        }
+
+        elseif (is_string($conditions)) {
+            $sql .= $conditions;
+        }
+
+        else {
+            return false;
+        }
+
+        $sql .=";";
         return $wpdb->query($sql);
+    }
+
+    /**
+     * Builds a properly formatted partial SQL clause of key-value pairs, with
+     * values escaped.
+     *
+     * @static
+     * @access private
+     * @param array $conditions key-value pairs to use in building the query string
+     * @param string $glue (optional) glue for concatenating the name-value pairs (default: " and ")
+     * @param boolean $values_only (optional) whether to include values only in the string (default: false)
+     * @return string a formatted partial SQL clause of key-value pairs
+     */
+    function _sqlPrepare($conditions, $glue = " and ", $values_only = false) {
+        global $wpdb;
+
+        foreach ($conditions as $k=>$v) {
+            if (!$values_only) {
+                $sql .= "$k = ";
+            }
+
+            $sql .= ToppaWPFunctions::_sqlEscape($v);
+            $sql .= $glue;
+        }
+
+        // remove the trailing glue
+        return substr($sql, 0, -(strlen($glue)));
+    }
+
+    /**
+     * Escapes and quotes values for safe inserting/updating to the database
+     *
+     * @static
+     * @access private
+     * @param string|float|integer $value a value to escape
+     * @return string|float|integer returns $value, escaped and quoted as needed
+     */
+    function _sqlEscape($value) {
+        global $wpdb;
+        return (is_numeric($value) ? $value : ("'" . $wpdb->escape($value) . "'"));
     }
 
     /**
@@ -208,50 +331,49 @@ class ToppaWPFunctions {
      *
      * @static
      * @access public
-     * @param string $inputName (required) the name to use for the input field
-     * @param array $refData (required) contains data about how the input field should be set up
-     * @param string $inputValue (optional) a value to apply to the input
-     * @param string $arrayValue (optional) to make an input field a PHP array (pass an empty string for an indexed array)
+     * @param string $input_name (required) the name to use for the input field
+     * @param array $ref_data (required) contains data about how the input field should be set up
+     * @param string $input_value (optional) a value to apply to the input
      */
-    function displayInput($inputName, $refData, $inputValue = null, $arrayValue = null) {
-        if ($arrayValue !== null) {
-            $inputName .= "[$arrayValue]";
-        }
+    function displayInput($input_name, $ref_data, $input_value = null) {
+        $input_id = str_replace("[", "_", $input_name);
+        $input_id = str_replace("]", "", $input_id);
 
-        if ($refData['inputType'] == 'text') {
-            echo '<input type="text" name="' . $inputName
-                . '" id="' . $inputName
-                . '" value="' . htmlspecialchars($inputValue)
-                . '" size="' . $refData['inputSize'] . '"';
+        switch ($ref_data['input_type']) {
+        case 'text':
+            echo '<input type="text" name="' . $input_name
+                . '" id="' . $input_id
+                . '" value="' . htmlspecialchars($input_value)
+                . '" size="' . $ref_data['input_size'] . '"';
 
-            if (strlen($refData['colParams']['length'])) {
-                echo ' maxlength="' . $refData['colParams']['length'] . '"';
+            if (strlen($ref_data['col_params']['length'])) {
+                echo ' maxlength="' . $ref_data['col_params']['length'] . '"';
             }
 
             echo " />\n";
-        }
+            break;
 
-        elseif ($refData['inputType'] == 'radio') {
-            foreach ($refData['inputSubgroup'] as $value=>$label) {
-                echo '<input type="radio" name="' . $inputName
-                    . '" id="' . $inputName
+        case 'radio':
+            foreach ($ref_data['input_subgroup'] as $value=>$label) {
+                echo '<input type="radio" name="' . $input_name
+                    . '" id="' . $input_id
                     . '" value="' . htmlspecialchars($value) . '"';
 
-                if ($inputValue == $value) {
+                if ($input_value == $value) {
                     echo ' checked="checked"';
                 }
 
                 echo ' /> ' . $label . "\n";
             }
-        }
+            break;
 
-        elseif ($refData['inputType'] == 'select') {
-            echo '<select name="' . $inputName . '" id="' . $inputName . '">' . "\n";
+        case 'select':
+            echo '<select name="' . $input_name . '" id="' . $input_id . '">' . "\n";
 
-            foreach ($refData['inputSubgroup'] as $value=>$label) {
+            foreach ($ref_data['input_subgroup'] as $value=>$label) {
                 echo '<option value="' . htmlspecialchars($value) . '"';
 
-                if ($inputValue == $value) {
+                if ($input_value == $value) {
                     echo ' selected="selected"';
                 }
 
@@ -259,42 +381,26 @@ class ToppaWPFunctions {
             }
 
             echo "</select>\n";
-        }
+            break;
 
-        elseif ($refData['inputType'] == 'textarea') {
-            echo '<textarea name="' . $inputName . '" cols="30" rows="5">'
-                . htmlspecialchars($inputValue) . '</textarea>';
-        }
+        case 'textarea':
+            echo '<textarea name="' . $input_name . '" id="' . $input_id
+                . '" cols="' . $ref_data['input_cols']
+                . '" rows="' . $ref_data['input_rows'] . '">'
+                . htmlspecialchars($input_value) . '</textarea>';
+            break;
 
-        elseif ($refData['inputType'] == 'checkbox') {
-            $cbCount = 1;
-            echo '<table border="0" cellspacing="3" cellpadding="3">' . "\n";
-            foreach ($refData['inputSubgroup'] as $value=>$label) {
-                $setLastTR = FALSE;
-                if ($cbCount % 3 == 1) {
-                    echo "<tr>\n";
-                }
-                echo '<td><input type="checkbox" name="' . $inputName
-                    . '[]" value="' . htmlspecialchars($value) . '"';
+        case 'checkbox':
+            echo '<input type="checkbox" name="' . $input_name
+                    . '" id = "' . $input_id
+                    . '" value="' . htmlspecialchars($value) . '"';
 
-                if (isset($object->$key) && in_array($value, $inputValue)) {
-                    echo ' checked="checked"';
-                }
-
-                echo ' /> ' . $label . "</td>\n";
-
-                if ($cbCount % 3 == 0) {
-                    echo "</tr>\n";
-                    $setLastTR = TRUE;
-                }
-                $cbCount++;
+            if ($input_value == $value) {
+                echo ' checked="checked"';
             }
 
-            if ($setLastTR == FALSE) {
-                echo "</tr>\n";
-            }
-
-            echo "</table>\n";
+            echo ' /> ' . $label . "\n";
+            break;
         }
     }
 
@@ -307,9 +413,9 @@ class ToppaWPFunctions {
      * @param boolean $cache whether or not to cache the feed
      * @return array the content of the feed
      */
-    function readFeed($feedURL) {
+    function readFeed($feed_url) {
         $parser = new ToppaXMLParser();
-        return $parser->parse($feedURL);
+        return $parser->parse($feed_url);
     }
 
     /**
@@ -320,55 +426,55 @@ class ToppaWPFunctions {
      *
      * @static
      * @access public
-     * @param array $feedContent should be supplied by the readFeed function
-     * @param array $refData maps your local data structure to the feed's structure; it can handle arrays nested two levels below $item
-     * @param string $matchField allows you to limit the results of the parse to a specific item
-     * @param string $matchValue the value to look for in $matchField
+     * @param array $feed_content should be supplied by the readFeed function
+     * @param array $ref_data maps your local data structure to the feed's structure; it can handle arrays nested two levels below $item
+     * @param string $match_field allows you to limit the results of the parse to a specific item
+     * @param string $match_value the value to look for in $match_field
      * @return boolean|array the parsed contents of the feed, or false on failure
      */
-    function parseFeed($feedContent, $refData, $matchField = null, $matchValue = null) {
-        $allParsed = array();
+    function parseFeed($feed_content, $ref_data, $match_field = null, $match_value = null) {
+        $all_parsed = array();
         $break = false;
 
         # make sure there's something to parse
-        if (empty($feedContent)) {
+        if (!$feed_content) {
             return false;
         }
 
-        foreach ($feedContent as $item) {
-            // if there's a matchfield, that means we're parsing the user's feed
+        foreach ($feed_content as $item) {
+            // if there's a match_field, that means we're parsing the user's feed
             // for all albums, and we want to return just the matching album
-            if (strlen($matchField) && isset($refData[$matchField]['feedParam2'])
-              && $item[$refData[$matchField]['feedParam1'] . ":" . $refData[$matchField]['feedParam2']]['data'] == $matchValue) {
+            if (strlen($match_field) && isset($ref_data[$match_field]['feed_param_2'])
+              && $item[$ref_data[$match_field]['feed_param_1'] . ":" . $ref_data[$match_field]['feed_param_2']]['data'] == $match_value) {
                 $break = true;
             }
 
-            elseif (strlen($matchField) && $item[$refData[$matchField]['feedParam1']]['data'] == $matchValue) {
+            elseif (strlen($match_field) && $item[$ref_data[$match_field]['feed_param_1']]['data'] == $match_value) {
                 $break = true;
             }
 
             $parsed = array();
-            foreach ($refData as $refK=>$refV) {
-                if ($refV['source'] == 'feed') {
-                    if (isset($refV['feedParam2'])) {
+            foreach ($ref_data as $ref_k=>$ref_v) {
+                if ($ref_v['source'] == 'feed') {
+                    if (isset($ref_v['feed_param_2'])) {
                         // if attrs is set, then we're looking for a particular value in the attrs array
                         // otherwise assume we're getting a string from 'data'
-                        if (isset($refV['attrs'])) {
-                            $parsed[$refK] = addslashes($item[$refV['feedParam1'] . ":" . $refV['feedParam2']]['attrs'][$refV['attrs']]);
+                        if (isset($ref_v['attrs'])) {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['attrs'][$ref_v['attrs']];
                         }
 
                         else {
-                            $parsed[$refK] = addslashes($item[$refV['feedParam1'] . ":" . $refV['feedParam2']]['data']);
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['data'];
                         }
                     }
 
                     else {
-                        if (isset($refV['attrs'])) {
-                            $parsed[$refK] = addslashes($item[$refV['feedParam1']]['attrs'][$refV['attrs']]);
+                        if (isset($ref_v['attrs'])) {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['attrs'][$ref_v['attrs']];
                         }
 
                         else {
-                            $parsed[$refK] = addslashes($item[$refV['feedParam1']]['data']);
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['data'];
                         }
                     }
                 }
@@ -378,10 +484,10 @@ class ToppaWPFunctions {
                 return $parsed;
             }
 
-            $allParsed[] = $parsed;
+            $all_parsed[] = $parsed;
         }
 
-        return $allParsed;
+        return $all_parsed;
     }
 }
 

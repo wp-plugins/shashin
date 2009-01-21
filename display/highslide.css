@@ -77,147 +77,147 @@ a.highslide-full-expand {
 
 /* Slideshow Controls. See http://www.google.com/search?q=css+sprites */
 .highslide-controls {
-	width: 195px;
-	height: 40px;
-	background: url(highslide/graphics/controlbar-white.gif) 0 -90px no-repeat;
-	margin-right: 15px;
-	margin-bottom: 10px;
-	margin-top: 20px;
+    width: 195px;
+    height: 40px;
+    background: url(highslide/graphics/controlbar-white.gif) 0 -90px no-repeat;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    margin-top: 20px;
 }
 .highslide-controls ul {
-	position: relative;
-	left: 15px;
-	height: 40px;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	background: url(highslide/graphics/controlbar-white.gif) right -90px no-repeat;
+    position: relative;
+    left: 15px;
+    height: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: url(highslide/graphics/controlbar-white.gif) right -90px no-repeat;
 }
 .highslide-controls li {
-	float: left;
-	padding: 5px 0;
+    float: left;
+    padding: 5px 0;
 }
 .highslide-controls a {
-	background-image: url(highslide/graphics/controlbar-white.gif);
-	display: block;
-	float: left;
-	height: 30px;
-	width: 30px;
-	outline: none;
+    background-image: url(highslide/graphics/controlbar-white.gif);
+    display: block;
+    float: left;
+    height: 30px;
+    width: 30px;
+    outline: none;
 }
 .highslide-controls a.disabled {
-	cursor: default;
+    cursor: default;
 }
 .highslide-controls a span {
-	/* hide the text for these graphic buttons */
-	display: none;
+    /* hide the text for these graphic buttons */
+    display: none;
 }
 .highslide-move a {
-	cursor: move;
+    cursor: move;
 }
 
 /* The CSS sprites for the slideshow controlbar */
 .highslide-controls .highslide-previous a {
-	background-position: 0 0;
+    background-position: 0 0;
 }
 .highslide-controls .highslide-previous a:hover {
-	background-position: 0 -30px;
+    background-position: 0 -30px;
 }
 .highslide-controls .highslide-previous a.disabled {
-	background-position: 0 -60px !important;
+    background-position: 0 -60px !important;
 }
 .highslide-controls .highslide-play a {
-	background-position: -30px 0;
+    background-position: -30px 0;
 }
 .highslide-controls .highslide-play a:hover {
-	background-position: -30px -30px;
+    background-position: -30px -30px;
 }
 .highslide-controls .highslide-play a.disabled {
-	background-position: -30px -60px !important;
+    background-position: -30px -60px !important;
 }
 .highslide-controls .highslide-pause a {
-	background-position: -60px 0;
+    background-position: -60px 0;
 }
 .highslide-controls .highslide-pause a:hover {
-	background-position: -60px -30px;
+    background-position: -60px -30px;
 }
 .highslide-controls .highslide-next a {
-	background-position: -90px 0;
+    background-position: -90px 0;
 }
 .highslide-controls .highslide-next a:hover {
-	background-position: -90px -30px;
+    background-position: -90px -30px;
 }
 .highslide-controls .highslide-next a.disabled {
-	background-position: -90px -60px !important;
+    background-position: -90px -60px !important;
 }
 .highslide-controls .highslide-move a {
-	background-position: -120px 0;
+    background-position: -120px 0;
 }
 .highslide-controls .highslide-move a:hover {
-	background-position: -120px -30px;
+    background-position: -120px -30px;
 }
 .highslide-controls .highslide-full-expand a {
-	background-position: -150px 0;
+    background-position: -150px 0;
 }
 .highslide-controls .highslide-full-expand a:hover {
-	background-position: -150px -30px;
+    background-position: -150px -30px;
 }
 .highslide-controls .highslide-full-expand a.disabled {
-	background-position: -150px -60px !important;
+    background-position: -150px -60px !important;
 }
 .highslide-controls .highslide-close a {
-	background-position: -180px 0;
+    background-position: -180px 0;
 }
 .highslide-controls .highslide-close a:hover {
-	background-position: -180px -30px;
-} 
+    background-position: -180px -30px;
+}
 
 /* Styles for the Flash popup */
 .highslide-wrapper, .rounded-white {
-	background-color: white;
+    background-color: white;
 }
 .highslide-wrapper .highslide-html-content {
-	width: 300px;
-	padding: 0 5px 5px 5px;
+    width: 300px;
+    padding: 0 5px 5px 5px;
 }
 .highslide-wrapper .highslide-header div {
 }
 .highslide-wrapper .highslide-header ul {
-	margin: 0;
-	padding: 0;
-	text-align: right;
+    margin: 0;
+    padding: 0;
+    text-align: right;
 }
 .highslide-wrapper .highslide-header ul li {
-	display: inline;
-	padding-left: 1em;
+    display: inline;
+    padding-left: 1em;
 }
-.highslide-wrapper .highslide-header ul li.highslide-previous, 
+.highslide-wrapper .highslide-header ul li.highslide-previous,
 .highslide-wrapper .highslide-header ul li.highslide-next {
-	display: none;
+    display: none;
 }
 .highslide-wrapper .highslide-header {
-	padding-bottom: 5px;
+    padding-bottom: 5px;
 }
 .highslide-wrapper .highslide-header a {
-	font-weight: bold;
-	color: gray;
-	text-transform: uppercase;
-	text-decoration: none;
+    font-weight: bold;
+    color: gray;
+    text-transform: uppercase;
+    text-decoration: none;
 }
 .highslide-wrapper .highslide-header a:hover {
-	color: black;
+    color: black;
 }
 .highslide-wrapper .highslide-header .highslide-move a {
-	cursor: move;
+    cursor: move;
 }
 .highslide-wrapper .highslide-footer {
-	height: 11px;
+    height: 11px;
 }
 .highslide-wrapper .highslide-footer .highslide-resize {
-	float: right;
-	height: 11px;
-	width: 11px;
-	background: url(highslide/graphics/resize.gif);
+    float: right;
+    height: 11px;
+    width: 11px;
+    background: url(highslide/graphics/resize.gif);
 }
 .highslide-wrapper .highslide-body {
 }

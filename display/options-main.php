@@ -1,134 +1,217 @@
 <?php
 /**
- * Set options for Shashin. This includes specifying your Picasa server, and
- * a couple of CSS settings.
+ * Set options for Shashin.
  *
  * This file is part of Shashin. Please see the Shashin.php file for
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  * @package Shashin
  * @subpackage AdminPanels
  */
- ?>
- 
+
+?>
+
 <div class="wrap">
-    <h2><?php echo SHASHIN_DISPLAY_NAME ?></h2>
-    
+    <h2><?php echo SHASHIN_DISPLAY_NAME . " " . __("Settings", SHASHIN_L10N_NAME); ?></h2>
+
     <?php if (strlen($message)) {
         require (SHASHIN_DIR . '/display/include-message.php');
     } ?>
-    
-    <h3>Options</h3>
 
     <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
-    <input type="hidden" name="shashinAction" value="updateOptions">
-    <table border="0" cellspacing="3" cellpadding="3" class="form-table">
-    <tr valign="top">
-    <td>Your Picasa server:</td>
-    <td nowrap="nowrap"><input type="text" name="shashin_picasa_server" value="<?php echo get_option('shashin_picasa_server') ?>" size="30"></td>
-    <td>The base URL of your Picasa server. Be sure to include "http://"</td>
-    </tr>
-    
-    <tr valign="top">
-    <td>Image div padding:</td>
-    <td nowrap="nowrap"><input type="text" name="shashin_div_padding" value="<?php echo get_option('shashin_div_padding') ?>" size="30"></td>
-    <td>Double the ".shashin_image img" padding value in shashin.css</td>
+    <input type="hidden" name="shashin_action" value="update_options">
+    <table class="form-table">
+    <tr style="vertical-align: top;">
+    <td nowrap="nowrap"><?php _e("Your Picasa server:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[picasa_server]" value="<?php echo $shashin_options['picasa_server'] ?>" size="30"></td>
+    <td><?php _e("The base URL of your Picasa server. Be sure to include 'http://'", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
-    <tr valign="top">
-    <td>Thumbnail div padding:</td>
-    <td nowrap="nowrap"><input type="text" name="shashin_thumb_padding" value="<?php echo get_option('shashin_thumb_padding') ?>" size="30"></td>
-    <td>Double the ".shashin_thumb img" padding value in shashin.css</td>
-    </tr>       
+    <tr style="vertical-align: top;">
+    <td><?php _e("Sync all albums daily:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[scheduled_update]" value="y"<?php
+        if ($shashin_options['scheduled_update'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[scheduled_update]" value="n"<?php
+        if ($shashin_options['scheduled_update'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("This will make Shashin sync all your albums automatically on a daily basis.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
 
-    <tr valign="top">
-    <td>Your page for album photos:</td>
-    <td nowrap="nowrap"><input type="text" name="shashin_album_photos_url" value="<?php echo get_option('shashin_album_photos_url') ?>" size="30"></td>
-    <td>If you want to display all the photos in a Picasa album, create a Wordpress
-    page containing the salbumphotos tag, and put the URL for that page here.</td>
+    <tr style="vertical-align: top;">
+    <td><?php _e("Image div padding:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[div_padding]" value="<?php echo $shashin_options['div_padding'] ?>" size="30"></td>
+    <td><?php _e("Double the '.shashin_image img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
-    
-    <tr valign="top">
-    <td>Prefix album titles on captions:</td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_prefix_captions" value="y"<?php
-        if (get_option('shashin_prefix_captions') == 'y') echo ' checked="checked"'; ?> /> Yes
-        <input type="radio" name="shashin_prefix_captions" value="n"<?php
-        if (get_option('shashin_prefix_captions') == 'n') echo ' checked="checked"'; ?> /> No</td>
-    <td>Clicking "yes" means a photo's album title will be prefixed on its caption.</td>
-    </tr>    
-    
-    <tr valign="top">
-    <td>Full-size image display:</td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_image_display" value="same_window"<?php
-            if (get_option('shashin_image_display') == 'same_window') echo ' checked="checked"'; ?> />
-            At Picasa, in same browser window<br />
-        <input type="radio" name="shashin_image_display" value="new_window"<?php
-            if (get_option('shashin_image_display') == 'new_window') echo ' checked="checked"'; ?> />
-            At Picasa, in a new browser window<br />
-        <input type="radio" name="shashin_image_display" value="highslide"<?php
-            if (get_option('shashin_image_display') == 'highslide') echo ' checked="checked"'; ?> />
-            Use Highslide<br />
-        <input type="radio" name="shashin_image_display" value="none"<?php
-            if (get_option('shashin_image_display') == 'none') echo ' checked="checked"'; ?> />
-            Do not make thumbnails clickable</td>
-    <td>This determines how to display an image when its thumbnail is clicked</td>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Thumbnail div padding:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding'] ?>" size="30"></td>
+    <td><?php _e("Double the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
-    
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Prefix album titles on captions:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[prefix_captions]" value="y"<?php
+        if ($shashin_options['prefix_captions'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[prefix_captions]" value="n"<?php
+        if ($shashin_options['prefix_captions'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Clicking 'yes' means a photo's album title will be prefixed on its caption.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Full-size image display:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[image_display]" value="same_window"<?php
+            if ($shashin_options['image_display'] == 'same_window') echo ' checked="checked"'; ?> />
+            <?php _e("At Picasa, in same browser window", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[image_display]" value="new_window"<?php
+            if ($shashin_options['image_display'] == 'new_window') echo ' checked="checked"'; ?> />
+            <?php _e("At Picasa, in a new browser window", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[image_display]" value="highslide"<?php
+            if ($shashin_options['image_display'] == 'highslide') echo ' checked="checked"'; ?> />
+            <?php _e("Use Highslide", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[image_display]" value="none"<?php
+            if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
+            <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("This determines how to display an image when its thumbnail is clicked", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
     <tr>
-    <td colspan="3"><strong>Highslide Settings</strong><br />These settings apply only if you select "Use Highslide" above, for the full-size image display.</td>
+    <td colspan="3"><?php _e("<strong>Highslide Settings</strong><br />These settings apply only if you select 'Use Highslide' above, for the full-size image display.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
-    <tr valign="top">
-    <td>Highslide image size:</td>
-    <td nowrap="nowrap"><select name="shashin_highslide_max">
+    <tr style="vertical-align: top;">
+    <td><?php _e("Highslide image size:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[highslide_max]">
     <?php
-        foreach ($allowed as $size) {
+        foreach ($shashin_image_sizes as $size) {
             echo '<option value="' . $size . '"';
-            if (get_option('shashin_highslide_max') == $size) {
+            if ($shashin_options['highslide_max'] == $size) {
                 echo ' selected="selected"';
             }
             echo ">$size</option>\n";
         }
     ?>
     </select></td>
-    <td>This determines the "maximum dimension" of an image displayed by Highslide when its
-    thumbnail is clicked. This size is applied to either the height or the width (whichever
-    is greater) and then the correct size for the other dimension is calculated on the fly.
-    The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that
-    the sizes <?php echo implode(", ", eval(SHASHIN_CROP_SIZES)) ?> are cropped square.</td>
+    <td><?php _e("This determines the 'maximum dimension' of an image displayed by Highslide when its thumbnail is clicked. This size is applied to either the height or the width (whichever is greater) and then the correct size for the other dimension is calculated on the fly. The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that the sizes", SHASHIN_L10N_NAME); ?>
+    <?php echo implode(", ", $shashin_crop_sizes) ?>
+    <?php _e("are cropped square.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
-    <tr valign="top">
-    <td>Autoplay Highslide slideshows:</td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_highslide_autoplay" value="true"<?php
-        if (get_option('shashin_highslide_autoplay') == 'true') echo ' checked="checked"'; ?> />
-            Yes<br />
-        <input type="radio" name="shashin_highslide_autoplay" value="false"<?php
-        if (get_option('shashin_highslide_autoplay') == 'false') echo ' checked="checked"'; ?> />
-            No</td>
-    <td>If someone clicks an image in a slideshow group, this determines whether the slideshow plays
-    automatically.</td>
-    </tr>
-    
-    <tr valign="top">
-    <td>Highslide slideshow image display time:</td>
-    <td nowrap="nowrap"><input type="text" name="shashin_highslide_interval" value="<?php echo get_option('shashin_highslide_interval') ?>" size="30"></td>
-    <td>How long each image is displayed in a slideshow (in milliseconds)</td>
+    <tr style="vertical-align: top;">
+    <td><?php _e("Autoplay Highslide slideshows:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_autoplay]" value="true"<?php
+        if ($shashin_options['highslide_autoplay'] == 'true') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[highslide_autoplay]" value="false"<?php
+        if ($shashin_options['highslide_autoplay'] == 'false') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("If someone clicks an image in a slideshow group, this determines whether the slideshow plays automatically.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
-    <tr valign="top">
-    <td>Highslide video dimensions:</td>
-    <td nowrap="nowrap">Width: <input type="text" name="shashin_highslide_video_width" value="<?php echo get_option('shashin_highslide_video_width') ?>" size="3">
-    Height: <input type="text" name="shashin_highslide_video_height" value="<?php echo get_option('shashin_highslide_video_height') ?>" size="3"></td>
-    <td>If you select Highslide for viewing images, it will also be used for displaying videos. This controls
-    the height and width of the embedded video (unlike images, the dimensions cannot be calculated on the fly).
-    A 4:3 (width:height) ratio is common for videos.</td>
+    <tr style="vertical-align: top;">
+    <td><?php _e("Highslide slideshow image display time:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[highslide_interval]" value="<?php echo $shashin_options['highslide_interval'] ?>" size="30"></td>
+    <td><?php _e("How long each image is displayed in a slideshow (in milliseconds)", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
+    <tr style="vertical-align: top;">
+    <td><?php _e("Highslide video dimensions:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><?php _e("Width:", SHASHIN_L10N_NAME); ?>
+        <input type="text" name="shashin_options[highslide_video_width]" value="<?php echo $shashin_options['highslide_video_width'] ?>" size="3">
+        <?php _e("Height:", SHASHIN_L10N_NAME); ?>
+        <input type="text" name="shashin_options[highslide_video_height]" value="<?php echo $shashin_options['highslide_video_height'] ?>" size="3"></td>
+    <td><?php _e("If you select Highslide for viewing images, it will also be used for displaying videos. This controls the height and width of the embedded video (unlike images, the dimensions cannot be calculated on the fly). A 4:3 (width:height) ratio is common for videos.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr>
+    <td colspan="3"><?php _e("<strong>Album Photos Settings</strong><br />If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Thumbnail size:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[album_photos_max]">
+    <?php
+        foreach ($shashin_image_sizes as $size) {
+            echo '<option value="' . $size . '"';
+            if ($shashin_options['album_photos_max'] == $size) {
+                echo ' selected="selected"';
+            }
+            echo ">$size</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("The size to use for displaying the photos in the album. See 'Highslide image size' above for more information. Note that the sizes", SHASHIN_L10N_NAME); ?>
+    <?php echo implode(", ", $shashin_crop_sizes) ?>
+    <?php _e("are cropped square.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Number of columns:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[album_photos_cols]" value="<?php echo $shashin_options['album_photos_cols'] ?>" size="2"></td>
+    <td><?php _e("The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Sort Order:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[album_photos_order]">
+    <?php
+        $order_options = array('title asc', 'title desc', 'uploaded_timestamp asc', 'uploaded_timestamp desc', 'taken_timestamp asc', 'taken_timestamp desc');
+        foreach ($order_options as $option) {
+            echo '<option value="' . $option . '"';
+            if ($shashin_options['album_photos_order'] == $option) {
+                echo ' selected="selected"';
+            }
+            echo ">$option</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("How to order the photos. 'asc' means ascending from lowest to highest (a-z, oldest to newest), 'desc' means descending from highest to lowest (z-a, newest to oldest).", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Display photo captions:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_captions]" value="y"<?php
+        if ($shashin_options['album_photos_captions'] == 'y') echo ' checked="checked"'; ?> />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[album_photos_captions]" value="n"<?php
+        if ($shashin_options['album_photos_captions'] == 'n') echo ' checked="checked"'; ?> />
+            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether to display a caption under each thumbnail.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Display album description:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_description]" value="y"<?php
+        if ($shashin_options['album_photos_description'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[album_photos_description]" value="n"<?php
+        if ($shashin_options['album_photos_description'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The album title will appear above the photos. You can choose whether to also display the album description, after the title.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
     </table>
-
-    <p><input type="submit" name="save" value="Save Options" /></p>
+    <p class="submit"><input class="button-primary" type="submit" name="save" value="<?php _e("Save Options", SHASHIN_L10N_NAME); ?>" /></p>
     </form>
+
+    <div style="border: thin solid; padding: 5px;">
+        <h3><?php _e("Uninstall Shashin", SHASHIN_L10N_NAME); ?></h3>
+
+        <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
+        <input type="hidden" name="shashin_action" value="uninstall">
+        <table border="0" cellspacing="3" cellpadding="3" class="form-table">
+        <tr style="vertical-align: top;">
+        <td nowrap="nowrap"><?php _e("Uninstall Shashin?", SHASHIN_L10N_NAME); ?></td>
+        <td><input type="checkbox" name="shashin_uninstall" value="y" /></td>
+        <td><?php _e("Check this box if you want to completely remove Shashin. <strong>This will permanently break any Shashin tags that you still have in your posts or pages.</strong> After uninstalling, you can then deactivate Shashin on your plugins management page.", SHASHIN_L10N_NAME); ?></td>
+        </tr>
+        </table>
+
+        <p class="submit"><input class="button-secondary" type="submit" name="save" value="<?php _e("Uninstall Shashin", SHASHIN_L10N_NAME); ?>" onclick="return confirm('<?php _e("Are you sure you want to uninstall Shashin?", SHASHIN_L10N_NAME); ?>');" /></p>
+        </form>
+    </div>
 </div>

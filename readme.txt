@@ -1,16 +1,16 @@
 === Shashin ===
 Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
-Tags: images, photos, Picasa
-Requires at least: 2.0.2
-Tested up to: 2.6.1
-Stable tag: 2.2.1
+Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
+Requires at least: 2.1
+Tested up to: 2.7
+Stable tag: 2.3
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
 == Description ==
 
-Shashin has many features that enable you to display your Picasa photos in a variety of ways in your Wordpress posts and pages:
+Shashin has many features for displaying your Picasa photos in a variety of ways in your Wordpress posts and pages:
 
 * Embed a gallery of your Picasa albums, and all the photos in each album.
 * Show your photos with Highslide slideshows.
@@ -21,32 +21,39 @@ Shashin has many features that enable you to display your Picasa photos in a var
 * Display any number of random photos, from one or more albums. You can also choose to exclude certain photos or albums from random display.
 * Use widgets for all of the above!
 * Customize the Shashin and Highslide stylesheets to suit the theme of your site.
+* Internationalization: Shashin supports translations into other languages (please contribute a translation if you're bilingual!)
+* Schedule daily automatic synchronization of Shashin with your Picasa albums.
 
-New features in Shashin 2.2:
+Shashin 2.3 is a complete rewrite. It includes more robust error handling, improved security, and these new features:
 
-* Includes the latest version of Highslide, and automatically uses its new slideshow feature when viewing groups of photos.
-* Shows videos in Highslide.
-* Includes new options in the Settings menu for autoplaying Highslide slideshows, how long to display each slideshow image, and the dimensions for displaying videos.
-* Checks for shashin.css and highslide.css in your active theme directory - this allows you to customize the stylesheets without worrying about losing your customizations the next time you upgrade Shashin.
-* No longer necessary to update image paths in highslide.css if you have WordPress installed in a subdirectory on your site.
-* For the caption in Shashin's tags, in addition to "y" or "n" you can now use "c", which means all pictures will get the caption "Click picture to enlarge" and all videos will get the caption "Click picture to play video." The actual caption will be displayed in the Highslide window.
-* Option to make thumbnails not clickable, if you don't want to display a larger version.
+* Internationalization
+* Daily automatic synchronization of Shashin with your Picasa albums
+* Greatly simplified use of the [salbumthumbs] tag when you want to show all the photos in an album after its thumbnail is clicked
+* Show photos from an album without having to click on an album thumbnail first, using the [salbumphotos] tag
+* Not exactly a feature, but <a href="http://www.toppa.com/2009/workaround-for-using-unlisted-picasa-albums-in-shashin/">read this post on how to get unlisted albums into Shashin</a>
+* Improved usabilty for the Shashin admin screens
+* The [srandom] and [snewest] tags now let you specify multiple albums
+* Uninstall option
+
+Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the Shashin 2.3 beta for a full description of the new features</a>. 
 
 == Installation ==
 
-**Installation**
+** Installation Instructions for New Users **
 
-Download the zip file, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear under your "Manage" tab and under your "Settings" tab.
+Download the zip file, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear in your "Tools" menu and your "Settings" menu.
 
-Go to the "Settings" tab first and take a look at the default options, which for many people will not require any changes. If your Picasa server is outside the US, then change the server (for example, if you're in the UK, it would be picasaweb.google.co.uk).
+Go to the "Settings" menu first and take a look at the default options, which for many people will not require any changes. It's particularly important that you provide the correct URL for your Picasa server. For example, if you're in the UK, it would be http://picasaweb.google.co.uk
 
-Now go to the "Manage" tab and follow the directions to add your first album!
+Now go to the "Tools" menu and follow the directions to add your first album!
 
 Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **You should include these tables when making backups of your WordPress tables.**
 
-**Special note to upgraders:** Deactivate your old installation, upload the new version, and then reactivate. This is necessary for required updates to the Shashin tables.
+** Installation Instructions for Upgraders **
+
+Deactivate your old installation in the plugins menu, make a backup copy of your old Shashin plugin files, and then delete Shashin from your plugins directory. This will cleanup some old files that are no longer needed. This will not harm your Shashin photo data. Then upload the new version and reactivate. Reactivation will make some required updates to the Shashin database tables. **IMPORTANT:** then you need to go to your Shashin "Settings" menu and reset all your options (your settings are stored in a new way in Shashin 2.3). 
 
 == Frequently Asked Questions ==
 
-Please go to <a href="http://www.toppa.com/shashin-wordpress-plugin">the Shashin page for information on how to use Shashin</a>.
+Please go to <a href="http://www.toppa.com/shashin-wordpress-plugin">the Shashin page for detailed instructions on how to use Shashin</a>.
 

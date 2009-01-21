@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  * @package Shashin
  * @subpackage Classes
  */
@@ -19,11 +19,11 @@
  * @subpackage Classes
  */
 class ShashinPhoto {
-    var $refData;
+    var $ref_data;
     var $data;
 
     /**
-     * The constructor sets $this->refData, which maps Picasa photo
+     * The constructor sets $this->ref_data, which maps Picasa photo
      * properties to ShashinPhoto object properties. It's also used for
      * creating the shashin_photo table and for generating form input
      * fields.
@@ -31,144 +31,148 @@ class ShashinPhoto {
      * @access public
      */
     function ShashinPhoto() {
-        $this->refData = array(
+        $this->ref_data = array(
             'photo_key' => array(
-                'colParams' => array('type' => 'int unsigned', 'notNull' => 1,
-                    'other' => 'auto_increment primary key'),
+                'col_params' => array('type' => 'int unsigned', 'not_null' => true,
+                    'primary_key' => true, 'other' => 'AUTO_INCREMENT'),
                 'label' => 'Photo Key', 'source' => 'db'),
             'photo_id' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255',
-                    'notNull' => 1, 'other' => 'unique'),
+                'col_params' => array('type' => 'varchar', 'length' => '255',
+                    'not_null' => true, 'other' => 'UNIQUE'),
                 'label' => 'Photo ID', 'source' => 'feed',
-                'feedParam1' => 'gphoto', 'feedParam2' => 'id'),
+                'feed_param_1' => 'gphoto', 'feed_param_2' => 'id'),
             'album_id' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
+                'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
                 'label' => 'Album ID', 'source' => 'feed',
-                'feedParam1' => 'gphoto', 'feedParam2' => 'albumid'),
+                'feed_param_1' => 'gphoto', 'feed_param_2' => 'albumid'),
             'title' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255'),
+                'col_params' => array('type' => 'varchar', 'length' => '255'),
                 'label' => 'Title', 'source' => 'feed',
-                'feedParam1' => 'title'),
+                'feed_param_1' => 'title'),
             'description' => array(
-                'colParams' => array('type' => 'text'),
+                'col_params' => array('type' => 'text'),
                 'label' => 'Description', 'source' => 'feed',
-                'feedParam1' => 'description'),
+                'feed_param_1' => 'description'),
             'link_url' => array(
-                'colParams' => array('type' => 'text', 'notNull' => 1),
+                'col_params' => array('type' => 'text', 'not_null' => true),
                 'label' => 'Link URL', 'source' => 'feed',
-                'feedParam1' => 'link'),
+                'feed_param_1' => 'link'),
             'content_url' => array(
-                'colParams' => array('type' => 'text', 'notNull' => 1),
+                'col_params' => array('type' => 'text', 'not_null' => true),
                 'label' => 'Content URL', 'source' => 'feed',
-                'feedParam1' => 'media', 'feedParam2' => 'content', 'attrs' => 'url'),
+                'feed_param_1' => 'media', 'feed_param_2' => 'content', 'attrs' => 'url'),
             'width' => array(
-                'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
+                'col_params' => array('type' => 'smallint unsigned', 'not_null' => true),
                 'label' => 'Width', 'source' => 'feed',
-                'feedParam1' => 'gphoto', 'feedParam2' => 'width'),
+                'feed_param_1' => 'gphoto', 'feed_param_2' => 'width'),
             'height' => array(
-                'colParams' => array('type' => 'smallint unsigned', 'notNull' => 1),
+                'col_params' => array('type' => 'smallint unsigned', 'not_null' => true),
                 'label' => 'Height', 'source' => 'feed',
-                'feedParam1' => 'gphoto', 'feedParam2' => 'height'),
+                'feed_param_1' => 'gphoto', 'feed_param_2' => 'height'),
             'taken_timestamp' => array(
-                'colParams' => array('type' => 'bigint unsigned',  'notNull' => 1),
+                'col_params' => array('type' => 'int unsigned', 'not_null' => true),
                 'label' => 'Date taken', 'source' => 'feed',
-                'feedParam1' => 'exif', 'feedParam2' => 'time'),
+                'feed_param_1' => 'exif', 'feed_param_2' => 'time'),
             'uploaded_timestamp' => array(
-                'colParams' => array('type' => 'bigint unsigned',  'notNull' => 1),
+                'col_params' => array('type' => 'int unsigned', 'not_null' => true),
                 'label' => 'Date Uploaded', 'source' => 'feed',
-                'feedParam1' => 'gphoto', 'feedParam2' => 'timestamp'),
+                'feed_param_1' => 'gphoto', 'feed_param_2' => 'timestamp'),
             'tags' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255'),
+                'col_params' => array('type' => 'varchar', 'length' => '255'),
                 'label' => 'Tags', 'source' => 'feed',
-                'feedParam1' => 'media', 'feedParam2' => 'keywords'),
+                'feed_param_1' => 'media', 'feed_param_2' => 'keywords'),
             'include_in_random' => array(
-                'colParams' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
+                'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
                 'label' => 'Include in random photo display', 'source' => 'user',
-                'inputType' => 'radio',
-                'inputSubgroup' => array('Y' => 'Yes', 'N' => 'No')),
+                'input_type' => 'radio',
+                'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
             'deleted' => array(
-                'colParams' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
+                'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
                 'label' => 'Deleted flag', 'source' => 'db'),
             'enclosure_url' => array(
-                'colParams' => array('type' => 'text', 'notNull' => 1),
+                'col_params' => array('type' => 'text', 'not_null' => true),
                 'label' => 'Enclosure URL', 'source' => 'feed',
-                'feedParam1' => 'enclosure', 'attrs' => 'url'),
+                'feed_param_1' => 'enclosure', 'attrs' => 'url'),
             'enclosure_type' => array(
-                'colParams' => array('type' => 'varchar', 'length' => '255', 'notNull' => 1),
+                'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
                 'label' => 'Enclosure Type', 'source' => 'feed',
-                'feedParam1' => 'enclosure', 'attrs' => 'type'),
+                'feed_param_1' => 'enclosure', 'attrs' => 'type'),
         );
     }
 
     /**
-     * Retrieves data stored in the shashin_photo table for the
-     * specified Picasa photo.
-     *
-     * Data is stored in $this->data. An album can be requested by
-     * Shashin key, or a complete array of photo data can be passed in.
+     * Populates a ShashinPhoto object based on an identifier (can be a
+     * Picasa ID, photo title, or Shashin key) or a passed-in array of photo
+     * data.
      *
      * @access public
-     * @param int $photoKey the Shashin key for a Picasa photo
-     * @param array $photoData a complete array of album data
-     * @uses ToppaWPFunctions::select()
-     * @return boolean true: retrieval succeeded; false: retrieval failed
+     * @param array $photo_identifier a key-value pair (e.g. 'photo_id' => 37)
+     * @param array $photo_data a complete array of photo data
+     * @return array 0: true on success, false on failure, null if photo not found; 1: message; 2: true if SQL error
      */
-    function getPhoto($photoKey = null, $photoData = null) {
-        if (strlen($photoKey)) {
-            $where = "WHERE PHOTO_KEY = '$photoKey' AND DELETED = 'N'";
-            $row = ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE, "*", $where);
+    function getPhoto($photo_identifier = null, $photo_data = null) {
+        if (is_array($photo_identifier)) {
+            $row = ToppaWPFunctions::sqlSelect(SHASHIN_PHOTO_TABLE, '*', $photo_identifier);
 
-            if (empty($row)) {
-                return false;
+            if ($row === false) {
+                return array(false, __("ShashinPhoto::getPhoto - Failed to retrieve photo. SQL Error:", SHASHIN_L10N_NAME), true);
+            }
+
+            elseif (empty($row)) {
+                return array(null, __("Photo not found.", SHASHIN_L10N_NAME));
             }
 
             $row['description'] = htmlspecialchars($row['description'], ENT_COMPAT, 'UTF-8');
             $this->data = $row;
         }
 
-        elseif (!empty($photoData)) {
-            $photoData['description'] = htmlspecialchars($photoData['description'], ENT_COMPAT, 'UTF-8');
-            $this->data = $photoData;
+        elseif (is_array($photo_data)) {
+            $photo_data['description'] = htmlspecialchars($photo_data['description'], ENT_COMPAT, 'UTF-8');
+            $this->data = $photo_data;
         }
 
         else {
-            return false;
+            return array(false, __("ShashinPhoto::getPhoto - Called with invalid arguments.", SHASHIN_L10N_NAME));
         }
 
-        return true;
+        return array(true, __("Photo retrieved."));
     }
 
     /**
-     * Sets the include_in_random flag for a photo (y or n).
+     * Updates local photo data (i.e. data that doesn't come from the
+     * Picasa RSS feed).
      *
      * @access public
-     * @param string $randomFlag y or n
-     * @uses ToppaWPFunctions::update()
-     * @return boolean true: update succeeded; false: update failed
+     * @param array $data A hash of photo data (keys are column names)
+     * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
-    function setIncludeInRandom($randomFlag) {
-        $retVal = ToppaWPFunctions::update(SHASHIN_PHOTO_TABLE, "photo_id = '{$this->data['photo_id']}'",
-            array('include_in_random' => $randomFlag));
-
-        if ($retVal === false) {
-            return false;
+    function setPhotoLocal($data) {
+        if (!is_array($data)) {
+            return array(false, __("ShashinPhoto::setPhotoLocal - Called with invalid arguments.", SHASHIN_L10N_NAME));
         }
 
-        return true;
+        $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $data, array('photo_id' => $this->data['photo_id']));
+
+        if (!$sql_result) {
+            return array(false, __("ShashinPhoto::getPhotoLocal - Failed to update record for photo ID {$this->data['photo_id']}. SQL Error:", SHASHIN_L10N_NAME), true);
+        }
+
+        return array(true, __("Photo updated."));
     }
 
     /**
      * A static method for retrieving an arbitrary set of photos.
-     * Accepts an optional SQL where clause.
      *
      * @static
      * @access public
-     * @param string $where the SQL where clause (can include order by, etc as well)
-     * @uses ToppaWPFunctions::select()
+     * @param string|array $keywords the fields to return
+     * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
+     * @param string $other (optional) any additional conditions for the query (GROUP BY, etc.)
+     * @uses ToppaWPFunctions::sqlSelect()
      * @return array An array of hashes containing photo data
      */
-    function getPhotos($where = null) {
-        return ToppaWPFunctions::select(SHASHIN_PHOTO_TABLE . " sp", "sp" . '.*', $where, 'get_results');
+    function getPhotos($keywords = 'sp.*', $conditions = null, $other = null) {
+        return ToppaWPFunctions::sqlSelect(SHASHIN_PHOTO_TABLE . " sp", $keywords, $conditions, $other, 'get_results');
     }
 
     /**
@@ -176,157 +180,93 @@ class ShashinPhoto {
      * specified photo, with a hyperlink to the photo (either in
      * Highslide or at Picasa).
      *
-     * $match array elements are as follows:
-     * - Tag (optional): the complete simage tag
-     * - Photo Key (required): the Shashin photo_key (not the Picasa image ID)
-     * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
-     * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Float (optional): a css float value (left, right, or none) (no default)
-     * - Clear (optional): a css clear value (left, right, or both) (no default)
-     *
-     * @static
      * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @param array $match see detailed list in Shashin::parseContent()
+     * @param boolean $admin whether we are displaying thumbnails on the admin page
      * @uses ShashinPhoto::getPhoto()
      * @uses ShashinPhoto::_getDivMarkup()
      * @return string xhtml markup for displaying a single image
      */
-    function getPhotoMarkup($match) {
+    function getPhotoMarkup($match, $admin = false) {
         // get the image, if we don't have it already
-        if (!strlen($this->data['photo_id'])) {
-            if ($this->getPhoto($match[1]) === false) {
-                return '<span class="shashin_error">Error: unable to find photo key ' . $match[1] . '</span>';
+        if (!$this->data['photo_id']) {
+            list($result, $message, $db_error) = $this->getPhoto(array('photo_key' => $match['photo_key']));
+
+            if (!$result) {
+                return '<span class="shashin_error">' . __("Shashin error:") . ' ' . $message . '</span>';
             }
         }
 
-        return $this->_getDivMarkup($match);
+        // for display in the admin menu, set the last arg (for the
+        // highslide controller) to true. We don't actually have one on
+        // the admin side, but this will force the correct behavior for
+        // captions, since we don't have highslide running on the admin
+        // side.
+        return $this->_getDivMarkup($match, false, null, false, $admin);
     }
 
     /**
-     * Same as getPhotoMarkup, but suppresses calls to Highslide, since 
-     * Highslide isn't running in the admin panels
-     *
-     * @static
-     * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
-     * @uses ShashinPhoto::getPhoto()
-     * @uses ShashinPhoto::_getDivMarkup()
-     * @return string xhtml markup for displaying a single image
-     */
-    function getAdminPhotoMarkup($match) {
-        // get the image, if we don't have it already
-        if (!strlen($this->data['photo_id'])) {
-            if ($this->getPhoto($match[1]) === false) {
-                return '<span class="shashin_error">Error: unable to find photo key ' . $match[1] . '</span>';
-            }
-        }
-
-        // set the last arg (for the highslide controller) to true
-        // we don't really have one on the admin side, but this will force
-        // the correct behavior for captions, since we don't have highslide
-        // running on the admin side.
-        return $this->_getDivMarkup($match, false, null, true);
-    }    
-    
-    /**
      * Translates the "srandom" Shashin tag into xhtml displaying a
-     * table of random photos, each with a hyperlink to the photo
-     * (either in Highslide or at Picasa).
+     * table of random photos. If album keys are not provided, then it will pick
+     * from among all photos.
      *
      * Note that if an album has include_in_random=n, no photos from it
-     * will be displayed, even if the photos have include_in_random=y.
-     *
-     * $match array elements are as follows:
-     * - Tag (optional): the complete simage tag
-     * - Album Key (required): a Shashin album_key (not the Picasa album ID) or "any" for pictures from any album
-     * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
-     * - Max Cols (required): how many columns the table will have
-     * - How Many (required): how many random pictures to show
-     * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Float (optional): a css float value (left, right, or none) (no default)
-     * - Clear (optional): a css clear value (left, right, or both) (no default)
+     * will be displayed, even if the photos in it have include_in_random=y.
      *
      * @static
      * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @param array $match see details in Shashin::parseContent()
      * @uses ShashinPhoto::getPhotos()
      * @uses ShashinPhoto::_getTableMarkup()
      * @return string the xhtml markup to replace the srandom tag with
      */
     function getRandomMarkup($match) {
-        $albumKey = strtolower(trim($match[1]));
+        $conditions = " inner join " . SHASHIN_ALBUM_TABLE
+            . " sa where sp.include_in_random = 'Y' and "
+            . "sa.include_in_random = 'Y' and sp.deleted = 'N' "
+            . "and sa.album_id = sp.album_id";
 
-        $conditions = " INNER JOIN " . SHASHIN_ALBUM_TABLE . " sa"
-            . " WHERE sp.include_in_random = 'Y' AND sa.include_in_random = 'Y'"
-            . " AND sa.album_id = sp.album_id";
-
-        if ($albumKey != 'any') {
-            $conditions .= " AND sa.album_key = $albumKey";
+        if ($match['album_key'] != 'any') {
+            $conditions .= " and album_key in (" . implode(",", explode("|", $match['album_key'])) . ")";
         }
 
-        $conditions .= " ORDER BY RAND() LIMIT " . $match[4];
+        $other = "order by rand() limit " . $match['how_many'];
+        $photos = ShashinPhoto::getPhotos('sp.*', $conditions, $other);
 
-        // get the photos
-        $photos = ShashinPhoto::getPhotos($conditions);
-
-        if ($photos === false) {
-            return '<span class="shashin_error">Error: unable to retrive photos</span>';
+        if (!$photos) {
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve random photos.") . '</span>';
         }
 
-        return ShashinPhoto::_getTableMarkup($photos, $match[2], $match[3], $match[5], $match[6], $match[7]);
+        return ShashinPhoto::_getTableMarkup($photos, $match);
     }
 
     /**
      * Translates the "snewest" Shashin tag into xhtml displaying a
-     * table of your newest photos, each with a hyperlink to the photo
-     * (either in Highslide or at Picasa).
-     *
-     * $match array elements are as follows:
-     * - Tag (optional): the complete simage tag
-     * - Album Key (required): a Shashin album_key (not the Picasa album ID) or "any" for pictures from any album
-     * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
-     * - Max Cols (required): how many columns the table will have
-     * - How Many (required): how many random pictures to show
-     * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Float (optional): a css float value (left, right, or none) (no default)
-     * - Clear (optional): a css clear value (left, right, or both) (no default)
+     * table of thumbnails of your newest photos (by upload date). If album
+     * keys are not provided, then it will pick from among all photos.
      *
      * @static
      * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
-     * @uses ShashinAlbum::ShashinAlbum()
-     * @uses ShashinAlbum::getAlbum()
+     * @param array $match see details in Shashin::parseContent()
      * @uses ShashinPhoto::getPhotos()
      * @uses ShashinPhoto::_getTableMarkup()
      * @return string the xhtml markup to replace the snewest tag with
      */
     function getNewestMarkup($match) {
-        $albumKey = strtolower(trim($match[1]));
-        $where = "";
-
-        // we need the picasa album id for the specified album key, if
-        // it's not "any"
-        if ($albumKey != 'any') {
-            $album = new ShashinAlbum();
-            $album->getAlbum(null, null, null, $albumKey);
-
-            if ($album === false) {
-                return '<span class="shashin_error">Error: unable to retrive album with album_key $albumKey</span>';
-            }
-
-            $where .= "WHERE ALBUM_ID = '" . $album->data['album_id'] . "'";
+        if ($match['album_key'] != 'any') {
+            $conditions = " inner join " . SHASHIN_ALBUM_TABLE
+                . " sa where sa.album_id = sp.album_id and album_key in ("
+                . implode(",", explode("|", $match['album_key'])) . ")";
         }
 
-        // set the limit, and order by timestamp
-        $where .= " ORDER BY UPLOADED_TIMESTAMP DESC";
-        $where .= " LIMIT " . $match[4];
-        $photos = ShashinPhoto::getPhotos($where);
+        $other = "order by uploaded_timestamp desc limit " . $match['how_many'];
+        $photos = ShashinPhoto::getPhotos('sp.*', $conditions, $other);
 
-        if ($photos === false) {
-            return '<span class="shashin_error">Error: unable to get photo IDs for random photo</span>';
+        if (!$photos) {
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve newest photos.") . '</span>';
         }
 
-        return ShashinPhoto::_getTableMarkup($photos, $match[2], $match[3], $match[5], $match[6], $match[7]);
+        return ShashinPhoto::_getTableMarkup($photos, $match);
     }
 
     /**
@@ -334,34 +274,26 @@ class ShashinPhoto {
      * xhtml table displaying the specified thumbnails, each with a
      * hyperlink to the photo (either in Highslide or at Picasa).
      *
-     * $match array elements are as follows:
-     * - Tag (optional): the complete sthumbs tag
-     * - Keys (required): Shashin photo keys, pipe delimited (not the Picasa image IDs)
-     * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
-     * - Columns (required): the number of colums for the thumbnail table
-     * - Float (optional): a css float value (left, right, or none) (no default)
-     * - Clear (optional): a css clear value (left, right, or both) (no default)
-     *
      * @static
      * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @param array $match see details in Shashin::parseContent()
      * @uses ShashinPhoto::getPhotos()
      * @uses ShashinPhoto::_getTableMarkup()
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getThumbsMarkup($match) {
-        $photoKeys = explode("|", $match[1]);
-        $where = "WHERE PHOTO_KEY IN ('" . implode("','", $photoKeys) . "')";
-        $photos = ShashinPhoto::getPhotos($where);
+        $photo_keys = explode("|", $match['photo_key']);
+        $conditions = "where photo_key in ('" . implode("','", $photo_keys) . "') and deleted = 'N'";
+        $photos = ShashinPhoto::getPhotos('*', $conditions);
 
-        if ($photos === false) {
-            return '<span class="shashin_error">Error: unable to retrive photos</span>';
+        if (!$photos) {
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve photo thumbnails.") . '</span>';
         }
 
         // the data doesn't come back from the database in the order it was
         // requested, so re-order it.
         $ordered = array();
-        foreach ($photoKeys as $key) {
+        foreach ($photo_keys as $key) {
             foreach ($photos as $photo) {
                 if ($key == $photo['photo_key']) {
                     $ordered[] = $photo;
@@ -369,26 +301,17 @@ class ShashinPhoto {
             }
         }
 
-        return ShashinPhoto::_getTableMarkup($ordered, $match[2], $match[3], $match[4], $match[5], $match[6]);
+        return ShashinPhoto::_getTableMarkup($ordered, $match);
     }
 
     /**
-     * Static method that translates the "salbumphotos" Shashin tag
-     * into anxhtml table displaying all the photos for an album, each
-     * with a hyperlink to the photo (either in Highslide or at Picasa).
-     *
-     * $match array elements are as follows:
-     * - Size (required): the desired max dimension. Note Picasa allows only certain sizes.
-     * - Columns (required): the number of colums for the thumbnail table
-     * - Caption (optional): y or n to show the image description as a caption (defaults to n)
-     * - Description (optional): y or n to display the album description as a table caption
-     * - Order By (optional): field to order the photos by - default is taken_timestamp
-     * - Float (optional): a css float value (left, right, or none) (no default)
-     * - Clear (optional): a css clear value (left, right, or both) (no default)
+     * Static method that display thumbnails for an album. Can be invoked by
+     * the salbumphotos tag, or by a $_REQUEST flag when an album cover
+     * thumbnail is clicked.
      *
      * @static
      * @access public
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
+     * @param array $match see details in Shashin::parseContent()
      * @uses ShashinPhoto::getPhotos()
      * @uses ShashinPhoto::_getTableMarkup()
      * @uses ShashinAlbum::ShashinAlbum()
@@ -396,41 +319,39 @@ class ShashinPhoto {
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getAlbumPhotosMarkup($match) {
-        // if no album id was supplied, then we'll show thumbnails for all the albums
-        if (!$_REQUEST['album_id']) {
-            return ShashinAlbum::getAlbumThumbsMarkup(array(null,'pub_date',$match[2],'n','n',$match[5],$match[6]));
-        }
-        
-        if ($match[5]) {
-            $order = $match[5];
-        }
-
-        else {
-            $order = 'taken_timestamp';
+        // the is_numeric check also provides a de facto check on XSS attacks
+        if (is_numeric($_REQUEST['shashin_album_key'])) {
+            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            $match['album_key'] = $_REQUEST['shashin_album_key'];
+            $match['max_size'] = $shashin_options['album_photos_max'];
+            $match['max_cols'] = $shashin_options['album_photos_cols'];
+            $match['caption_yn'] = $shashin_options['album_photos_captions'];
+            $match['description_yn'] = $shashin_options['album_photos_description'];
+            $match['order_by'] = $shashin_options['album_photos_order'];
         }
 
-        $where = "WHERE ALBUM_ID = '" . $_REQUEST['album_id']
-            . "' ORDER BY $order";
+        $order = $match['order_by'] ? $match['order_by'] : 'taken_timestamp';
+        $conditions = " inner join " . SHASHIN_ALBUM_TABLE
+            . " sa where sa.album_id = sp.album_id and sp.deleted = 'N' and sa.album_key = "
+            . $match['album_key'];
+        $other = "order by $order";
+        $photos = ShashinPhoto::getPhotos('sp.*, sa.title as album_title, sa.description as album_description', $conditions, $other);
 
-        $photos = ShashinPhoto::getPhotos($where);
-
-        if ($photos === false) {
-            return '<span class="shashin_error">Error: unable to retrive photos</span>';
+        if (!$photos) {
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrive album photos.") . '</span>';
         }
 
-        $desc = '<strong>' . $_REQUEST['title']  . '</strong>';
+        // for accessing the album title and description
+        $photo = current($photos);
 
-        // query for the album description if we want to show it
-        if (strtolower(trim($match[4])) == 'y') {
-            $album = new ShashinAlbum();
-            $album->getAlbum($_REQUEST['album_id']);
-            
-            if ($album->data['description']) {
-                $desc .= " - " . preg_replace("/\s/", " ", $album->data['description']);
-            }
+        $desc = '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back") . '</a></span>';
+        $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
+
+        if ($photo['album_description'] &&  $match['description_yn'] == 'y') {
+            $desc .= ' <span class="shashin_caption_description">' . preg_replace("/\s/", " ", $photo['album_description']) . '</span>';
         }
 
-        return ShashinPhoto::_getTableMarkup($photos, $match[1], $match[2], $match[3], $match[6], $match[7], $desc);
+        return ShashinPhoto::_getTableMarkup($photos, $match, $desc);
     }
 
     /**
@@ -440,60 +361,47 @@ class ShashinPhoto {
      * @static
      * @access private
      * @param array $photos array of arrays containing photo data
-     * @param int $size the desired max dimension - note Picasa allows only certain sizes
-     * @param int $cols the number of columns for the table
-     * @param string $caption y or n flag indicatig whether to show captions on the images
-     * @param string $float an optional css float value
-     * @param string $clear an optional css clear value
+     * @param array $match data for customizing the markup
      * @param string $desc an optional album description to display (as a table caption)
      * @uses ShashinPhoto::ShashinPhoto()
      * @uses ShashinPhoto::getPhoto()
      * @uses ShashinPhoto::_getDivMarkup()
      * @return string xhtml markup for the table containing the photos
      */
-    function _getTableMarkup($photos, $size, $cols, $caption, $float = null, $clear = null, $desc = null) {
+    function _getTableMarkup($photos, $match, $desc = null) {
         $replace = '<table class="shashin_thumbs_table"';
 
-        if (strlen($float) || strlen($clear)) {
+        if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
-
-            if (strlen($float)) {
-                $replace .= "float:$float;";
-            }
-
-            if (strlen($clear)) {
-                $replace .= "clear:$clear;";
-            }
-
+            $replace .= $match['float'] ? "float:{$match['float']};" : '';
+            $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
             $replace .= '"';
+            // don't want these applied to the individual images when
+            // calling _getDivMarkup
+            unset($match['float']);
+            unset($match['clear']);
         }
 
-        $replace .= '>' . "\n";
-
-        if ($desc) {
-            $replace .=  "<caption>$desc</caption>\n";
-        }
-
-        $cellCount = 1;
+        $replace .= ">\n";
+        $replace .=  $desc ? "<caption>$desc</caption>\n" : '';
+        $cell_count = 1;
 
         for ($i = 0; $i < count($photos); $i++) {
-            if ($cellCount == 1) {
-                $replace .= "<tr>\n";
-            }
-
+            $replace .= ($cell_count == 1) ? "<tr>\n" : '';
             $photo = new ShashinPhoto();
+            list($result, $message, $db_error) = $photo->getPhoto(null, $photos[$i]);
 
-            if ($photo->getPhoto(null, $photos[$i]) === false) {
-                return '<span class="shashin_error">Error: unable to set photo object for photo_id ' . $photos[$i]['photo_id'] . '</span>';
+            if (!$result) {
+                return '<span class="shashin_error">' . __("Shashin Error:") . ' ' . $message . '</span>';
             }
 
-            $markup = $photo->_getDivMarkup(array(null, null, $size, $caption), true, $_SESSION['hs_group_counter'], true);
+            $markup = $photo->_getDivMarkup($match, true, $_SESSION['hs_group_counter'], true);
             $replace .= "<td>$markup</td>\n";
-            $cellCount++;
+            $cell_count++;
 
-            if ($cellCount > $cols || $i == (count($photos) - 1)) {
+            if ($cell_count > $match['max_cols'] || $i == (count($photos) - 1)) {
                 $replace .= "</tr>\n";
-                $cellCount = 1;
+                $cell_count = 1;
             }
         }
 
@@ -504,14 +412,13 @@ class ShashinPhoto {
     }
 
     /**
-     * Calculates the height or width for an image, based on $max. Allowed
-     * values for $max are 32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512,
-     * 576, 640, 720, 800. If 32, 48, 64, or 160 is used, the image will be
-     * cropped square.
+     * Calculates the height or width for an image, based on $max. See
+     * See http://code.google.com/apis/picasaweb/reference.html for an
+     * explanation of the supported image sizes.
      *
      * $max is your desired maximum image dimension. It will be applied to the
      * width of the image if it has a landscape orientation, or to the height if
-     * it has a portrait orientation (that's just how Picasa works). The
+     * it has a portrait orientation (that's how Picasa works). The
      * dimensions are added to $this->data as user_width, user_height, and
      * user_max
      *
@@ -520,12 +427,10 @@ class ShashinPhoto {
      * @return boolean true: set dimension successfully; false: failed to set dimension
      */
     function _setDimensions($max) {
-        // You have to use one of these  to get a picture back from Picasa
-        // See http://code.google.com/apis/picasaweb/reference.html
-        $allowed = eval(SHASHIN_IMAGE_SIZES);
-        $cropped = eval(SHASHIN_CROP_SIZES);
+        $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
+        $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
 
-        if (!in_array($max, $allowed)) {
+        if (!in_array($max, $shashin_image_sizes)) {
             return false;
         }
 
@@ -533,11 +438,10 @@ class ShashinPhoto {
         $this->data['user_max'] = $max;
 
         // if it's a cropped size, then $max applies to the height and width
-        if (in_array($max, $cropped)) {
+        if (in_array($max, $shashin_crop_sizes)) {
             $this->data['user_width'] = $max;
             $this->data['user_height'] = $max;
             $this->data['user_max'] = $this->data['user_max'] . '&amp;crop=1';
-
         }
 
         // see if $max should be applied to the height or the width
@@ -545,16 +449,14 @@ class ShashinPhoto {
             $this->data['user_width'] = $max;
             $percentage = $max / $this->data['width'];
             $this->data['user_height'] = $percentage * $this->data['height'];
-            # drop any decimals
-            settype($this->data['user_height'], "int");
+            settype($this->data['user_height'], "int"); // drop any decimals
         }
 
         else {
             $this->data['user_height'] = $max;
             $percentage = $max / $this->data['height'];
             $this->data['user_width'] = $percentage * $this->data['width'];
-            # drop any decimals
-            settype($this->data['user_width'], "int");
+            settype($this->data['user_width'], "int"); // drop any decimals
         }
 
         return true;
@@ -564,25 +466,25 @@ class ShashinPhoto {
      * Generates the xhtml div for displaying an image.
      *
      * @access private
-     * @param array $match the array returned by str_replace on the content in Shashin::parseContent()
-     * @param boolean $thumb if true the shashion_thumb_padding class will be applied
-     * @param integer $group a group id number for Highslide
+     * @param array $match see detailed list in ShashinPhoto::getPhotoMarkup()
+     * @param boolean $thumb if true the shashin_thumb_padding class will be applied
+     * @param integer $group a group ID number for Highslide
      * @param boolean $controller whether the image display has a Highslide controller
      * @uses ShashinPhoto::_setDimensions()
+     * @uses ShashinAlbum::ShashinAlbum()
+     * @uses ShashinAlbum::getAlbum()
      * @return string the xhtml markup to display the image
      */
-    function _getDivMarkup($match, $thumb = false, $group = null, $controller = false) {
-        // see if we're using highslide, linking to the image at Picasa in the
-        // same window, or in a new window
-        $display = get_option('shashin_image_display');
+    function _getDivMarkup($match, $thumb = false, $group = null, $controller = false, $admin = false) {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
 
         // set the dimensions
-        if ($this->_setDimensions($match[2]) === false) {
-            return '<span class="shashin_error">Error: invalid size for image</span>';
+        if ($this->_setDimensions($match['max_size']) === false) {
+            return '<span class="shashin_error">Shashin Error: invalid size for image</span>';
         }
 
         // set the caption to include the album name if that option is set
-        if (get_option('shashin_prefix_captions') == 'y') {
+        if ($shashin_options['prefix_captions'] == 'y') {
             $album = new ShashinAlbum();
             $album->getAlbum($this->data['album_id']);
             $caption = $album->data['title'] . " &ndash; " . $this->data['description'];
@@ -593,76 +495,53 @@ class ShashinPhoto {
         }
 
         // a caption on the thumbnail is optional
-        if (strtolower(trim($match[3])) == 'y') {
-            $optCaption = $caption;
+        if ($match['caption_yn'] == 'y') {
+            $opt_caption = $caption;
         }
 
         // 'enlarge' or 'play' as a caption option
-        else if (strtolower(trim($match[3])) == 'c') {
-            $optCaption = $this->_isVideo() ? 'Click picture to play video' : 'Click picture to enlarge';
-        }
-        
-        // set the float value
-        if (strlen(trim($match[4]))) {
-            $float = $match[4];
+        else if ($match['caption_yn'] == 'c') {
+            $opt_caption = $this->_isVideo() ? 'Click picture to play video' : 'Click picture to enlarge';
         }
 
-        // set the clear value
-        if (strlen(trim($match[5]))) {
-            $clear = $match[5];
-        }
-
-
-        if ($thumb === true) {
-            $class = ' class="shashin_thumb"';
-            $padding = get_option("shashin_thumb_padding");
-        }
-
-        else {
-            $class = ' class="shashin_image"';
-            $padding = get_option("shashin_div_padding");
-        }
-
-        $markup = '<div' . $class . ' style="width: '
-            . ($this->data['user_width'] + $padding) . 'px;';
-
-        if (strlen($float)) {
-            $markup .= ' float: ' . $float . ';';
-        }
-
-        if (strlen($clear)) {
-            $markup .= ' clear: ' . $clear . ';';
-        }
-
+        $class = $thumb ? 'shashin_thumb' : 'shashin_image';
+        $padding = $thumb ? $shashin_options['thumb_padding'] : $shashin_options['div_padding'];
+        $markup = '<div class="' . $class . '" style="width: ' . ($this->data['user_width'] + $padding) . 'px;';
+        $markup .= is_string($match['float']) ? " float: {$match['float']};" : "";
+        $markup .= is_string($match['clear']) ? " clear: {$match['clear']};" : "";
         $markup .=  '">';
+        $autoplay = $shashin_options['highslide_autoplay'];
 
-        $autoplay = get_option('shashin_highslide_autoplay');
-        
+        if ($shashin_options['image_display'] == 'none' || $admin) {
+            $markup .= ''; // no link! :-)
+        }
+
         // videos in highslide
-        if ($display == 'highslide' && $this->_isVideo()) {
-            $videoURL = SHASHIN_GOOGLE_PLAYER_URL
+        else if ($shashin_options['image_display'] == 'highslide' && $this->_isVideo()) {
+            $video_url = SHASHIN_GOOGLE_PLAYER_URL
                 . urlencode(html_entity_decode($this->data['content_url']))
                 . '&amp;autoPlay=true';
-            $width = get_option('shashin_highslide_video_width');
-            $height = get_option('shashin_highslide_video_height');
+            $width = $shashin_options['highslide_video_width'];
+            $height = $shashin_options['highslide_video_height'];
+
             // need minWidth because width was not autosizing for content
             // need "preserveContent: false" so the video and audio will stop when the window is closed
-            $markup .= "<a href=\"$videoURL\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
-                . ($width+20) . ", minHeight: " . ($height+20) 
+            $markup .= "<a href=\"$video_url\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
+                . ($width+20) . ", minHeight: " . ($height+20)
                 . ", objectWidth: $width, objectHeight: $height, allowSizeReduction: false, preserveContent: false";
-                
+
             if ($group) {
                 $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "'";
             }
-                
+
             $markup .= ' } )" class="highslide">';
             $_SESSION['hs_id_counter']++;
         }
 
         // images in highslide
-        else if ($display == 'highslide') {
+        else if ($shashin_options['image_display'] == 'highslide') {
             $markup .= '<a href="' . $this->data['enclosure_url']
-                . '?imgmax=' . get_option('shashin_highslide_max')
+                . '?imgmax=' . $shashin_options['highslide_max']
                 . '" class="highslide" id="thumb' . $_SESSION['hs_id_counter']
                 . '" onclick="return hs.expand(this';
 
@@ -673,39 +552,35 @@ class ShashinPhoto {
             $markup .= ')">';
             $_SESSION['hs_id_counter']++;
         }
-        
-        else if ($display == 'none') {
-            $markup .= ''; // no link! :-)
-        }
-        
+
         // images or videos at Picasa
         else {
             $markup .= '<a href="' . $this->data['link_url'] . '"';
 
-            if ($display == 'new_window') {
+            if ($shashin_options['image_display'] == 'new_window') {
                 $markup .= ' target="_blank"';
             }
-            
+
             $markup .= '>';
         }
-        
+
         $markup .= '<img src="' . $this->data['enclosure_url']
             . '?imgmax='. $this->data['user_max']
             . '" alt="' . $caption
             . '" title="' . $caption
             . '" width="' . $this->data['user_width']
             . '" height="' . $this->data['user_height'] . '" />';
-        
-        if ($display != 'none') {    
+
+        if ($shashin_options['image_display'] != 'none') {
             $markup .= '</a>';
         }
-        
+
         // whether to display the caption under the photo
-        if (strlen($optCaption)) {
-            $markup .= '<span class="shashin_caption">' . $optCaption . '</span>';
+        if ($opt_caption) {
+            $markup .= '<span class="shashin_caption">' . $opt_caption . '</span>';
         }
 
-        if (strlen($caption) && $display == 'highslide') {
+        if ($caption && $shashin_options['image_display'] == 'highslide') {
             $markup .= '<div class="highslide-caption">' . $caption . '</div>';
         }
 
@@ -718,10 +593,11 @@ class ShashinPhoto {
      *
      * @access private
      * @return boolean
-     */    
+     */
     function _isVideo() {
+        $video_types = unserialize(SHASHIN_PICASA_VIDEO_TYPES);
         $ext = strtoupper(substr($this->data['title'], -3));
-        if (in_array($ext, eval(SHASHIN_PICASA_VIDEO_TYPES))) {
+        if (in_array($ext, $video_types)) {
             return true;
         }
         return false;

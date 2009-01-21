@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.2.1
+ * @version 2.3
  * @package Shashin
  * @subpackage Classes
  */
@@ -44,14 +44,14 @@ class ToppaXMLParser {
 
     function parse($url) {
         $client = new Snoopy();
-	    $client->fetch($url);
+        $client->fetch($url);
         $clean = str_replace('&', '%and%', $client->results); // sucky
         $ret = xml_parse($this->parser, $clean);
 
         if (!$ret) {
             return(sprintf("XML error: %s at line %d",
-    			xml_error_string(xml_get_error_code($this->parser)),
-    			xml_get_current_line_number($this->parser)));
+                xml_error_string(xml_get_error_code($this->parser)),
+                xml_get_current_line_number($this->parser)));
         }
 
         xml_parser_free($this->parser);
@@ -59,30 +59,30 @@ class ToppaXMLParser {
     }
 
     function startElement($parser, $name, $attrs) {
-    	if ($this->insideItem === true) {
+        if ($this->insideItem === true) {
             $attrs = str_replace('%and%', '&', $attrs); // sucky
             $this->allTags[$this->counter][$name] = array();
-            
+
             foreach ($attrs as $k=>$v) {
                 $this->allTags[$this->counter][$name]['attrs'][$k] .= $v;
-            }            
+            }
 
             $this->tag = $name;
         }
-    	if ($name == "item") {
-    		$this->insideItem = true;
-    	}
+        if ($name == "item") {
+            $this->insideItem = true;
+        }
     }
 
     function endElement($parser, $name) {
-    	if ($name == "item") {
+        if ($name == "item") {
             $this->counter++;
-    		$this->insideItem = false;
-    	}
+            $this->insideItem = false;
+        }
     }
 
     function characterData($parser, $data) {
-    	if ($this->insideItem === true) {
+        if ($this->insideItem === true) {
             $data = str_replace('%and%', '&', $data); // sucky
 
             // The use of .= here is crucial for two reasons:
@@ -93,7 +93,7 @@ class ToppaXMLParser {
             //    call this method again, so you need to concatenate the
             //    data from each call
             $this->allTags[$this->counter][$this->tag]['data'] .= $data;
-    	}
+        }
     }
 }
 

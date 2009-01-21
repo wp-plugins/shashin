@@ -1,0 +1,729 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-15 07:13-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ShashinPhoto.php:118
+msgid "ShashinPhoto::getPhoto - Failed to retrieve photo. SQL Error:"
+msgstr ""
+
+#: ShashinPhoto.php:122
+msgid "Photo not found."
+msgstr ""
+
+#: ShashinPhoto.php:135
+msgid "ShashinPhoto::getPhoto - Called with invalid arguments."
+msgstr ""
+
+#: ShashinPhoto.php:138
+msgid "Photo retrieved."
+msgstr ""
+
+#: ShashinPhoto.php:151
+msgid "ShashinPhoto::setPhotoLocal - Called with invalid arguments."
+msgstr ""
+
+#: ShashinPhoto.php:160
+msgid "Photo updated."
+msgstr ""
+
+#: ShashinPhoto.php:196
+msgid "Shashin error:"
+msgstr ""
+
+#: ShashinPhoto.php:237
+msgid "Shashin Error: unable to retrieve random photos."
+msgstr ""
+
+#: ShashinPhoto.php:266
+msgid "Shashin Error: unable to retrieve newest photos."
+msgstr ""
+
+#: ShashinPhoto.php:290
+msgid "Shashin Error: unable to retrieve photo thumbnails."
+msgstr ""
+
+#: ShashinPhoto.php:341
+msgid "Shashin Error: unable to retrive album photos."
+msgstr ""
+
+#: ShashinPhoto.php:347
+msgid "Go back"
+msgstr ""
+
+#: ShashinPhoto.php:395 ShashinAlbum.php:683 ShashinAlbum.php:878
+msgid "Shashin Error:"
+msgstr ""
+
+#: Shashin.php:61 display/options-main.php:36 display/options-main.php:59
+#: display/options-main.php:109 display/options-main.php:180
+#: display/options-main.php:191
+msgid "Yes"
+msgstr ""
+
+#: Shashin.php:62 display/options-main.php:39 display/options-main.php:62
+#: display/options-main.php:112 display/options-main.php:183
+#: display/options-main.php:194
+msgid "No"
+msgstr ""
+
+#: Shashin.php:186 Shashin.php:193
+msgid "Failed to create or update table "
+msgstr ""
+
+#: Shashin.php:378 Shashin.php:469
+msgid "Updates saved."
+msgstr ""
+
+#: Shashin.php:391
+msgid "That is not a valid URL for your Picasa server."
+msgstr ""
+
+#: Shashin.php:404
+msgid "Album added."
+msgstr ""
+
+#: Shashin.php:417
+msgid "Albums added."
+msgstr ""
+
+#: Shashin.php:464 Shashin.php:528
+msgid "Failed to retrieve album data."
+msgstr ""
+
+#: Shashin.php:483
+msgid "Album synchronized."
+msgstr ""
+
+#: Shashin.php:498 ShashinAlbum.php:247
+msgid "Album deleted."
+msgstr ""
+
+#: Shashin.php:523
+msgid "Failed to retrieve user data."
+msgstr ""
+
+#: Shashin.php:571
+msgid ""
+"Shashin has been uninstalled. You can now deactivate Shashin on your plugins "
+"management page."
+msgstr ""
+
+#: Shashin.php:575
+msgid "Uninstall of Shashin failed. Database error:"
+msgstr ""
+
+#: Shashin.php:581
+msgid ""
+"You must check the 'Uninstall Shashin' checkbox to confirm you want to "
+"uninstall Shashin"
+msgstr ""
+
+#: Shashin.php:590
+msgid "Invalid URL for Picasa Server"
+msgstr ""
+
+#: Shashin.php:605
+msgid "Shashin settings saved."
+msgstr ""
+
+#: ShashinAlbum.php:118
+msgid "ShashinAlbum::getAlbum - Failed to retrieve album. SQL Error:"
+msgstr ""
+
+#: ShashinAlbum.php:122
+msgid "Album not found."
+msgstr ""
+
+#: ShashinAlbum.php:131
+msgid "ShashinAlbum::getAlbum - Called with invalid arguments."
+msgstr ""
+
+#: ShashinAlbum.php:134
+msgid "Album retrieved."
+msgstr ""
+
+#: ShashinAlbum.php:167
+msgid ""
+"ShashinAlbum::setAlbum - First argument to setAlbum is not a valid username."
+msgstr ""
+
+#: ShashinAlbum.php:176
+msgid "ShashinAlbum::setAlbum - Failed to parse album feed."
+msgstr ""
+
+#: ShashinAlbum.php:189
+msgid ""
+"ShashinAlbum::setAlbum - Second argument to setAlbum is not a valid album "
+"identifier."
+msgstr ""
+
+#: ShashinAlbum.php:214
+msgid ""
+"ShashinAlbum::setAlbum - Failed to insert/update database record for album. "
+"SQL Error:"
+msgstr ""
+
+#: ShashinAlbum.php:232
+msgid "ShashinAlbum::deleteAlbum - Album object not correctly set."
+msgstr ""
+
+#: ShashinAlbum.php:285
+msgid "No photos found."
+msgstr ""
+
+#: ShashinAlbum.php:289
+msgid "Album photos retrieved."
+msgstr ""
+
+#: ShashinAlbum.php:323
+msgid ""
+"ShashinAlbum::setAlbumPhotos - Failed to read Picasa RSS feed for album."
+msgstr ""
+
+#: ShashinAlbum.php:428
+msgid "ShashinAlbum::setAlbumLocal - Called with invalid arguments."
+msgstr ""
+
+#: ShashinAlbum.php:437
+msgid "Album updated."
+msgstr ""
+
+#: ShashinAlbum.php:568
+msgid ""
+"ShashinAlbum::setUserAlbums - First argument to setUserAlbums is not a valid "
+"username."
+msgstr ""
+
+#: ShashinAlbum.php:572
+msgid "ShashinAlbum::setUserAlbums - Failed to parse album feed."
+msgstr ""
+
+#: ShashinAlbum.php:636
+msgid "Album photos updated."
+msgstr ""
+
+#: ShashinAlbum.php:657
+msgid "Shashin Error: unable to retrieve albums."
+msgstr ""
+
+#: display/widget_random.php:17 display/admin-main.php:41
+#: display/widget_thumbs.php:17 display/widget_single.php:17
+#: display/widget_album_thumbs.php:17 display/widget_newest.php:17
+msgid "Title"
+msgstr ""
+
+#: display/widget_random.php:21 display/widget_newest.php:21
+msgid "Album"
+msgstr ""
+
+#: display/widget_random.php:25 display/widget_thumbs.php:26
+#: display/widget_single.php:25 display/widget_newest.php:25
+msgid "Image Size"
+msgstr ""
+
+#: display/widget_random.php:29 display/widget_thumbs.php:30
+msgid "Max Cols"
+msgstr ""
+
+#: display/widget_random.php:33 display/widget_newest.php:33
+msgid "# of Images"
+msgstr ""
+
+#: display/widget_random.php:37 display/widget_thumbs.php:34
+#: display/widget_single.php:29 display/widget_newest.php:37
+msgid "Show Captions"
+msgstr ""
+
+#: display/widget_random.php:41 display/widget_thumbs.php:38
+#: display/widget_single.php:33 display/widget_album_thumbs.php:39
+#: display/widget_newest.php:41
+msgid "CSS Float"
+msgstr ""
+
+#: display/widget_random.php:45 display/widget_thumbs.php:42
+#: display/widget_single.php:37 display/widget_album_thumbs.php:43
+#: display/widget_newest.php:45
+msgid "CSS Clear"
+msgstr ""
+
+#: display/admin-main.php:27
+msgid "Your Albums"
+msgstr ""
+
+#: display/admin-main.php:31
+msgid ""
+"Click an album title to view its photos. Click a column header to order the "
+"album list by that column (and click again to reverse the order)."
+msgstr ""
+
+#: display/admin-main.php:44
+msgid "Album Key"
+msgstr ""
+
+#: display/admin-main.php:47
+msgid "Photo Count"
+msgstr ""
+
+#: display/admin-main.php:50
+msgid "Pub Date"
+msgstr ""
+
+#: display/admin-main.php:53
+msgid "Last Sync"
+msgstr ""
+
+#: display/admin-main.php:54
+msgid "Include in Random?"
+msgstr ""
+
+#: display/admin-main.php:55
+msgid "Sync"
+msgstr ""
+
+#: display/admin-main.php:56
+msgid "Delete"
+msgstr ""
+
+#: display/admin-main.php:100 display/admin-edit.php:81
+msgid "Update Random Display"
+msgstr ""
+
+#: display/admin-main.php:108 display/admin-main.php:129
+msgid "You have not added any albums yet."
+msgstr ""
+
+#: display/admin-main.php:112
+msgid "Sync Multiple Albums"
+msgstr ""
+
+#: display/admin-main.php:114
+msgid ""
+"You can sync all the albums for a Picasa user at the same time. This can "
+"take some time if you have many albums. Note this only sync albums you have "
+"already added to Shashin."
+msgstr ""
+
+#: display/admin-main.php:120
+msgid "Sync all albums for Picasa username:"
+msgstr ""
+
+#: display/admin-main.php:122
+msgid "Sync All"
+msgstr ""
+
+#: display/admin-main.php:134 display/admin-main.php:152
+msgid "Add Albums"
+msgstr ""
+
+#: display/admin-main.php:139
+msgid ""
+"Please enter the URL for your &quot;My Photos&quot; page on Picasa if you "
+"want to add all your public albums to Shashin, or enter the URL of an "
+"individual album. Use the regular URL, <strong>not the RSS URL</strong>."
+msgstr ""
+
+#: display/admin-main.php:141
+msgid "The URL should have one of these formats:"
+msgstr ""
+
+#: display/admin-main.php:144
+msgid "<strong>- OR -</strong>"
+msgstr ""
+
+#: display/admin-main.php:147
+msgid "Picasa URL:"
+msgstr ""
+
+#: display/admin-main.php:149
+msgid "Include photos in random photo display?"
+msgstr ""
+
+#: display/admin-main.php:157
+msgid "Album Tips"
+msgstr ""
+
+#: display/admin-main.php:160
+msgid ""
+"<strong>Syncing:</strong> after you upload new photos to an album in Picasa, "
+"click the"
+msgstr ""
+
+#: display/admin-main.php:162
+msgid "icon for it above."
+msgstr ""
+
+#: display/admin-main.php:163
+msgid ""
+"<strong>Display thumbnails for all your albums:</strong> you can choose the "
+"sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' "
+"for reverse ordering). [salbumthumbs=order_option,max_cols,location_yn,"
+"pubdate_yn,float,clear]"
+msgstr ""
+
+#: display/admin-main.php:164
+msgid ""
+"<strong>Display thumbnails for selected albums:</strong> "
+"[salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,"
+"float,clear]"
+msgstr ""
+
+#: display/admin-main.php:165
+msgid ""
+"<strong>Display thumbnails and descriptions for all your albums:</strong> "
+"you can choose the sort order - options are 'pub_date', 'title', or "
+"'last_updated' (add ' desc' for reverse ordering). [salbumlist=order_option,"
+"info_yn]"
+msgstr ""
+
+#: display/admin-main.php:166
+msgid ""
+"<strong>Display thumbnails and descriptions for selected albums:</strong> "
+"[salbumlist=album_key1|album_key2|etc,info_yn]"
+msgstr ""
+
+#: display/admin-main.php:167
+msgid ""
+"<strong>Random images:</strong> if you want to exclude an album's images "
+"when using the srandom tag, set 'Include in Random?' to 'No.'"
+msgstr ""
+
+#: display/admin-main.php:168 display/admin-edit.php:100
+msgid "<strong>More Help:</strong> see the"
+msgstr ""
+
+#: display/admin-main.php:170 display/admin-edit.php:102
+msgid "Shashin page"
+msgstr ""
+
+#: display/admin-main.php:171 display/admin-edit.php:103
+msgid "for detailed instructions"
+msgstr ""
+
+#: display/admin-main.php:176
+msgid "Tipping: it isn't just for cows"
+msgstr ""
+
+#: display/admin-main.php:178
+msgid ""
+"Shashin has taken hundreds of hours for me to develop and maintain. I do it "
+"for the love of course, but a tip would be nice :-) Thanks!"
+msgstr ""
+
+#: display/widget_thumbs.php:21
+msgid "Photo Keys"
+msgstr ""
+
+#: display/widget_single.php:21 display/admin-edit.php:46
+msgid "Photo Key"
+msgstr ""
+
+#: display/options-main.php:17
+msgid "Settings"
+msgstr ""
+
+#: display/options-main.php:27
+msgid "Your Picasa server:"
+msgstr ""
+
+#: display/options-main.php:29
+msgid "The base URL of your Picasa server. Be sure to include 'http://'"
+msgstr ""
+
+#: display/options-main.php:33
+msgid "Sync all albums daily:"
+msgstr ""
+
+#: display/options-main.php:40
+msgid ""
+"This will make Shashin sync all your albums automatically on a daily basis."
+msgstr ""
+
+#: display/options-main.php:44
+msgid "Image div padding:"
+msgstr ""
+
+#: display/options-main.php:46
+msgid "Double the '.shashin_image img' padding value in shashin.css"
+msgstr ""
+
+#: display/options-main.php:50
+msgid "Thumbnail div padding:"
+msgstr ""
+
+#: display/options-main.php:52
+msgid "Double the '.shashin_thumb img' padding value in shashin.css"
+msgstr ""
+
+#: display/options-main.php:56
+msgid "Prefix album titles on captions:"
+msgstr ""
+
+#: display/options-main.php:63
+msgid ""
+"Clicking 'yes' means a photo's album title will be prefixed on its caption."
+msgstr ""
+
+#: display/options-main.php:67
+msgid "Full-size image display:"
+msgstr ""
+
+#: display/options-main.php:70
+msgid "At Picasa, in same browser window"
+msgstr ""
+
+#: display/options-main.php:73
+msgid "At Picasa, in a new browser window"
+msgstr ""
+
+#: display/options-main.php:76
+msgid "Use Highslide"
+msgstr ""
+
+#: display/options-main.php:79
+msgid "Do not make thumbnails clickable"
+msgstr ""
+
+#: display/options-main.php:80
+msgid "This determines how to display an image when its thumbnail is clicked"
+msgstr ""
+
+#: display/options-main.php:84
+msgid ""
+"<strong>Highslide Settings</strong><br />These settings apply only if you "
+"select 'Use Highslide' above, for the full-size image display."
+msgstr ""
+
+#: display/options-main.php:88
+msgid "Highslide image size:"
+msgstr ""
+
+#: display/options-main.php:100
+msgid ""
+"This determines the 'maximum dimension' of an image displayed by Highslide "
+"when its thumbnail is clicked. This size is applied to either the height or "
+"the width (whichever is greater) and then the correct size for the other "
+"dimension is calculated on the fly. The sizes listed in the drop-down menu "
+"are the only ones supported by Picasa. Note that the sizes"
+msgstr ""
+
+#: display/options-main.php:102 display/options-main.php:150
+msgid "are cropped square."
+msgstr ""
+
+#: display/options-main.php:106
+msgid "Autoplay Highslide slideshows:"
+msgstr ""
+
+#: display/options-main.php:113
+msgid ""
+"If someone clicks an image in a slideshow group, this determines whether the "
+"slideshow plays automatically."
+msgstr ""
+
+#: display/options-main.php:117
+msgid "Highslide slideshow image display time:"
+msgstr ""
+
+#: display/options-main.php:119
+msgid "How long each image is displayed in a slideshow (in milliseconds)"
+msgstr ""
+
+#: display/options-main.php:123
+msgid "Highslide video dimensions:"
+msgstr ""
+
+#: display/options-main.php:124
+msgid "Width:"
+msgstr ""
+
+#: display/options-main.php:126
+msgid "Height:"
+msgstr ""
+
+#: display/options-main.php:128
+msgid ""
+"If you select Highslide for viewing images, it will also be used for "
+"displaying videos. This controls the height and width of the embedded video "
+"(unlike images, the dimensions cannot be calculated on the fly). A 4:3 "
+"(width:height) ratio is common for videos."
+msgstr ""
+
+#: display/options-main.php:132
+msgid ""
+"<strong>Album Photos Settings</strong><br />If you are using Highslide and "
+"the [salbumthumbs] or [salbumlist] tags, these settings control how the "
+"photos in an album are displayed when an album thumbnail is clicked."
+msgstr ""
+
+#: display/options-main.php:136
+msgid "Thumbnail size:"
+msgstr ""
+
+#: display/options-main.php:148
+msgid ""
+"The size to use for displaying the photos in the album. See 'Highslide image "
+"size' above for more information. Note that the sizes"
+msgstr ""
+
+#: display/options-main.php:154
+msgid "Number of columns:"
+msgstr ""
+
+#: display/options-main.php:156
+msgid ""
+"The maximum number of columns for displaying the album photos. You will want "
+"to take into account the 'thumbnail size' you selected above, to make sure "
+"the overall display is not too wide for your WordPress theme."
+msgstr ""
+
+#: display/options-main.php:160
+msgid "Sort Order:"
+msgstr ""
+
+#: display/options-main.php:173
+msgid ""
+"How to order the photos. 'asc' means ascending from lowest to highest (a-z, "
+"oldest to newest), 'desc' means descending from highest to lowest (z-a, "
+"newest to oldest)."
+msgstr ""
+
+#: display/options-main.php:177
+msgid "Display photo captions:"
+msgstr ""
+
+#: display/options-main.php:184
+msgid "Whether to display a caption under each thumbnail."
+msgstr ""
+
+#: display/options-main.php:188
+msgid "Display album description:"
+msgstr ""
+
+#: display/options-main.php:195
+msgid ""
+"The album title will appear above the photos. You can choose whether to also "
+"display the album description, after the title."
+msgstr ""
+
+#: display/options-main.php:198
+msgid "Save Options"
+msgstr ""
+
+#: display/options-main.php:202 display/options-main.php:214
+msgid "Uninstall Shashin"
+msgstr ""
+
+#: display/options-main.php:208
+msgid "Uninstall Shashin?"
+msgstr ""
+
+#: display/options-main.php:210
+msgid ""
+"Check this box if you want to completely remove Shashin. <strong>This will "
+"permanently break any Shashin tags that you still have in your posts or "
+"pages.</strong> After uninstalling, you can then deactivate Shashin on your "
+"plugins management page."
+msgstr ""
+
+#: display/options-main.php:214
+msgid "Are you sure you want to uninstall Shashin?"
+msgstr ""
+
+#: display/widget_album_thumbs.php:22
+msgid ""
+"If you want to display all your albums, indicate how to order them: options "
+"are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse "
+"ordering). <strong>- OR -</strong> If you want only certain albums, enter "
+"their album keys separated by pipes, for example '12|22|14|17'"
+msgstr ""
+
+#: display/widget_album_thumbs.php:24
+msgid "Albums"
+msgstr ""
+
+#: display/widget_album_thumbs.php:24
+msgid "Keys or Sort"
+msgstr ""
+
+#: display/widget_album_thumbs.php:28 display/widget_newest.php:29
+msgid "Max # of Columns"
+msgstr ""
+
+#: display/widget_album_thumbs.php:32
+msgid "Show Location"
+msgstr ""
+
+#: display/widget_album_thumbs.php:35
+msgid "Show Pub. Date"
+msgstr ""
+
+#: display/admin-edit.php:36 display/admin-edit.php:106
+msgid "Shashin Admin"
+msgstr ""
+
+#: display/admin-edit.php:38
+msgid ""
+"Click a column header to order the photo list by that column (and click "
+"again to reverse the order)."
+msgstr ""
+
+#: display/admin-edit.php:43
+msgid "Photo"
+msgstr ""
+
+#: display/admin-edit.php:49
+msgid "Filename"
+msgstr ""
+
+#: display/admin-edit.php:52
+msgid "Date Taken"
+msgstr ""
+
+#: display/admin-edit.php:92
+msgid ""
+"<strong>Display an image:</strong> copy and paste the code listed under "
+"<em>Markup</em>, and then edit it as needed. [simage=photo_key,max_size,"
+"caption_yn,float,clear]"
+msgstr ""
+
+#: display/admin-edit.php:93
+msgid "<strong>Valid Picasa image sizes:</strong>"
+msgstr ""
+
+#: display/admin-edit.php:95
+msgid "For a cropped square image, use sizes"
+msgstr ""
+
+#: display/admin-edit.php:97
+msgid ""
+"<strong>Display random images:</strong> [srandom=album_key1|album_key2|etc,"
+"max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the "
+"album_key for any album"
+msgstr ""
+
+#: display/admin-edit.php:98
+msgid ""
+"<strong>Display a group of thumbnails:</strong>[sthumbs=photo_key1|"
+"photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
+msgstr ""
+
+#: display/admin-edit.php:99
+msgid ""
+"<strong>Display newest images:</strong> [snewest=album_key1|album_key2|etc,"
+"max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the "
+"album_key for any album"
+msgstr ""
