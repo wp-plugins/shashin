@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3
+ * @version 2.3.1
  * @package Shashin
  * @subpackage AdminPanels
  *

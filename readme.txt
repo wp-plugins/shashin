@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.1
 Tested up to: 2.7
-Stable tag: 2.3
+Stable tag: 2.3.1
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -35,7 +35,7 @@ Shashin 2.3 is a complete rewrite. It includes more robust error handling, impro
 * The [srandom] and [snewest] tags now let you specify multiple albums
 * Uninstall option
 
-Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the Shashin 2.3 beta for a full description of the new features</a>. 
+Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the Shashin 2.3 beta for a full description of the new features</a>.
 
 == Installation ==
 
@@ -51,7 +51,7 @@ Note that Shashin will add two tables to your WordPress database, named wp\_shas
 
 ** Installation Instructions for Upgraders **
 
-Deactivate your old installation in the plugins menu, make a backup copy of your old Shashin plugin files, and then delete Shashin from your plugins directory. This will cleanup some old files that are no longer needed. This will not harm your Shashin photo data. Then upload the new version and reactivate. Reactivation will make some required updates to the Shashin database tables. **IMPORTANT:** then you need to go to your Shashin "Settings" menu and reset all your options (your settings are stored in a new way in Shashin 2.3). 
+Deactivate your old installation in the plugins menu, make a backup copy of your old Shashin plugin files, and then delete Shashin from your plugins directory. This will cleanup some old files that are no longer needed. This will not harm your Shashin photo data. Then upload the new version and reactivate. Reactivation will make some required updates to the Shashin database tables. **IMPORTANT:** then you need to go to your Shashin "Settings" menu and reset all your options (your settings are stored in a new way in Shashin 2.3).
 
 == Frequently Asked Questions ==
 
