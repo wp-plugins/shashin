@@ -110,7 +110,7 @@ class Shashin {
         }
 
         // load localization
-        load_plugin_textdomain(SHASHIN_L10N_NAME, PLUGINDIR . '/' . SHASHIN_DIR, SHASHIN_DIR);
+        load_plugin_textdomain(SHASHIN_L10N_NAME, PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/languages/');
 
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));

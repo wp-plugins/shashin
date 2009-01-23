@@ -153,7 +153,7 @@ class ShashinPhoto {
 
         $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $data, array('photo_id' => $this->data['photo_id']));
 
-        if (!$sql_result) {
+        if ($sql_result === false) {
             return array(false, __("ShashinPhoto::getPhotoLocal - Failed to update record for photo ID {$this->data['photo_id']}. SQL Error:", SHASHIN_L10N_NAME), true);
         }
 
