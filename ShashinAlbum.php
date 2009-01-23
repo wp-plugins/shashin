@@ -210,7 +210,7 @@ class ShashinAlbum {
             $sql_result = ToppaWPFunctions::sqlInsert(SHASHIN_ALBUM_TABLE, $album_data);
         }
 
-        if (!$sql_result) {
+        if ($sql_result === false) {
             return array(false, __("ShashinAlbum::setAlbum - Failed to insert/update database record for album. SQL Error:", SHASHIN_L10N_NAME), true);
         }
 
@@ -383,7 +383,7 @@ class ShashinAlbum {
         foreach($updates as $update) {
             $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $update, array('photo_id' => $update['photo_id']));
 
-            if (!$sql_result) {
+            if ($sql_result === false) {
                 return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to update record for photo ID {$update['photo_id']}. SQL Error:", SHASHIN_L10N_NAME), true);
             }
         }
@@ -393,7 +393,7 @@ class ShashinAlbum {
         foreach($inserts as $insert) {
             $sql_result = ToppaWPFunctions::sqlInsert(SHASHIN_PHOTO_TABLE, $insert, null, 'album_id');
 
-            if (!$sql_result) {
+            if ($sql_result === false) {
                 return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to insert record for photo ID {$insert['photo_id']}. SQL Error:", SHASHIN_L10N_NAME), true);
             }
         }
@@ -404,7 +404,7 @@ class ShashinAlbum {
                 if (!in_array($old_photo['photo_id'], $found_ids)) {
                     $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, array('deleted' => 'Y'), array('photo_id' => $update['photo_id']));
 
-                    if (!$sql_result) {
+                    if ($sql_result === false) {
                         return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to flag photo ID {$update['photo_id']} as deleted. SQL Error:", SHASHIN_L10N_NAME), true);
                     }
                 }
@@ -430,7 +430,7 @@ class ShashinAlbum {
 
         $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_ALBUM_TABLE, $data, array('album_id' => $this->data['album_id']));
 
-        if (!$sql_result) {
+        if ($sql_result === false) {
             return array(false, __("ShashinAlbum::setAlbumLocal - Failed to update record for photo ID {$this->data['photo_id']}. SQL Error:", SHASHIN_L10N_NAME), true);
         }
 
@@ -599,7 +599,7 @@ class ShashinAlbum {
             if ($exists && $sync_only) {
                 $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_ALBUM_TABLE, $albums_data[$i], array('album_id' => $albums_data[$i]['album_id']));
 
-                if (!$sql_result) {
+                if ($sql_result === false) {
                     return array(false, __("ShashinAlbum::setUserAlbums - Failed to update database record for album ID {$albums_data[$i]['album_id']}. Possible SQL Error:", SHASHIN_L10N_NAME), true);
                 }
             }
@@ -608,7 +608,7 @@ class ShashinAlbum {
             elseif (!$exists && !$sync_only) {
                 $sql_result = ToppaWPFunctions::sqlInsert(SHASHIN_ALBUM_TABLE, $albums_data[$i]);
 
-                if (!$sql_result) {
+                if ($sql_result === false) {
                     return array(false, __("ShashinAlbum::setUserAlbums - Failed to insert database record for album ID {$albums_data[$i]['album_id']}. Possible SQL Error:", SHASHIN_L10N_NAME), true);
                 }
 

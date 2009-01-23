@@ -43,6 +43,9 @@
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'album_key') ? 'album_key%20desc' : 'album_key')
             . '">' . __("Album Key", SHASHIN_L10N_NAME) . "</a></th>\n";
+        echo '<th class="manage-column" style="text-align: center;">' . __("Sync", SHASHIN_L10N_NAME) . "</th>\n";
+        echo '<th class="manage-column" style="text-align: center;">' . __("Delete", SHASHIN_L10N_NAME) . "</th>\n";
+        echo '<th class="manage-column" style="text-align: center;">' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'photo_count') ? 'photo_count%20desc' : 'photo_count')
             . '">' . __("Photo Count", SHASHIN_L10N_NAME) . "</a></th>\n";
@@ -52,9 +55,6 @@
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'last_updated') ? 'last_updated%20desc' : 'last_updated')
             . '">' . __("Last Sync", SHASHIN_L10N_NAME). "</a></th>\n";
-        echo '<th class="manage-column" style="text-align: center;">' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
-        echo '<th class="manage-column" style="text-align: center;">' . __("Sync", SHASHIN_L10N_NAME) . "</th>\n";
-        echo '<th class="manage-column" style="text-align: center;">' . __("Delete", SHASHIN_L10N_NAME) . "</th>\n";
         echo "</tr>\n";
 
         $i = 1;
@@ -67,16 +67,6 @@
                 . "</a></td>\n";
             echo '<td style="text-align: center;">'
                 . $all_album['album_key'] . "</td>\n";
-            echo '<td style="text-align: center;">'
-                . $all_album['photo_count'] . "</td>\n";
-            echo '<td style="text-align: center;">' . date("d-M-y", $all_album['pub_date']) . "</td>\n";
-            echo '<td style="text-align: center;">' . date("d-M-y H:i", $all_album['last_updated']) . "</td>\n";
-            echo '<td style="text-align: center;">';
-            ToppaWPFunctions::displayInput(
-                "include_in_random[{$all_album['album_id']}]",
-                $album->ref_data['include_in_random'],
-                $all_album['include_in_random']);
-            echo "</td>\n";
             echo '<td style="text-align: center;"><a href="'
                 . SHASHIN_ADMIN_URL
                 . '&amp;shashin_action=sync_album&amp;album_id='
@@ -93,13 +83,23 @@
                 . '<img src="' . SHASHIN_DISPLAY_URL
                 . 'delete.png" alt="Delete Album" width="16" height="16" border="0" />'
                 . "</a></td>\n";
+            echo '<td style="text-align: center;">';
+            ToppaWPFunctions::displayInput(
+                "include_in_random[{$all_album['album_id']}]",
+                $album->ref_data['include_in_random'],
+                $all_album['include_in_random']);
+            echo "</td>\n";
+            echo '<td style="text-align: center;">'
+                . $all_album['photo_count'] . "</td>\n";
+            echo '<td style="text-align: center;">' . date("d-M-y", $all_album['pub_date']) . "</td>\n";
+            echo '<td style="text-align: center;">' . date("d-M-y H:i", $all_album['last_updated']) . "</td>\n";
             echo "</tr>\n";
         } ?>
 
         <tr>
-        <td colspan="5">&nbsp;</td>
+        <td colspan="4">&nbsp;</td>
         <td style="text-align: center;"><input class="button-secondary" type="submit" name="submit_form" value="<?php _e("Update Random Display", SHASHIN_L10N_NAME); ?>" /></td>
-        <td colspan="2">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
         </tr>
         </table>
         </form>
