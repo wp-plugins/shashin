@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.1
+ * @version 2.3.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -40,7 +40,7 @@ class ShashinAlbum {
                     'primary_key' => true, 'other' => 'AUTO_INCREMENT'),
                 'label' => 'Album Key', 'source' => 'db'),
             'album_id' => array(
-                'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
+                'col_params' => array('type' => 'bigint unsigned', 'not_null' => true),
                 'label' => 'Album ID', 'source' => 'feed',
                 'feed_param_1' => 'gphoto', 'feed_param_2' => 'id'),
             'user' => array(
@@ -91,7 +91,7 @@ class ShashinAlbum {
                 'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
                 'label' => 'Include in random photo display', 'source' => 'user',
                 'input_type' => 'radio',
-                'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
+                'input_subgroup' => array('Y' => __(SHASHIN_YES, SHASHIN_L10N_NAME), 'N' => __(SHASHIN_NO, SHASHIN_L10N_NAME))),
         );
     }
 
@@ -466,15 +466,15 @@ class ShashinAlbum {
     }
 
     /**
-     * Generates the xhtml markup for an album thumbnail, with an appropriate
-     * link for accessing the album photos
+     * Generates the xhtml markup for an album thumbnail, with an appropriate link for accessing the album photos
      *
      * @access private
+     * @param boolean $force_picasa (optional): force the album link to point to Picasa (default: false)
      * @uses ShashinAlbum::_getAlbumLink()
      * @return string xhtml markup for album thumbnail
      */
-     function _getAlbumThumbTag() {
-        $markup = $this->_getAlbumLink();
+     function _getAlbumThumbTag($force_picasa = false) {
+        $markup = $this->_getAlbumLink($force_picasa);
         $markup .= '<img src="' . $this->data['cover_photo_url']
             . '" alt="' . $this->data['title']
             . '" width="' . SHASHIN_ALBUM_THUMB_SIZE
@@ -484,20 +484,20 @@ class ShashinAlbum {
     }
 
     /**
-     * Generates a link to an album's photo, either at Picasa or locally,
-     * depending on the option shashin_album_photos_url. The link includes an
-     * opening anchor tag but not a closing one.
+     * Generates a link to an album's photo, either at Picasa or locally, depending on the option
+     * shashin_album_photos_url. The link includes an opening anchor tag but not a closing one.
      *
      * @access private
+     * @param boolean $force_picasa (optional): force the album link to point to Picasa (default: false)
      * @return string URL embedded in an opening anchor tag
      */
-    function _getAlbumLink() {
+    function _getAlbumLink($force_picasa = false) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
-        // if you want to make album links behave differently from photo links,
-        // override $shashin_options['image_display'] by uncommenting the
-        // following line
-        // $shashin_options['image_display'] = 'new_window';
+        // comment out the if line and closing bracket if you want to always link to picasa
+        if ($force_picasa) {
+            $shashin_options['image_display'] = 'same_window';
+        }
 
         $markup = '<a href="';
 
@@ -647,14 +647,14 @@ class ShashinAlbum {
      * @return string complete xhtml markup for displaying album thumbnails in a table
      */
     function getAlbumThumbsMarkup($match) {
-        if ($_REQUEST['shashin_album_key']) {
+        if ($_REQUEST['shashin_album_key'] && !$match['force_picasa']) {
             return ShashinPhoto::getAlbumPhotosMarkup($match);
         }
 
         $ordered = ShashinAlbum::_getOrderedAlbums($match);
 
         if (!is_array($ordered)) {
-            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve albums.") . '</span>';
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve albums.", SHASHIN_L10N_NAME) . '</span>';
         }
 
         return ShashinAlbum::_getTableMarkup($ordered, $match);
@@ -804,7 +804,7 @@ class ShashinAlbum {
         }
 
         $replace .=  '">';
-        $replace .= $this->_getAlbumThumbTag();
+        $replace .= $this->_getAlbumThumbTag($match['force_picasa']);
         $replace .= '<span class="shashin_album_title">'
             . $this->_getAlbumLink()
             . $this->data['title']
@@ -875,7 +875,7 @@ class ShashinAlbum {
             list($result, $message, $db_error) = $album->getAlbum(null, $albums[$i]);
 
             if (!$result) {
-                return '<span class="shashin_error">' . __("Shashin Error:") . ' ' . $message . '</span>';
+                return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
 

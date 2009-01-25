@@ -9,7 +9,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.1
+ * @version 2.3.2
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ShashinPhoto::ShashinPhoto()
@@ -50,8 +50,8 @@ $edit_link = SHASHIN_ADMIN_URL
     echo '<th><a href="' . $edit_link
         . (($order_by == 'taken_timestamp') ? 'taken_timestamp%20desc' : 'taken_timestamp')
         . '">' . __("Date Taken", SHASHIN_L10N_NAME) . "</th>\n";
-    echo "<th>Markup</th>\n";
-    echo "<th>Include in Random?</th>\n";
+    echo '<th>' . __("Markup", SHASHIN_L10N_NAME) . "</th>\n";
+    echo '<th>' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
     echo "</tr>\n";
 
     $i = 1;
@@ -85,7 +85,7 @@ $edit_link = SHASHIN_ADMIN_URL
 
     <hr />
 
-    <h3>Photo Tips</h3>
+    <h3><?php _e("Photo Tips", SHASHIN_L10N_NAME); ?></h3>
 
     <?php
     echo "<ul>\n";

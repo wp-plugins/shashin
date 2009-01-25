@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.1
+ * @version 2.3.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -37,12 +37,12 @@ class ShashinPhoto {
                     'primary_key' => true, 'other' => 'AUTO_INCREMENT'),
                 'label' => 'Photo Key', 'source' => 'db'),
             'photo_id' => array(
-                'col_params' => array('type' => 'varchar', 'length' => '255',
+                'col_params' => array('type' => 'bigint unsigned',
                     'not_null' => true, 'other' => 'UNIQUE'),
                 'label' => 'Photo ID', 'source' => 'feed',
                 'feed_param_1' => 'gphoto', 'feed_param_2' => 'id'),
             'album_id' => array(
-                'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
+                'col_params' => array('type' => 'bigint unsigned', 'not_null' => true),
                 'label' => 'Album ID', 'source' => 'feed',
                 'feed_param_1' => 'gphoto', 'feed_param_2' => 'albumid'),
             'title' => array(
@@ -85,7 +85,7 @@ class ShashinPhoto {
                 'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
                 'label' => 'Include in random photo display', 'source' => 'user',
                 'input_type' => 'radio',
-                'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
+                'input_subgroup' => array('Y' => __(SHASHIN_YES, SHASHIN_L10N_NAME), 'N' => __(SHASHIN_NO, SHASHIN_L10N_NAME))),
             'deleted' => array(
                 'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
                 'label' => 'Deleted flag', 'source' => 'db'),

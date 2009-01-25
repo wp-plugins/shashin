@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.1
+Version: 2.3.2
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.1
+ * @version 2.3.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -426,7 +426,7 @@ class Shashin {
             list($result, $message, $db_error) = ShashinAlbum::setUserAlbums($user);
 
             if ($result === true) {
-                $message = __("All albums synced for $user", SHASHIN_L10N_NAME);
+                $message = __("All albums synced for ", SHASHIN_L10N_NAME) . $user;
             }
 
             $display = 'admin-main';
@@ -962,11 +962,12 @@ class Shashin {
      * @param string $pubDateYN (optional): y or n to show the pub date of the album
      * @param string $float (optional): a css float value (left, right, or none) (no default)
      * @param string $clear (optional): a css clear value (left, right, or both) (no default)
+     * @param boolean $force_picasa (optional): force the album link to point to Picasa (default: true)
      * @uses ShashinAlbum::getAlbumThumbsMarkup()
      * @return string xhtml to display album thumbnail
      */
-    function getAlbumThumbs($album_key, $max_cols, $location_yn = null, $pubdate_yn = null, $float = null, $clear = null) {
-        $named = compact('album_key', 'max_cols', 'location_yn', 'pubdate_yn', 'float', 'clear');
+    function getAlbumThumbs($album_key, $max_cols, $location_yn = null, $pubdate_yn = null, $float = null, $clear = null, $force_picasa = true) {
+        $named = compact('album_key', 'max_cols', 'location_yn', 'pubdate_yn', 'float', 'clear', 'force_picasa');
         array_walk($named, array(SHASHIN_PLUGIN_NAME, '_strtolower'));
         return ShashinAlbum::getAlbumThumbsMarkup($named);
     }

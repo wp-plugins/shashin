@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.1
+ * @version 2.3.2
  * @package Shashin
  * @subpackage Classes
  */
@@ -63,6 +63,7 @@ class ShashinWidget {
 
         function widgetAlbumThumbs($args) {
             $shashin_options = unserialize(SHASHIN_OPTIONS);
+            $shashin_options['widget_album_thumbs']['force_picasa'] = true;
             $widget = ShashinAlbum::getAlbumThumbsMarkup($shashin_options['widget_album_thumbs']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_album_thumbs']['title'], $widget);
         }
