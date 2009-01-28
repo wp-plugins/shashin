@@ -317,24 +317,65 @@ class ShashinAlbum {
         $feed_url = str_replace("ALBUMID", $this->data['album_id'], $feed_url);
         $feed_content = ToppaWPFunctions::readFeed($feed_url);
         $photo = new ShashinPhoto();
-        $new_photos = ToppaWPFunctions::parseFeed($feed_content, $photo->ref_data);
+        $new_photos = ToppaWPFunctions::parseFeed($feed_content, $photo->ref_data, null, null, 'photo_id');
 
         if (!$new_photos) {
             return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to read Picasa RSS feed for album.", SHASHIN_L10N_NAME));
         }
 
-        $current = $this->getAlbumPhotos();
+        $old_ids = ToppaWPFunctions::sqlSelect(SHASHIN_PHOTO_TABLE, 'photo_id', array('album_id' => $this->data['album_id']), null, 'get_col');
 
-        if ($current[0] === false) {
-            return $current;
+        if ($old_ids === false) {
+            return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to retrieve current photo data for album ID %d. SQL Error:", SHASHIN_L10N_NAME, $this->data['album_id']));
         }
 
+        // flag any photos no longer in the album as deleted
+        foreach ($old_ids as $old_id) {
+            if (!array_key_exists($old_id, $new_photos) {
+                $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, array('deleted' => 'Y'), array('photo_id' => $old_id));
+
+                if ($sql_result === false) {
+                    return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to flag photo ID %d as deleted. SQL Error:", SHASHIN_L10N_NAME, $old_id), true);
+            }
+        }
+
+        foreach ($new_photos as $new_photo) {
+            // if the photo used to be in another album, it's delete flag will
+            // be set to Y. Set it to N in the new_photo data to force an
+            // update to the new album
+            $new_photo['deleted'] = 'N';
+
+            // for some reason Picasa pads the timestamps with extra zeroes
+            // - strip them out.
+            $new_photo['taken_timestamp'] = substr($new_photo['taken_timestamp'],0,10);
+            $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
+
+            if (in_array($new_photo['photo_id'], $old_ids)) {
+                $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $new_photo, array('photo_id' => $new_photo['photo_id']));
+
+                if ($sql_result === false) {
+                    return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to update record for photo ID %d. SQL Error:", SHASHIN_L10N_NAME, $new_photo['photo_id']), true);
+                }
+
+            }
+
+            // for inserts, update the album key if we're trying to insert a photo
+            // that was actually moved from another album
+            else {
+                $sql_result = ToppaWPFunctions::sqlInsert(SHASHIN_PHOTO_TABLE, $new_photo, null, 'album_id');
+
+                if ($sql_result === false) {
+                    return array(false, __("ShashinAlbum::setAlbumPhotos - Failed to insert record for photo ID %D. SQL Error:", SHASHIN_L10N_NAME, $new_photo['photo_id']), true);
+            }
+        }
+/*
         $update_ids = array();
         $found_ids = array();
         $unchanged_ids = array();
         $inserts = array();
         $updates = array();
-
+var_dump($new_photos);
+var_dump($this->data['photos']);
         foreach ($new_photos as $new_photo) {
             // if the photo used to be in another album, it's delete flag will
             // be set to Y. Set it to N in the new_photo data to force an
@@ -350,6 +391,9 @@ class ShashinAlbum {
             // values, so we can decide whether to insert, update, or skip
             if (!empty($this->data['photos'])) {
                 foreach ($this->data['photos'] as $old_photo) {
+var_dump($old_photo['photo_id']);
+var_dump($new_photo['photo_id']);
+var_dump("----");
                     if ($old_photo['photo_id'] == $new_photo['photo_id']) {
                         // use this below to find old photos that need to be
                         // flagged as deleted
@@ -378,7 +422,7 @@ class ShashinAlbum {
                 $inserts[] = $new_photo;
             }
         }
-
+exit;
         // do updates
         foreach($updates as $update) {
             $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $update, array('photo_id' => $update['photo_id']));
@@ -410,9 +454,9 @@ class ShashinAlbum {
                 }
             }
         }
-
+*/
         // refresh the photos in memory
-        return $this->getAlbumPhotos();
+        //return $this->getAlbumPhotos();
     }
 
     /**

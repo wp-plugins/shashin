@@ -430,9 +430,10 @@ class ToppaWPFunctions {
      * @param array $ref_data maps your local data structure to the feed's structure; it can handle arrays nested two levels below $item
      * @param string $match_field allows you to limit the results of the parse to a specific item
      * @param string $match_value the value to look for in $match_field
+     * @param string $key allows you to use an item from the feed as the key for the returned array
      * @return boolean|array the parsed contents of the feed, or false on failure
      */
-    function parseFeed($feed_content, $ref_data, $match_field = null, $match_value = null) {
+    function parseFeed($feed_content, $ref_data, $match_field = null, $match_value = null, $key = null) {
         $all_parsed = array();
         $break = false;
 
@@ -451,6 +452,14 @@ class ToppaWPFunctions {
 
             elseif (strlen($match_field) && $item[$ref_data[$match_field]['feed_param_1']]['data'] == $match_value) {
                 $break = true;
+            }
+
+            if ($key && $ref_data[$key]['feed_param_2']) {
+                $key_val = $item[$ref_data[$key]['feed_param_1'] . ":" . $ref_data[$key]['feed_param_2']]['data'];
+            }
+
+            elseif ($key) {
+                $key_val = $item[$ref_data[$key]['feed_param_1']]['data'];
             }
 
             $parsed = array();
@@ -484,7 +493,14 @@ class ToppaWPFunctions {
                 return $parsed;
             }
 
-            $all_parsed[] = $parsed;
+            if ($key_val) {
+                $all_parsed[$key_val] = $parsed;
+
+            }
+
+            else {
+                $all_parsed[] = $parsed;
+            }
         }
 
         return $all_parsed;
