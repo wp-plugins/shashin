@@ -196,19 +196,21 @@ class ToppaWPFunctions {
     /**
      * Creates and executes a SQL insert statement based on passed-in parameters.
      *
-     * If you pass $keys and $values, they are treated as the name-value pairs
-     * to update, and are related positionally. If you pass $keys only, it
+     * If you pass $fields and $values, they are treated as the name-value pairs
+     * to update, and are related positionally. If you pass $fields only, it
      * assumes its actually a hash of key-value pairs. All values are escaped.
+     * Note the update option currently works only if $fields contains key-
+     * value pairs.
      *
      * @static
      * @access public
      * @param string $table the name of the table to query
-     * @param array $keys column names or a hash of key-value pairs
+     * @param array $fields column names or a hash of key-value pairs
      * @param array $values (optional) the values to insert if $keys is only a list of columns
-     * @param string $update (optional) field to update if the insert would cause a duplicate key on a unique index
+     * @param string $update (optional) whether to run an update if the insert would cause a duplicate key on a unique index (default: false)
      * @return mixed passes along the return value of the $wpdb call
      */
-    function sqlInsert($table, $keys, $values = null, $update = null) {
+    function sqlInsert($table, $fields, $values = null, $update = false) {
         global $wpdb;
 
         if (is_string($table)) {
@@ -219,24 +221,23 @@ class ToppaWPFunctions {
             return false;
         }
 
-        if (is_array($keys) && !$values) {
-            $values = array_values($keys);
-            $new_keys = array_keys($keys);
+        if (is_array($fields) && !$values) {
+            $values = array_values($fields);
+            $keys = array_keys($fields);
         }
 
         if (!is_array($values)) {
             return false;
         }
 
-        $sql .= implode(",", $new_keys);
+        $sql .= implode(",", $keys);
         $sql .= ") values (";
         $sql .= ToppaWPFunctions::_sqlPrepare($values, ",", true);
         $sql .= ")";
 
-        // comment out the next three lines if you are on a version of mySQL prior to 4.1
-        if (is_string($update)) {
-            $sql .= " on duplicate key update $update = ";
-            $sql .= ToppaWPFunctions::_sqlEscape($new_keys[$update]);
+        if ($update) {
+            $sql .= " on duplicate key update ";
+            $sql .= ToppaWPFunctions::_sqlPrepare($fields, ",");
         }
 
         $sql .= ";";

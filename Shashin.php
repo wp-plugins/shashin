@@ -383,11 +383,14 @@ class Shashin {
         // add an album (or all albums)
         case 'add_album':
             $link_url = trim($_REQUEST['link_url']);
-            // validate the URL
             $pieces = explode("/", $link_url);
 
-            // send user back to the form if there are validation errors
-            if ((($pieces[0] . "//" . $pieces[2]) != $shashin_options['picasa_server']) || !$pieces[3]) {
+            // validate the URL
+            if (strpos($link_url, "#") !== false) {
+                $message = __("Please remove the '#' character from the URL and try again.", SHASHIN_L10N_NAME);
+            }
+
+            else if ((($pieces[0] . "//" . $pieces[2]) != $shashin_options['picasa_server']) || !$pieces[3]) {
                 $message = __("That is not a valid URL for your Picasa server.", SHASHIN_L10N_NAME);
             }
 
