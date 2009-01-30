@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.2
+Version: 2.3.3
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage Classes
  *
@@ -34,7 +34,7 @@ Author URI: http://www.toppa.com
 
 // note to self... for generating pot file...
 // find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
-// xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
+// xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
 global $wpdb;
 define('SHASHIN_OPTIONS', get_option('shashin_options'));
@@ -58,8 +58,6 @@ define('SHASHIN_GOOGLE_PLAYER_URL', 'http://video.google.com/googleplayer.swf?vi
 define('SHASHIN_IMAGE_SIZES', serialize(array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800)));
 define('SHASHIN_CROP_SIZES', serialize(array(32, 48, 64, 160)));
 define('SHASHIN_PICASA_VIDEO_TYPES', serialize(array('MPG', 'AVI', 'ASF', 'WMV', 'MOV', 'MP4')));
-define('SHASHIN_YES', __("Yes", SHASHIN_L10N_NAME));
-define('SHASHIN_NO', __("No", SHASHIN_L10N_NAME));
 
 // get required libraries
 require_once(SHASHIN_DIR . '/ShashinAlbum.php');
@@ -380,17 +378,20 @@ class Shashin {
 
             $display = 'admin-main';
             break;
-        // add an album (or all albums)
+        // add an album (or all of a user's albums)
         case 'add_album':
             $link_url = trim($_REQUEST['link_url']);
+
+            // remove any trailing # from the url - these often appear in Picasa
+            // album links, and they trip up the RSS feed
+            if (strpos($link_url, "#") == strlen($link_url) - 1) {
+                $link_url = substr($link_url, 0, -1);
+            }
+
             $pieces = explode("/", $link_url);
 
             // validate the URL
-            if (strpos($link_url, "#") !== false) {
-                $message = __("Please remove the '#' character from the URL and try again.", SHASHIN_L10N_NAME);
-            }
-
-            else if ((($pieces[0] . "//" . $pieces[2]) != $shashin_options['picasa_server']) || !$pieces[3]) {
+            if ((($pieces[0] . "//" . $pieces[2]) != $shashin_options['picasa_server']) || !$pieces[3]) {
                 $message = __("That is not a valid URL for your Picasa server.", SHASHIN_L10N_NAME);
             }
 

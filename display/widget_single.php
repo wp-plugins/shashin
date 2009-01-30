@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -27,7 +27,7 @@
     echo ToppaWPFunctions::displayInput('shashin_widget_single[max_size]', $size_data, $shashin_options['widget_single']['max_size']); ?></dd>
 
 <dt><label for="shashin_widget_single_caption_yn"><?php _e("Show Captions"); ?>:</label></dt>
-<dd><?php $caption_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO));
+<dd><?php $caption_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => __("Yes", SHASHIN_L10N_NAME), 'n' => __("No", SHASHIN_L10N_NAME)));
     echo ToppaWPFunctions::displayInput('shashin_widget_single[caption_yn]', $caption_data, $shashin_options['widget_single']['caption_yn']); ?></dd>
 
 <dt><label for="shashin_widget_single_float"><?php _e("CSS Float"); ?>:</label></dt>

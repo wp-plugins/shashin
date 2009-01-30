@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.1
 Tested up to: 2.7
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 
 Shashin is a powerful WordPress plugin that lets you display Picasa images anywhere in your WordPress site.
 
@@ -35,27 +35,19 @@ Shashin 2.3 is a complete rewrite. It includes more robust error handling, impro
 * The [srandom] and [snewest] tags now let you specify multiple albums
 * Uninstall option
 
-Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the Shashin 2.3 beta for a full description of the new features</a>. 
+Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the previous Shashin 2.3 beta for a full description of the new features</a>.
 
 == Installation ==
 
-**Installation Instructions for New Users**
+**Installation Instructions**
 
-Download the zip file, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear in your "Tools" menu and your "Settings" menu.
+Download the zip file, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel (if you are upgrading, deactivate and then reactivate). After successful activation, Shashin will appear in your "Tools" menu and your "Settings" menu.
 
 Go to the "Settings" menu first and take a look at the default options, which for many people will not require any changes. It's particularly important that you provide the correct URL for your Picasa server. For example, if you're in the UK, it would be http://picasaweb.google.co.uk
 
 Now go to the "Tools" menu and follow the directions to add your first album!
 
-Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **You should include these tables when making backups of your WordPress tables.**
-
-**Installation Instructions for Upgrades from versions 2.3 or 2.3.1**
-
-Upload the new files to your plugins menu. Then deactivate and then reactivate Shashin in the plugins menu. This should address the most important bugs that have come up so far with verson 2.3.
-
-**Installation Instructions for Upgrades from versions prior to 2.3**
-
-Deactivate your old installation in the plugins menu, make a backup copy of your old Shashin plugin files, and then delete Shashin from your plugins directory. This will cleanup some old files that are no longer needed. This will not harm your Shashin photo data. Then upload the new version and reactivate. Reactivation will make some required updates to the Shashin database tables. **IMPORTANT:** then you need to go to your Shashin "Settings" menu and reset all your options (your settings are stored in a new way in Shashin 2.3). 
+Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **I't simportant to include these tables when making backups of your WordPress tables.** The Shashin tags rely on key numbers from these tables that you won't get back if you lose the data in these tables.
 
 == Frequently Asked Questions ==
 

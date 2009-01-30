@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -31,10 +31,10 @@
     echo ToppaWPFunctions::displayInput('shashin_widget_album_thumbs[max_cols]', $cols_data, $shashin_options['widget_album_thumbs']['max_cols']); ?></dd>
 
 <dt><label for="shashin_widget_album_thumbs_location_yn"><?php _e("Show Location"); ?>:</label></dt>
-<dd><?php $location_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO));
+<dd><?php $location_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => __("Yes", SHASHIN_L10N_NAME), 'n' => __("No", SHASHIN_L10N_NAME)));
     echo ToppaWPFunctions::displayInput('shashin_widget_album_thumbs[location_yn]', $location_data, $shashin_options['widget_album_thumbs']['location_yn']); ?></dd>
 <dt><label for="shashin_widget_album_thumbs_pubdate_yn"><?php _e("Show Pub. Date"); ?>:</label></dt>
-<dd><?php $pubdate_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO));
+<dd><?php $pubdate_data = array('input_type' => 'radio', 'input_subgroup' => array('y' => __("Yes", SHASHIN_L10N_NAME), 'n' => __("No", SHASHIN_L10N_NAME)));
     echo ToppaWPFunctions::displayInput('shashin_widget_album_thumbs[pubdate_yn]', $pubdate_data, $shashin_options['widget_album_thumbs']['pubdate_yn']); ?></dd>
 
 <dt><label for="shashin_widget_album_thumbs_float"><?php _e("CSS Float"); ?>:</label></dt>

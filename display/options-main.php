@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage AdminPanels
  */
@@ -81,7 +81,7 @@
     </tr>
 
     <tr>
-    <td colspan="3"><?php _e("<strong>Highslide Settings</strong><br />These settings apply only if you select 'Use Highslide' above, for the full-size image display.", SHASHIN_L10N_NAME); ?></td>
+    <td colspan="3"><strong><?php _e("Highslide Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("These settings apply only if you select 'Use Highslide' above, for the full-size image display.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -129,7 +129,7 @@
     </tr>
 
     <tr>
-    <td colspan="3"><?php _e("<strong>Album Photos Settings</strong><br />If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
+    <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">

@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage Classes
  */
@@ -85,7 +85,7 @@ class ShashinPhoto {
                 'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'Y'"),
                 'label' => 'Include in random photo display', 'source' => 'user',
                 'input_type' => 'radio',
-                'input_subgroup' => array('Y' => __(SHASHIN_YES, SHASHIN_L10N_NAME), 'N' => __(SHASHIN_NO, SHASHIN_L10N_NAME))),
+                'input_subgroup' => array('Y' => __("Yes", SHASHIN_L10N_NAME), 'N' => __("No", SHASHIN_L10N_NAME))),
             'deleted' => array(
                 'col_params' => array('type' => 'char', 'length' => '1', 'other' => "default 'N'"),
                 'label' => 'Deleted flag', 'source' => 'db'),

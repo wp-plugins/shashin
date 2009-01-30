@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage Classes
  */
@@ -207,7 +207,7 @@ class ToppaWPFunctions {
      * @param string $table the name of the table to query
      * @param array $fields column names or a hash of key-value pairs
      * @param array $values (optional) the values to insert if $keys is only a list of columns
-     * @param string $update (optional) whether to run an update if the insert would cause a duplicate key on a unique index (default: false)
+     * @param string $update (optional) run an update instead if the insert would cause a duplicate key on a unique index (default: false)
      * @return mixed passes along the return value of the $wpdb call
      */
     function sqlInsert($table, $fields, $values = null, $update = false) {

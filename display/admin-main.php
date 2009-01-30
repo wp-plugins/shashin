@@ -11,7 +11,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.2
+ * @version 2.3.3
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -28,10 +28,9 @@
     echo "<h3>" . __("Your Albums", SHASHIN_L10N_NAME) . "</h3>\n";
 
     if ($all_albums) {
-        echo '<p>'
-            . __("Click an album title to view its photos. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME)
-            . "</p>\n";
-
+        echo '<p>';
+        _e("Click an album title to view its photos. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME);
+        echo "</p>\n";
         echo '<form action="' . SHASHIN_ADMIN_URL . '" method="post">' . "\n";
         echo '<input type="hidden" name="shashin_action" value="update_albums" />' . "\n";
         echo '<table class="widefat">' . "\n";
@@ -112,7 +111,7 @@
     <hr />
     <h3><?php _e("Sync Multiple Albums", SHASHIN_L10N_NAME); ?></h3>
 
-    <p><?php _e("You can sync all the albums for a Picasa user at the same time. This can take some time if you have many albums. Note this only sync albums you have already added to Shashin.", SHASHIN_L10N_NAME); ?></p>
+    <p><?php _e("You can synchronize all the albums for a Picasa user at the same time. This can take some time if you have many albums. Note this only synchronizes albums you have already added to Shashin.", SHASHIN_L10N_NAME); ?></p>
 
     <?php if ($sync_all) { ?>
         <form action="<?php echo SHASHIN_ADMIN_URL ?>" method="post">
@@ -141,9 +140,9 @@
 
     <p><?php _e("The URL should have one of these formats:", SHASHIN_L10N_NAME); ?><p>
 
-    <p><?php echo $shashin_options['picasa_server'] ?>/<em>username</em><br />
-    <?php _e("<strong>- OR -</strong>", SHASHIN_L10N_NAME); ?><br />
-    <?php echo $shashin_options['picasa_server'] ?>/<em>username</em>/<em>albumname</em></p>
+    <p><?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em><br />
+    <strong><?php _e("- OR -", SHASHIN_L10N_NAME); ?></strong><br />
+    <?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em>/<em><?php _e("albumname", SHASHIN_L10N_NAME); ?></em></p>
 
     <p><?php _e("Picasa URL:", SHASHIN_L10N_NAME); ?>
     <?php ToppaWPFunctions::displayInput('link_url', $album->ref_data['link_url'], $_REQUEST['link_url']) ?><br />

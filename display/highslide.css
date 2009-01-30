@@ -1,23 +1,24 @@
 /**
  * Highslide CSS for use with Shashin.
+ * See the highslide tutorial if you want to make customizations:
+ * http://highslide.com/tutorial
+ *
+ * @author Michael Toppa
+ * @version 2.3.3
  */
 
 .highslide {
     cursor: url(highslide/graphics/zoomin.cur), pointer;
     outline: none;
 }
-
 .highslide-wrapper {
     background: white;
 }
-
 .highslide-image {
     border: 2px solid white;
 }
-
 .highslide-image-blur {
 }
-
 .highslide-caption {
     display: none;
     border: 2px solid white;
@@ -27,7 +28,6 @@
     padding: 5px;
     background-color: white;
 }
-
 .highslide-loading {
     display: block;
     color: black;
@@ -43,7 +43,6 @@
     background-repeat: no-repeat;
     background-position: 3px 1px;
 }
-
 a.highslide-credits,
 a.highslide-credits i {
     padding: 2px;
@@ -51,21 +50,17 @@ a.highslide-credits i {
     text-decoration: none;
     font-size: 10px;
 }
-
 a.highslide-credits:hover,
 a.highslide-credits:hover i {
     color: white;
     background-color: gray;
 }
-
 .highslide-move {
     cursor: move;
 }
-
 .highslide-overlay {
     display: none;
 }
-
 a.highslide-full-expand {
     background: url(highslide/graphics/fullexpand.gif) no-repeat;
     display: block;
@@ -73,7 +68,6 @@ a.highslide-full-expand {
     width: 34px;
     height: 34px;
 }
-
 
 /* Slideshow Controls. See http://www.google.com/search?q=css+sprites */
 .highslide-controls {
