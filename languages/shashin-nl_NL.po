@@ -1,0 +1,793 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Shashin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-30 07:55-0500\n"
+"PO-Revision-Date: 2009-01-30 16:56+0100\n"
+"Last-Translator: Theo Muys <theomuys@gmail.com>\n"
+"Language-Team: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+
+#: ShashinPhoto.php:88
+#: ShashinAlbum.php:94
+#: display/widget_random.php:38
+#: display/widget_thumbs.php:35
+#: display/widget_single.php:30
+#: display/options-main.php:36
+#: display/options-main.php:59
+#: display/options-main.php:109
+#: display/options-main.php:180
+#: display/options-main.php:191
+#: display/widget_album_thumbs.php:34
+#: display/widget_album_thumbs.php:37
+#: display/widget_newest.php:38
+msgid "Yes"
+msgstr "Ja"
+
+#: ShashinPhoto.php:88
+#: ShashinAlbum.php:94
+#: display/widget_random.php:38
+#: display/widget_thumbs.php:35
+#: display/widget_single.php:30
+#: display/options-main.php:39
+#: display/options-main.php:62
+#: display/options-main.php:112
+#: display/options-main.php:183
+#: display/options-main.php:194
+#: display/widget_album_thumbs.php:34
+#: display/widget_album_thumbs.php:37
+#: display/widget_newest.php:38
+msgid "No"
+msgstr "Nee"
+
+#: ShashinPhoto.php:118
+msgid "ShashinPhoto::getPhoto - Failed to retrieve photo. SQL Error:"
+msgstr "ShashinPhoto::getPhoto - Kan foto niet ophalen. SQL Fout:"
+
+#: ShashinPhoto.php:122
+msgid "Photo not found."
+msgstr "Foto niet gevonden."
+
+#: ShashinPhoto.php:135
+msgid "ShashinPhoto::getPhoto - Called with invalid arguments."
+msgstr "ShashinPhoto::getPhoto - Aangeroepen met ongeldige parameters."
+
+#: ShashinPhoto.php:138
+msgid "Photo retrieved."
+msgstr "Foto opgehaald."
+
+#: ShashinPhoto.php:151
+msgid "ShashinPhoto::setPhotoLocal - Called with invalid arguments."
+msgstr "ShashinPhoto::setPhotoLocal - Aangeroepen met ongeldige parameters."
+
+#: ShashinPhoto.php:157
+#, php-format
+msgid "ShashinPhoto::getPhotoLocal - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinPhoto::getPhotoLocal - Kan record voor foto ID %d niet ophalen. SQL Fout:"
+
+#: ShashinPhoto.php:160
+msgid "Photo updated."
+msgstr "Foto geüpdatet."
+
+#: ShashinPhoto.php:196
+msgid "Shashin error:"
+msgstr "Shashin fout:"
+
+#: ShashinPhoto.php:237
+msgid "Shashin Error: unable to retrieve random photos."
+msgstr "Shashin Fout: kan willekeurige foto's niet ophalen."
+
+#: ShashinPhoto.php:266
+msgid "Shashin Error: unable to retrieve newest photos."
+msgstr "Shashin Fout: kan nieuwste foto's niet ophalen."
+
+#: ShashinPhoto.php:290
+msgid "Shashin Error: unable to retrieve photo thumbnails."
+msgstr "Shashin Fout: kan foto miniaturen niet ophalen."
+
+#: ShashinPhoto.php:341
+msgid "Shashin Error: unable to retrive album photos."
+msgstr "Shashin Fout: kan album foto's niet ophalen."
+
+#: ShashinPhoto.php:347
+msgid "Go back"
+msgstr "Ga terug"
+
+#: ShashinPhoto.php:395
+#: ShashinAlbum.php:660
+#: ShashinAlbum.php:855
+msgid "Shashin Error:"
+msgstr "Shashin Fout:"
+
+#: Shashin.php:184
+#: Shashin.php:191
+msgid "Failed to create or update table "
+msgstr "Kan tabel niet maken of updaten"
+
+#: Shashin.php:376
+#: Shashin.php:473
+msgid "Updates saved."
+msgstr "Updates opgeslagen."
+
+#: Shashin.php:395
+msgid "That is not a valid URL for your Picasa server."
+msgstr "Dat is geen geldige URL voor je Picasa server."
+
+#: Shashin.php:408
+msgid "Album added."
+msgstr "Album toegevoegd."
+
+#: Shashin.php:421
+msgid "Albums added."
+msgstr "Albums toegevoegd."
+
+#: Shashin.php:433
+msgid "All albums synced for "
+msgstr "Alle albums gesynct voor"
+
+#: Shashin.php:468
+#: Shashin.php:532
+msgid "Failed to retrieve album data."
+msgstr "Kan albumgegevens niet ophalen."
+
+#: Shashin.php:487
+msgid "Album synchronized."
+msgstr "Album gesynchroniseerd."
+
+#: Shashin.php:502
+#: ShashinAlbum.php:248
+msgid "Album deleted."
+msgstr "Album verwijderd."
+
+#: Shashin.php:527
+msgid "Failed to retrieve user data."
+msgstr "Kan gebruikersgegevens niet ophalen."
+
+#: Shashin.php:575
+msgid "Shashin has been uninstalled. You can now deactivate Shashin on your plugins management page."
+msgstr "Shashin is verwijderd. Je kunt nu Shashin uitschakelen op de plugin pagina."
+
+#: Shashin.php:579
+msgid "Uninstall of Shashin failed. Database error:"
+msgstr "Verwijderen van Shasin is mislukt. Database fout:"
+
+#: Shashin.php:585
+msgid "You must check the 'Uninstall Shashin' checkbox to confirm you want to uninstall Shashin"
+msgstr "Je moet 'Shashin verwijderen' aanvinken om te bevestigen dat je Shashin wilt verwijderen."
+
+#: Shashin.php:594
+msgid "Invalid URL for Picasa Server"
+msgstr "Ongeldige URL voor Picasa Server"
+
+#: Shashin.php:609
+msgid "Shashin settings saved."
+msgstr "Shashin instellingen opgeslagen."
+
+#: ShashinAlbum.php:118
+msgid "ShashinAlbum::getAlbum - Failed to retrieve album. SQL Error:"
+msgstr "ShashinAlbum::getAlbum - Album verwijderen mislukt. SQL Fout:"
+
+#: ShashinAlbum.php:122
+msgid "Album not found."
+msgstr "Album niet gevonden."
+
+#: ShashinAlbum.php:131
+msgid "ShashinAlbum::getAlbum - Called with invalid arguments."
+msgstr "ShashinAlbum::getAlbum - Aangeroepen met ongeldige parameters."
+
+#: ShashinAlbum.php:134
+msgid "Album retrieved."
+msgstr "Album opgehaald."
+
+#: ShashinAlbum.php:167
+msgid "ShashinAlbum::setAlbum - First argument to setAlbum is not a valid username."
+msgstr "ShashinAlbum::setAlbum - De eerste parameter voor setAlbum is geen geldige gebruikersnaam."
+
+#: ShashinAlbum.php:176
+msgid "ShashinAlbum::setAlbum - Failed to parse album feed."
+msgstr "ShashinAlbum::setAlbum - Kan album feed niet parsen."
+
+#: ShashinAlbum.php:189
+msgid "ShashinAlbum::setAlbum - Second argument to setAlbum is not a valid album identifier."
+msgstr "ShashinAlbum::setAlbum - De tweede parameter voor setAlbum is geen geldige album identifier."
+
+#: ShashinAlbum.php:214
+msgid "ShashinAlbum::setAlbum - Failed to insert/update database record for album. SQL Error:"
+msgstr "ShashinAlbum::setAlbum - Kan database record niet invoegen/updaten voor het album. SQL Fout:"
+
+#: ShashinAlbum.php:220
+msgid "Album metadata synchronized"
+msgstr "Album metagegevens gesynchroniseerd."
+
+#: ShashinAlbum.php:233
+msgid "ShashinAlbum::deleteAlbum - Album object not correctly set."
+msgstr "ShashinAlbum::deleteAlbum - Album object niet goed ingesteld."
+
+#: ShashinAlbum.php:239
+#, php-format
+msgid "ShashinAlbum::deleteAlbum - Failed to delete photo records for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::deleteAlbum - Kan foto record niet verwijderen voor album ID %d. SQL Fout:"
+
+#: ShashinAlbum.php:245
+#, php-format
+msgid "ShashinAlbum::deleteAlbum - Failed to delete album record for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::deleteAlbum - Kan album record niet verwijderen voor album ID %d. SQL Fout:"
+
+#: ShashinAlbum.php:282
+#, php-format
+msgid "ShashinAlbum::getAlbumPhotos - Failed to retrieve photos for Album ID %d. SQL Error:"
+msgstr "ShashinAlbum::getAlbumPhotos - Kan fotos'voor album ID %d niet verwijderen. SQL Fout:"
+
+#: ShashinAlbum.php:286
+msgid "No photos found."
+msgstr "Geen foto's gevonden."
+
+#: ShashinAlbum.php:290
+msgid "Album photos retrieved."
+msgstr "Albumfoto's opgehaald."
+
+#: ShashinAlbum.php:324
+msgid "ShashinAlbum::setAlbumPhotos - Failed to read Picasa RSS feed for album."
+msgstr "ShashinAlbum::setAlbumPhotos - Kan Picasa RSS feed voor het album niet lezen."
+
+#: ShashinAlbum.php:344
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to flag photo ID %d as deleted. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Kan foto ID %d niet aanmerken als verwijderd. SQL Fout:"
+
+#: ShashinAlbum.php:372
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Kan record voor foto ID %d niet aanpassen. SQL Fout:"
+
+#: ShashinAlbum.php:383
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to insert record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Kan record voor foto ID %d niet invoegen. SQL Fout:"
+
+#: ShashinAlbum.php:392
+msgid "Album photos synchronized."
+msgstr "Alle albums gesynchroniseerd."
+
+#: ShashinAlbum.php:405
+msgid "ShashinAlbum::setAlbumLocal - Called with invalid arguments."
+msgstr "ShashinAlbum::setAlbumLocal - Aangeroepen met ongeldige paramaters."
+
+#: ShashinAlbum.php:411
+#, php-format
+msgid "ShashinAlbum::setAlbumLocal - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumLocal - Kan record voor foto ID %d niet aanpassen. SQL Fout:"
+
+#: ShashinAlbum.php:414
+msgid "Album updated."
+msgstr "Album geüpdatet."
+
+#: ShashinAlbum.php:545
+msgid "ShashinAlbum::setUserAlbums - First argument to setUserAlbums is not a valid username."
+msgstr "ShashinAlbum::setUserAlbums - Eerste parameter voor setUserAlbums is geen geldige gebruikersnaam."
+
+#: ShashinAlbum.php:549
+msgid "ShashinAlbum::setUserAlbums - Failed to parse album feed."
+msgstr "ShashinAlbum::setUserAlbums - Kan album feed niet parsen."
+
+#: ShashinAlbum.php:580
+#, php-format
+msgid "ShashinAlbum::setUserAlbums - Failed to update database record for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::setUserAlbums - Kan record voor album ID %d niet aanpassen. SQL Fout:"
+
+#: ShashinAlbum.php:589
+#, php-format
+msgid "ShashinAlbum::setUserAlbums - Failed to insert database record for album ID %d. Possible SQL Error:"
+msgstr "ShashinAlbum::setUserAlbums - Kan record voor album ID %d niet invoegen. Mogelijke SQL Fout:"
+
+#: ShashinAlbum.php:613
+msgid "Album photos updated."
+msgstr "Album foto's geüpdatet."
+
+#: ShashinAlbum.php:634
+msgid "Shashin Error: unable to retrieve albums."
+msgstr "Shashin Error: kan albums niet ophalen."
+
+#: display/widget_random.php:17
+#: display/admin-main.php:41
+#: display/widget_thumbs.php:17
+#: display/widget_single.php:17
+#: display/widget_album_thumbs.php:17
+#: display/widget_newest.php:17
+msgid "Title"
+msgstr "Titel"
+
+#: display/widget_random.php:21
+#: display/widget_newest.php:21
+msgid "Album"
+msgstr "Album"
+
+#: display/widget_random.php:25
+#: display/widget_thumbs.php:26
+#: display/widget_single.php:25
+#: display/widget_newest.php:25
+msgid "Image Size"
+msgstr "Afmetingen foto"
+
+#: display/widget_random.php:29
+#: display/widget_thumbs.php:30
+msgid "Max Cols"
+msgstr "Max Kols"
+
+#: display/widget_random.php:33
+#: display/widget_newest.php:33
+msgid "# of Images"
+msgstr "# foto's"
+
+#: display/widget_random.php:37
+#: display/widget_thumbs.php:34
+#: display/widget_single.php:29
+#: display/widget_newest.php:37
+msgid "Show Captions"
+msgstr "Laat onderschrift zien"
+
+#: display/widget_random.php:41
+#: display/widget_thumbs.php:38
+#: display/widget_single.php:33
+#: display/widget_album_thumbs.php:40
+#: display/widget_newest.php:41
+msgid "CSS Float"
+msgstr "CSS Float"
+
+#: display/widget_random.php:45
+#: display/widget_thumbs.php:42
+#: display/widget_single.php:37
+#: display/widget_album_thumbs.php:44
+#: display/widget_newest.php:45
+msgid "CSS Clear"
+msgstr "CSS Clear"
+
+#: display/admin-main.php:28
+msgid "Your Albums"
+msgstr "Je albums"
+
+#: display/admin-main.php:32
+msgid "Click an album title to view its photos. Click a column header to order the album list by that column (and click again to reverse the order)."
+msgstr "Klik op een albumtitel om de foto's te zien. Klik op een kolomhoofd om de albumlijst op die kolom te sorteren (nog eens voor de omgekeerde volgorde)."
+
+#: display/admin-main.php:44
+msgid "Album Key"
+msgstr "Album Key"
+
+#: display/admin-main.php:45
+msgid "Sync"
+msgstr "Sync"
+
+#: display/admin-main.php:46
+msgid "Delete"
+msgstr "Verwijder"
+
+#: display/admin-main.php:47
+#: display/admin-edit.php:54
+msgid "Include in Random?"
+msgstr "Bij Willekeurige voegen?"
+
+#: display/admin-main.php:50
+msgid "Photo Count"
+msgstr "Aantal foto's"
+
+#: display/admin-main.php:53
+msgid "Pub Date"
+msgstr "Pub Datum"
+
+#: display/admin-main.php:56
+msgid "Last Sync"
+msgstr "Laatste Sync"
+
+#: display/admin-main.php:100
+#: display/admin-edit.php:81
+msgid "Update Random Display"
+msgstr "Toon Willekeurige updaten"
+
+#: display/admin-main.php:108
+#: display/admin-main.php:129
+msgid "You have not added any albums yet."
+msgstr "Je hebt nog geen albums toegevoegd."
+
+#: display/admin-main.php:112
+msgid "Sync Multiple Albums"
+msgstr "Sync meerdere albums"
+
+#: display/admin-main.php:114
+msgid "You can synchronize all the albums for a Picasa user at the same time. This can take some time if you have many albums. Note this only synchronizes albums you have already added to Shashin."
+msgstr "Je kunt alle albums van een Picasa gebruiker in één keer syncen. Dit kan wat lang duren als je veel albums hebt. Let op: dit synct alleen albums die je al aan Shashin hebt toegevoegd."
+
+#: display/admin-main.php:120
+msgid "Sync all albums for Picasa username:"
+msgstr "Sync alle albums voor Picasa gebruiker:"
+
+#: display/admin-main.php:122
+msgid "Sync All"
+msgstr "Sync alle"
+
+#: display/admin-main.php:134
+#: display/admin-main.php:152
+msgid "Add Albums"
+msgstr "Albums toevoegen"
+
+#: display/admin-main.php:139
+msgid "Please enter the URL for your &quot;My Photos&quot; page on Picasa if you want to add all your public albums to Shashin, or enter the URL of an individual album. Use the regular URL, <strong>not the RSS URL</strong>."
+msgstr "Voer de URL in voor je  &quot;Mijn Foto's&quot; pagina op Picasa, als je all je openbare albums aan Shashin wilt toevoegen, of voer de URL in voor een individueel album. Gebruik de normale URL, <strong>niet de RSS URL</strong>."
+
+#: display/admin-main.php:141
+msgid "The URL should have one of these formats:"
+msgstr "De URL moet een van de volgende formaten hebben:"
+
+#: display/admin-main.php:143
+#: display/admin-main.php:145
+msgid "username"
+msgstr "gebruikersnaam"
+
+#: display/admin-main.php:144
+msgid "- OR -"
+msgstr "- OF -"
+
+#: display/admin-main.php:145
+msgid "albumname"
+msgstr "albumnaam"
+
+#: display/admin-main.php:147
+msgid "Picasa URL:"
+msgstr "Picasa URL:"
+
+#: display/admin-main.php:149
+msgid "Include photos in random photo display?"
+msgstr "Foto's meenemen bij willekeurige tonen?"
+
+#: display/admin-main.php:157
+msgid "Album Tips"
+msgstr "Album Tips"
+
+#: display/admin-main.php:160
+msgid "<strong>Syncing:</strong> after you upload new photos to an album in Picasa, click the"
+msgstr "<strong>Syncen:</strong> als je nieuwe foto's aan je album in Picasa hebt toegevoegd, klik het"
+
+#: display/admin-main.php:162
+msgid "icon for it above."
+msgstr "icoon ervoor hier boven"
+
+#: display/admin-main.php:163
+msgid "<strong>Display thumbnails for all your albums:</strong> you can choose the sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering). [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]"
+msgstr "<strong>Toon miniaturen voor all je albums:</strong> je kunt de sorteervolgorde instellen - opties zijn 'pub_date', 'title', of 'last_updated' (voeg ' desc' toe voor omgekeerde volgorde). [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]"
+
+#: display/admin-main.php:164
+msgid "<strong>Display thumbnails for selected albums:</strong> [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]"
+msgstr "<strong>Toon miniaturen voor geselecteerde albums:</strong> [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]"
+
+#: display/admin-main.php:165
+msgid "<strong>Display thumbnails and descriptions for all your albums:</strong> you can choose the sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering). [salbumlist=order_option,info_yn]"
+msgstr "<strong>Toon miniaturen en omschrijving voor al je albums:</strong>  je kunt de sorteervolgorde instellen - opties zijn 'pub_date', 'title', or 'last_updated' (voeg ' desc' toe voor omgekeerde volgorde). [salbumlist=order_option,info_yn]"
+
+#: display/admin-main.php:166
+msgid "<strong>Display thumbnails and descriptions for selected albums:</strong> [salbumlist=album_key1|album_key2|etc,info_yn]"
+msgstr "<strong>Toon miniaturen en omschrijvingen voor geselecteerde albums:</strong> [salbumlist=album_key1|album_key2|etc,info_yn]"
+
+#: display/admin-main.php:167
+msgid "<strong>Random images:</strong> if you want to exclude an album's images when using the srandom tag, set 'Include in Random?' to 'No.'"
+msgstr "<strong>Willekeurige foto's:</strong> alsj je foto's uit een album wilt uitsluiten bij de srandom tag, zet 'Bij willekeurige voegen?' op 'Nee.'"
+
+#: display/admin-main.php:168
+#: display/admin-edit.php:100
+msgid "<strong>More Help:</strong> see the"
+msgstr "<strong>Meer Help:</strong> zie"
+
+#: display/admin-main.php:170
+#: display/admin-edit.php:102
+msgid "Shashin page"
+msgstr "Shashin pagina"
+
+#: display/admin-main.php:171
+#: display/admin-edit.php:103
+msgid "for detailed instructions"
+msgstr "voor detail instructies"
+
+#: display/admin-main.php:176
+msgid "Tipping: it isn't just for cows"
+msgstr "Een gift is welkom."
+
+#: display/admin-main.php:178
+msgid "Shashin has taken hundreds of hours for me to develop and maintain. I do it for the love of course, but a tip would be nice :-) Thanks!"
+msgstr "Het heeft honderden uren gekost om Shashin te ontwikkelen en te onderhouden. Het is natuurlijk liefdewerk, maar een bijdrage zou wel leuk zijn :-) Bedankt!"
+
+#: display/widget_thumbs.php:21
+msgid "Photo Keys"
+msgstr "Foto Keys"
+
+#: display/widget_single.php:21
+#: display/admin-edit.php:46
+msgid "Photo Key"
+msgstr "Foto Key"
+
+#: display/options-main.php:17
+msgid "Settings"
+msgstr "Instellingen"
+
+#: display/options-main.php:27
+msgid "Your Picasa server:"
+msgstr "Je Picasa server:"
+
+#: display/options-main.php:29
+msgid "The base URL of your Picasa server. Be sure to include 'http://'"
+msgstr "De basis URL van je Picasa server. Vergeet 'http://' niet."
+
+#: display/options-main.php:33
+msgid "Sync all albums daily:"
+msgstr "Alle albums dagelijks syncen:"
+
+#: display/options-main.php:40
+msgid "This will make Shashin sync all your albums automatically on a daily basis."
+msgstr "Dit laat Shashin al je albums automatisch dagelijks syncen."
+
+#: display/options-main.php:44
+msgid "Image div padding:"
+msgstr "Foto div padding:"
+
+#: display/options-main.php:46
+msgid "Double the '.shashin_image img' padding value in shashin.css"
+msgstr "'.shashin_image img' padding verdubbelen in shashin.css"
+
+#: display/options-main.php:50
+msgid "Thumbnail div padding:"
+msgstr "Miniatuur div padding:"
+
+#: display/options-main.php:52
+msgid "Double the '.shashin_thumb img' padding value in shashin.css"
+msgstr "'.shashin_thumb img' padding verdubbelen in shashin.css"
+
+#: display/options-main.php:56
+msgid "Prefix album titles on captions:"
+msgstr "Album voorvoegsel bij alle onderschriften"
+
+#: display/options-main.php:63
+msgid "Clicking 'yes' means a photo's album title will be prefixed on its caption."
+msgstr "'Ja' klikken betekent dat de albumtitel wordt toegevoegd aan de onderschriften."
+
+#: display/options-main.php:67
+msgid "Full-size image display:"
+msgstr "Volledige grootte tonen:"
+
+#: display/options-main.php:70
+msgid "At Picasa, in same browser window"
+msgstr "In Picasa, in hetzelfde browser window"
+
+#: display/options-main.php:73
+msgid "At Picasa, in a new browser window"
+msgstr "In Picasa, in een nieuw browser window"
+
+#: display/options-main.php:76
+msgid "Use Highslide"
+msgstr "Highslide gebruiken"
+
+#: display/options-main.php:79
+msgid "Do not make thumbnails clickable"
+msgstr "Maak miniaturen niet klikbaar"
+
+#: display/options-main.php:80
+msgid "This determines how to display an image when its thumbnail is clicked"
+msgstr "Dit bepaalt hoe een foto wordt getoond als op de miniatuur wordt geklikt"
+
+#: display/options-main.php:84
+msgid "Highslide Settings"
+msgstr "Highslide instellingen:"
+
+#: display/options-main.php:84
+msgid "These settings apply only if you select 'Use Highslide' above, for the full-size image display."
+msgstr "Deze instellingen gelden alleen als je hierboven 'Highslide gebruiken' hebt geselecteerd om de volledige grootte te tonen."
+
+#: display/options-main.php:88
+msgid "Highslide image size:"
+msgstr "Highslide fotogrootte:"
+
+#: display/options-main.php:100
+msgid "This determines the 'maximum dimension' of an image displayed by Highslide when its thumbnail is clicked. This size is applied to either the height or the width (whichever is greater) and then the correct size for the other dimension is calculated on the fly. The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that the sizes"
+msgstr "Dit bepaalt de maximale grootte van een foto getoond door Highslide als op een miniatuur wordt geklikt. Deze afmeting geldt voor de hoogte of de breedte (de grootste van de twee); de juiste afmeting voor de andere dimensie wordt berekend. De afmetingen in het drop-down menu zijn de enige die door Picasa worden ondersteund. Let wel, de afmetingen"
+
+#: display/options-main.php:102
+#: display/options-main.php:150
+msgid "are cropped square."
+msgstr "worden vierkant uitgesneden."
+
+#: display/options-main.php:106
+msgid "Autoplay Highslide slideshows:"
+msgstr "Autoplay Highslide diashows:"
+
+#: display/options-main.php:113
+msgid "If someone clicks an image in a slideshow group, this determines whether the slideshow plays automatically."
+msgstr "Hier stel je in of de diashow vanzelf begint als iemand een foto aanklikt in een diashow overzicht."
+
+#: display/options-main.php:117
+msgid "Highslide slideshow image display time:"
+msgstr "Highslide diashow tijd per foto:"
+
+#: display/options-main.php:119
+msgid "How long each image is displayed in a slideshow (in milliseconds)"
+msgstr "Tijd dat iedere foto getoond wordt in een diashow (in milliseconden)."
+
+#: display/options-main.php:123
+msgid "Highslide video dimensions:"
+msgstr "Highslide diashow afmetingen:"
+
+#: display/options-main.php:124
+msgid "Width:"
+msgstr "Breedte:"
+
+#: display/options-main.php:126
+msgid "Height:"
+msgstr "Hoogte:"
+
+#: display/options-main.php:128
+msgid "If you select Highslide for viewing images, it will also be used for displaying videos. This controls the height and width of the embedded video (unlike images, the dimensions cannot be calculated on the fly). A 4:3 (width:height) ratio is common for videos."
+msgstr "Als je Highslide kiest om foto's te tonen, wordt dit ook gebruikt om video's te laten zien. Hiermee bepaal je de hoogte en breedte van de embedded video (de afmetingen kunnen niet, zoals bij foto's, worden berekend). Een verhouding van 4:3 (breedte:hoogte) is normaal voor video's."
+
+#: display/options-main.php:132
+msgid "Album Photos Settings"
+msgstr "Albumfoto instellingen"
+
+#: display/options-main.php:132
+msgid "If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked."
+msgstr "Als je Highslide gebruikt met de [salbumthumbs] of [salbumlist] tags, bepalen deze instellingen hoe de foto's worden getoond als er op een album miniatuur wordt geklikt."
+
+#: display/options-main.php:136
+msgid "Thumbnail size:"
+msgstr "Miniatuur afmetingen:"
+
+#: display/options-main.php:148
+msgid "The size to use for displaying the photos in the album. See 'Highslide image size' above for more information. Note that the sizes"
+msgstr "De afmetingen die worden gebruikt om foto's te tonen in een album. Zie 'Highslide foto afmetingen' hierboven voor meer informatie. Let wel, de afmetingen"
+
+#: display/options-main.php:154
+msgid "Number of columns:"
+msgstr "Aantal kolommen:"
+
+#: display/options-main.php:156
+msgid "The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme."
+msgstr "Het maximum aantal kolommen dat gebruikt wordt om albumfoto's te tonen. Let op de gekozen 'miniatuurafmetingen' hierboven ingesteld, om zeker te zijn dat het niet te breed wordt voor je gekozen WordPress theme."
+
+#: display/options-main.php:160
+msgid "Sort Order:"
+msgstr "Sorteervolgorde:"
+
+#: display/options-main.php:173
+msgid "How to order the photos. 'asc' means ascending from lowest to highest (a-z, oldest to newest), 'desc' means descending from highest to lowest (z-a, newest to oldest)."
+msgstr "Sorteervolgorde voor de foto's. 'asc' betekent oplopend van laag naar hoog (a-z, oud-nieuw), 'desc' betekent aflopen van hoog naar laag (z-a, nieuw-oud)."
+
+#: display/options-main.php:177
+msgid "Display photo captions:"
+msgstr "Toon foto onderschriften:"
+
+#: display/options-main.php:184
+msgid "Whether to display a caption under each thumbnail."
+msgstr "Onderschrift tonen onder miniatuur."
+
+#: display/options-main.php:188
+msgid "Display album description:"
+msgstr "Toon album omschrijving:"
+
+#: display/options-main.php:195
+msgid "The album title will appear above the photos. You can choose whether to also display the album description, after the title."
+msgstr "De albumtitel verschijnt boven de foto's. Je kunt kiezen of ook de album omschrijving getoond moet worden, na de titel."
+
+#: display/options-main.php:198
+msgid "Save Options"
+msgstr "Opties opslaan"
+
+#: display/options-main.php:202
+#: display/options-main.php:214
+msgid "Uninstall Shashin"
+msgstr "Shashin verwijderen"
+
+#: display/options-main.php:208
+msgid "Uninstall Shashin?"
+msgstr "Shashin verwijderen?"
+
+#: display/options-main.php:210
+msgid "Check this box if you want to completely remove Shashin. <strong>This will permanently break any Shashin tags that you still have in your posts or pages.</strong> After uninstalling, you can then deactivate Shashin on your plugins management page."
+msgstr "Vink dit aan als je Shashin compleet wilt verwijderen. <strong>Dit verbreekt definitief de Shashin tags die je nog hebt in je berichten of op je pagina's. </strong> Na verwijdering kun je Shashin uitschakelen op de plugin pagina."
+
+#: display/options-main.php:214
+msgid "Are you sure you want to uninstall Shashin?"
+msgstr "Weet je zeker dat je Shashin wilt verwijderen?"
+
+#: display/widget_album_thumbs.php:25
+msgid "Albums"
+msgstr "Albums"
+
+#: display/widget_album_thumbs.php:25
+msgid "Keys or Sort"
+msgstr "Keys of Sorteren"
+
+#: display/widget_album_thumbs.php:29
+#: display/widget_newest.php:29
+msgid "Max # of Columns"
+msgstr "Max # kolommen"
+
+#: display/widget_album_thumbs.php:33
+msgid "Show Location"
+msgstr "Toon lokatie"
+
+#: display/widget_album_thumbs.php:36
+msgid "Show Pub. Date"
+msgstr "Toon Publicatiedatum"
+
+#: display/admin-edit.php:36
+#: display/admin-edit.php:106
+msgid "Shashin Admin"
+msgstr "Shashin Beheer"
+
+#: display/admin-edit.php:38
+msgid "Click a column header to order the photo list by that column (and click again to reverse the order)."
+msgstr "Klik op een kolomnaam om de foto's te sorteren volgens die kolom (nog een keer voor de omgekeerde volgorde)"
+
+#: display/admin-edit.php:43
+msgid "Photo"
+msgstr "Foto"
+
+#: display/admin-edit.php:49
+msgid "Filename"
+msgstr "Bestandsnaam"
+
+#: display/admin-edit.php:52
+msgid "Date Taken"
+msgstr "Datum genomen"
+
+#: display/admin-edit.php:53
+msgid "Markup"
+msgstr "Opmaak"
+
+#: display/admin-edit.php:88
+msgid "Photo Tips"
+msgstr "Foto Tips"
+
+#: display/admin-edit.php:92
+msgid "<strong>Display an image:</strong> copy and paste the code listed under <em>Markup</em>, and then edit it as needed. [simage=photo_key,max_size,caption_yn,float,clear]"
+msgstr "<strong>Foto tonen:</strong> kopieer en plak de code bij <em>Markup</em>, en pas aan voorzover nodig. [simage=photo_key,max_size,caption_yn,float,clear]"
+
+#: display/admin-edit.php:93
+msgid "<strong>Valid Picasa image sizes:</strong>"
+msgstr "<strong>Geldig afmetingen voor Picasa:</strong>"
+
+#: display/admin-edit.php:95
+msgid "For a cropped square image, use sizes"
+msgstr "Voor een vierkante uitsnede, gebruik afmetingen:"
+
+#: display/admin-edit.php:97
+msgid "<strong>Display random images:</strong> [srandom=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the album_key for any album"
+msgstr "<strong>Willekeurige tonen:</strong> [srandom=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear] Voer 'any' in voor de album_key voor alle albums"
+
+#: display/admin-edit.php:98
+msgid "<strong>Display a group of thumbnails:</strong>[sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
+msgstr "<strong>Groep van miniaturen tonen:</strong>[sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
+
+#: display/admin-edit.php:99
+msgid "<strong>Display newest images:</strong> [snewest=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the album_key for any album"
+msgstr "<strong>Nieuwste foto's tonen:</strong> [snewest=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear] Vul 'any' in voor de album_key om alle albums te tonen"
+
+#~ msgid "<strong>- OR -</strong>"
+#~ msgstr "<strong>- OF -</strong>"
+#~ msgid ""
+#~ "If you want to display all your albums, indicate how to order them: "
+#~ "options are 'pub_date', 'title', or 'last_updated' (add ' desc' for "
+#~ "reverse ordering). <strong>- OR -</strong> If you want only certain "
+#~ "albums, enter their album keys separated by pipes, for example '12|22|14|"
+#~ "17'"
+#~ msgstr ""
+#~ "Als je al je albums wilt tonen, geef dan de sorteervolgorden aan: de "
+#~ "opties zijn 'pub_date', 'title', of 'last_updated' (voeg 'desc' voor de "
+#~ "omgekeerde volgorde). <strong>- OF -</strong> Als je alleen enkele albums "
+#~ "wilt tonen, voer dan de album keys in, gescheiden door het 'pipe' "
+#~ "symbool, bijvoorbeeld '12|22|14|17'"
+
