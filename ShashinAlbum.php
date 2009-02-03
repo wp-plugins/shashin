@@ -235,13 +235,13 @@ class ShashinAlbum {
 
         $sql_result = ToppaWPFunctions::sqlDelete(SHASHIN_PHOTO_TABLE, array('album_id' => $this->data['album_id']));
 
-        if (!$sql_result) {
+        if ($sql_result === false) {
             return array(false, sprintf(__("ShashinAlbum::deleteAlbum - Failed to delete photo records for album ID %d. SQL Error:", SHASHIN_L10N_NAME), $this->data['album_id']), true);
         }
 
         $sql_result = ToppaWPFunctions::sqlDelete(SHASHIN_ALBUM_TABLE, array('album_id' => $this->data['album_id']));
 
-        if (!$sql_result) {
+        if ($sql_result === false) {
             return array(false, sprintf(__("ShashinAlbum::deleteAlbum - Failed to delete album record for album ID %d. SQL Error:", SHASHIN_L10N_NAME), $this->data['album_id']), true);
         }
 
