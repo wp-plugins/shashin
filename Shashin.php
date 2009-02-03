@@ -181,14 +181,14 @@ class Shashin {
         // the only way to handle errors during plugin activation is to force
         // a fatal PHP error - stupid WordPress!
         if (!ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ") . SHASHIN_ALBUM_TABLE;
+            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_ALBUM_TABLE;
             trigger_error('', E_USER_ERROR);
         }
 
         $photo = new ShashinPhoto();
 
         if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ") . SHASHIN_PHOTO_TABLE;
+            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_PHOTO_TABLE;
             trigger_error('', E_USER_ERROR);
         }
 
