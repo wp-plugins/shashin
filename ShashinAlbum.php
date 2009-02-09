@@ -357,7 +357,14 @@ class ShashinAlbum {
 
             // for some reason Picasa pads the timestamps with extra zeroes
             // - strip them out.
-            $new_photo['taken_timestamp'] = substr($new_photo['taken_timestamp'],0,10);
+            if ($new_photo['taken_timestamp']) {
+                $new_photo['taken_timestamp'] = substr($new_photo['taken_timestamp'],0,10);
+            }
+
+            else {
+                $new_photo['taken_timestamp'] = 0;
+            }
+
             $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
 
             // only make an update if something has changed about the photo
