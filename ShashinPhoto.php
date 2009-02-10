@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.3
+ * @version 2.3.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -193,7 +193,7 @@ class ShashinPhoto {
             list($result, $message, $db_error) = $this->getPhoto(array('photo_key' => $match['photo_key']));
 
             if (!$result) {
-                return '<span class="shashin_error">' . __("Shashin error:") . ' ' . $message . '</span>';
+                return '<span class="shashin_error">' . __("Shashin error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
         }
 
@@ -234,7 +234,7 @@ class ShashinPhoto {
         $photos = ShashinPhoto::getPhotos('sp.*', $conditions, $other);
 
         if (!$photos) {
-            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve random photos.") . '</span>';
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve random photos.", SHASHIN_L10N_NAME) . '</span>';
         }
 
         return ShashinPhoto::_getTableMarkup($photos, $match);
@@ -263,7 +263,7 @@ class ShashinPhoto {
         $photos = ShashinPhoto::getPhotos('sp.*', $conditions, $other);
 
         if (!$photos) {
-            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve newest photos.") . '</span>';
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve newest photos.", SHASHIN_L10N_NAME) . '</span>';
         }
 
         return ShashinPhoto::_getTableMarkup($photos, $match);
@@ -287,7 +287,7 @@ class ShashinPhoto {
         $photos = ShashinPhoto::getPhotos('*', $conditions);
 
         if (!$photos) {
-            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve photo thumbnails.") . '</span>';
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve photo thumbnails.", SHASHIN_L10N_NAME) . '</span>';
         }
 
         // the data doesn't come back from the database in the order it was
@@ -338,13 +338,13 @@ class ShashinPhoto {
         $photos = ShashinPhoto::getPhotos('sp.*, sa.title as album_title, sa.description as album_description', $conditions, $other);
 
         if (!$photos) {
-            return '<span class="shashin_error">' . __("Shashin Error: unable to retrive album photos.") . '</span>';
+            return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve album photos.", SHASHIN_L10N_NAME) . '</span>';
         }
 
         // for accessing the album title and description
         $photo = current($photos);
 
-        $desc = '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back") . '</a></span>';
+        $desc = '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back", SHASHIN_L10N_NAME) . '</a></span>';
         $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
 
         if ($photo['album_description'] &&  $match['description_yn'] == 'y') {
@@ -392,7 +392,7 @@ class ShashinPhoto {
             list($result, $message, $db_error) = $photo->getPhoto(null, $photos[$i]);
 
             if (!$result) {
-                return '<span class="shashin_error">' . __("Shashin Error:") . ' ' . $message . '</span>';
+                return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
             $markup = $photo->_getDivMarkup($match, true, $_SESSION['hs_group_counter'], true);
@@ -580,7 +580,7 @@ class ShashinPhoto {
             $markup .= '<span class="shashin_caption">' . $opt_caption . '</span>';
         }
 
-        if ($caption && $shashin_options['image_display'] == 'highslide') {
+        if ($caption && $shashin_options['image_display'] == 'highslide' && !$admin) {
             $markup .= '<div class="highslide-caption">' . $caption . '</div>';
         }
 

@@ -3,10 +3,10 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.3
+ * @version 2.3.4
  */
 
-/* The following are applied to the simage and srandom tags */
+/* Applied to all individual photos */
 .shashin_image {
     display: block;
     margin: 5px;
@@ -30,7 +30,7 @@
     font-weight: bold;
 }
 
-/* Applied to salbum tag */
+/* Applied to album thumbnails */
 .shashin_album {
     display: block;
     margin: 5px;
@@ -69,7 +69,6 @@
     font-size: x-small;
 }
 
-/* Applied to salbumthumbs tag */
 .shashin_album_thumbs_table {
     margin: 5px;
 }
@@ -80,7 +79,7 @@
     vertical-align: top;
 }
 
-/* Applied to sthumbs, srandom, and snewest tags */
+/* Applied to photos shown by sthumbs, srandom, and snewest tags */
 .shashin_thumbs_table {
     margin: 5px;
 }
@@ -118,7 +117,7 @@
     font-weight: bold;
 }
 
-/* Applied to salbumlist */
+/* Applied to album thumbnails in salbumlist */
 .shashin_album_list {
     clear: both;
 }
@@ -135,6 +134,14 @@
     border: none;
 }
 
+.shashin_album_list_info {
+}
+
+.shashin_album_list_title {
+    font-weight: bold;
+}
+
+/* Applied to table display of photos shown by salbumphotos, salbumlist, and salbumthumbs */
 .shashin_caption_title {
     display: block;
     font-weight: bold;

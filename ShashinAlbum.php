@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.3
+ * @version 2.3.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -368,11 +368,12 @@ class ShashinAlbum {
             $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
 
             // only make an update if something has changed about the photo
-            // (I'm pretty sure only the description and tags would ever change)
             if (array_key_exists($new_id, $old_photos)) {
                 if ($new_photo['tags'] != $old_photos[$new_id]['tags']
                   || $new_photo['description'] != $old_photos[$new_id]['description']
-                  || $new_photo['deleted'] != $old_photos[$new_id]['deleted']) {
+                  || $new_photo['taken_timestamp'] != $old_photos[$new_id]['taken_timestamp']
+                  || $new_photo['width'] != $old_photos[$new_id]['width']
+                  || $new_photo['height'] != $old_photos[$new_id]['height']) {
                     $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $new_photo, array('photo_id' => $new_id));
 
                     if ($sql_result === false) {
@@ -621,18 +622,29 @@ class ShashinAlbum {
     }
 
     /**
-     * Returns xhtml markup for displaying album thumbnails in a table.
+     * Returns xhtml markup for displaying album thumbnails in a table. Will
+     * instead call ShashinPhoto::getAlbumPhotosMarkup() if there is an album
+     * key in the $_REQUEST.
      *
      * @static
      * @access public
      * @uses ShashinAlbum::_getOrderedAlbums()
      * @uses ShashinAlbum::_getTableMarkup()
+     * @uses ShashinPhoto::getAlbumPhotosMarkup()
      * @param array $match see details in Shashin::parseContent()
      * @return string complete xhtml markup for displaying album thumbnails in a table
      */
     function getAlbumThumbsMarkup($match) {
+        // this is tricky if there are multiple salbumthumbs tags on the page:
+        // return photos for the album that was clicked, and suppress everything
+        // else
         if ($_REQUEST['shashin_album_key'] && !$match['force_picasa']) {
-            return ShashinPhoto::getAlbumPhotosMarkup($match);
+            if ((strpos($match['album_key'], "|") === false && !is_numeric($match['album_key']))
+                || in_array($_REQUEST['shashin_album_key'], explode("|", $match['album_key']))) {
+                return ShashinPhoto::getAlbumPhotosMarkup($match);
+            }
+
+            return "";
         }
 
         $ordered = ShashinAlbum::_getOrderedAlbums($match);
@@ -646,17 +658,36 @@ class ShashinAlbum {
 
     /**
      * Returns xhtml markup for displaying album thumbnails paired with the album
-     * description, and optional other data to display.
+     * description, and optional other data to display. Will instead call
+     * ShashinPhoto::getAlbumPhotosMarkup() if there is an album key in the
+     * $_REQUEST.
      *
      * @static
      * @access public
      * @uses ShashinAlbum::_getOrderedAlbums()
      * @uses ShashinAlbum::_getAlbumLink()
      * @uses ShashinAlbum::_getAlbumThumbTag()
+     * @uses ShashinPhoto::getAlbumPhotosMarkup()
      * @param array $match see details in Shashin::parseContent()
      * @return string complete xhtml markup for albums thumbnails and descriptions
      */
      function getAlbumListMarkup($match) {
+        // this is tricky if there are multiple salbumlist tags on the page:
+        // return photos for the album that was clicked, and suppress everything
+        // else
+        if ($_REQUEST['shashin_album_key'] && !$match['force_picasa']) {
+            if ((strpos($match['album_key'], "|") === false && !is_numeric($match['album_key']))
+                || in_array($_REQUEST['shashin_album_key'], explode("|", $match['album_key']))) {
+                return ShashinPhoto::getAlbumPhotosMarkup($match);
+            }
+
+            return "";
+        }
+
+        if (in_array($_REQUEST['shashin_album_key'], explode("|", $match['album_key'])) && !$match['force_picasa']) {
+            return ShashinPhoto::getAlbumPhotosMarkup($match);
+        }
+
         $albums = ShashinAlbum::_getOrderedAlbums($match);
 
         foreach ($albums as $al) {
@@ -664,13 +695,12 @@ class ShashinAlbum {
             list($result, $message, $db_error) = $album->getAlbum(null, $al);
 
             if (!$result) {
-                return '<span class="shashin_error">' . __("Shashin Error:") . ' ' . $message . '</span>';
+                return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
-            $replace = '<div class="shashin_album_list">' . "\n";
+            $replace .= '<div class="shashin_album_list">' . "\n";
             $replace .= '<div class="shashin_album_list_thumb">' . $album->_getAlbumThumbTag() . "</div>\n";
-            $link = $album->_getAlbumLink();
-            $replace .= "<strong>$link" . $album->data['title'] . '</a></strong><br />';
+            $replace .= '<div class="shashin_album_list_info"><span class="shashin_album_list_title">' . $album->_getAlbumLink() . $album->data['title'] . '</a></span><br />';
 
             // option to show album info
             if ($match['info_yn'] == 'y') {
@@ -696,9 +726,11 @@ class ShashinAlbum {
                 $replace .= preg_replace("/\s/", " ", $album->data['description']);
             }
 
-            $replace .= "</div>\n";
+            $replace .= "</div>\n</div>\n";
         }
 
+        // need to clear margins after the list is done
+        $replace .= '<div style="display: block; visibility: hidden; clear: both; height: 0;"></div>' . "\n";
         return $replace;
     }
 
