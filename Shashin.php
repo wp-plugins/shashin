@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.3
+Version: 2.3.4
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.3
+ * @version 2.3.4
  * @package Shashin
  * @subpackage Classes
  *
