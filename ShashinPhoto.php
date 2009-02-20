@@ -507,8 +507,16 @@ class ShashinPhoto {
         $class = $thumb ? 'shashin_thumb' : 'shashin_image';
         $padding = $thumb ? $shashin_options['thumb_padding'] : $shashin_options['div_padding'];
         $markup = '<div class="' . $class . '" style="width: ' . ($this->data['user_width'] + $padding) . 'px;';
-        $markup .= is_string($match['float']) ? " float: {$match['float']};" : "";
-        $markup .= is_string($match['clear']) ? " clear: {$match['clear']};" : "";
+
+        if ($match['float'] == 'center') {
+            $markup .= " margin-left: auto; margin-right: auto;";
+        }
+
+        else if ($match['float']) {
+            $markup .= " float: {$match['float']};";
+        }
+
+        $markup .= $match['clear'] ? " clear: {$match['clear']};" : "";
         $markup .=  '">';
         $autoplay = $shashin_options['highslide_autoplay'];
 
@@ -564,12 +572,38 @@ class ShashinPhoto {
             $markup .= '>';
         }
 
-        $markup .= '<img src="' . $this->data['enclosure_url']
-            . '?imgmax='. $this->data['user_max']
+        if ($match['alt_thumb']) {
+            $alt_thumb = new ShashinPhoto();
+            list($result, $message, $db_error) = $alt_thumb->getPhoto(array('photo_key' => $match['alt_thumb']));
+
+            if (!$result) {
+                return '<span class="shashin_error">' . __("Shashin error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
+            }
+
+            // set the dimensions
+            if ($alt_thumb->_setDimensions($match['max_size']) === false) {
+                return '<span class="shashin_error">Shashin Error: invalid size for image</span>';
+            }
+
+            $src = $alt_thumb->data['enclosure_url'];
+            $imgmax = $alt_thumb->data['user_max'];
+            $width = $alt_thumb->data['user_width'];
+            $height = $alt_thumb->data['user_height'];
+        }
+
+        else {
+            $src = $this->data['enclosure_url'];
+            $imgmax = $this->data['user_max'];
+            $width = $this->data['user_width'];
+            $height = $this->data['user_height'];
+        }
+
+        $markup .= '<img src="' . $src
+            . '?imgmax='. $imgmax
             . '" alt="' . $caption
             . '" title="' . $caption
-            . '" width="' . $this->data['user_width']
-            . '" height="' . $this->data['user_height'] . '" />';
+            . '" width="' . $width
+            . '" height="' . $height . '" />';
 
         if ($shashin_options['image_display'] != 'none') {
             $markup .= '</a>';

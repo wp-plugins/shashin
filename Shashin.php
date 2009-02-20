@@ -738,13 +738,13 @@ class Shashin {
      * @uses ShashinAlbum::getAlbumListMarkup()
      */
     function parseContent($content) {
-        $simage = "/\[simage=(\d+),(\d{2,4}),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $simage = "/\[simage=(\d+),(\d{2,4}),?(\w?),?(\w{0,6}),?(\w{0,5}),?(\d*)\]/";
 
         if (preg_match_all($simage, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
                 array_walk($match, array(SHASHIN_PLUGIN_NAME, '_strtolower'));
                 $named = array('tag' => $match[0], 'photo_key' => $match[1], 'max_size' => $match[2],
-                    'caption_yn' => $match[3], 'float' => $match[4], 'clear' => $match[5]);
+                    'caption_yn' => $match[3], 'float' => $match[4], 'clear' => $match[5], 'alt_thumb' => $match[6]);
                 $photo = new ShashinPhoto();
                 $markup = $photo->getPhotoMarkup($named);
                 $content = str_replace($named['tag'], $markup, $content);
