@@ -811,12 +811,16 @@ class ShashinAlbum {
         $replace = '<div class="shashin_album" style="width: '
             . (SHASHIN_ALBUM_THUMB_SIZE + $shashin_options['div_padding']) . 'px;';
 
-        if ($match['float']) {
-            $replace .= ' float: ' . $match['float'] . ';';
+        if ($match['float'] == 'center') {
+            $replace .= " margin-left: auto; margin-right: auto;";
+        }
+
+        else if ($match['float']) {
+            $replace .= " float: {$match['float']};";
         }
 
         if ($match['clear']) {
-            $replace .= ' clear: ' . $match['clear'] . ';';
+            $replace .= " clear: {$match['clear']};";
         }
 
         $replace .=  '">';

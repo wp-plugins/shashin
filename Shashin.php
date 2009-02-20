@@ -751,7 +751,7 @@ class Shashin {
             }
         }
 
-        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($srandom, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -764,7 +764,7 @@ class Shashin {
             }
         }
 
-        $salbum = "/\[salbum=(\d+),?(\w?),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $salbum = "/\[salbum=(\d+),?(\w?),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbum, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -777,7 +777,7 @@ class Shashin {
             }
         }
 
-        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($sthumbs, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -791,7 +791,7 @@ class Shashin {
             }
         }
 
-        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($snewest, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -804,7 +804,7 @@ class Shashin {
             }
         }
 
-        $salbumthumbs = "/\[salbumthumbs=([\w\|\ ]+),(\d+),?(\w?),?(\w?),?(\w{0,5}),?(\w{0,5})\]/";
+        $salbumthumbs = "/\[salbumthumbs=([\w\|\ ]+),(\d+),?(\w?),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumthumbs, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -817,7 +817,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?(\w{0,}),?(\w{0,5}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?(\w{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
