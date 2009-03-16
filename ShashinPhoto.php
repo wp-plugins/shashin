@@ -344,7 +344,12 @@ class ShashinPhoto {
         // for accessing the album title and description
         $photo = current($photos);
 
-        $desc = '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back", SHASHIN_L10N_NAME) . '</a></span>';
+        $desc = "";
+        
+        if (is_numeric($_REQUEST['shashin_album_key'])) {
+            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back", SHASHIN_L10N_NAME) . '</a></span>';
+        }
+        
         $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
 
         if ($photo['album_description'] &&  $match['description_yn'] == 'y') {
@@ -373,7 +378,15 @@ class ShashinPhoto {
 
         if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
-            $replace .= $match['float'] ? "float:{$match['float']};" : '';
+
+            if ($match['float'] == 'center') {
+                $replace .= " margin-left: auto; margin-right: auto;";
+            }
+    
+            else if ($match['float']) {
+                $markup .= " float: {$match['float']};";
+            }
+
             $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
             $replace .= '"';
             // don't want these applied to the individual images when

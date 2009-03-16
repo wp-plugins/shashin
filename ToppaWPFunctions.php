@@ -63,7 +63,7 @@ class ToppaWPFunctions {
 
         $sql = substr($sql, 0, -2);
         $sql .= "\n)\nDEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
-        require_once(ABSPATH . '/wp-admin/upgrade-functions.php');
+        require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
         return dbDelta($sql, true);
     }
 

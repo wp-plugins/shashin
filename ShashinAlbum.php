@@ -819,9 +819,7 @@ class ShashinAlbum {
             $replace .= " float: {$match['float']};";
         }
 
-        if ($match['clear']) {
-            $replace .= " clear: {$match['clear']};";
-        }
+        $replace .= $match['clear'] ? " clear: {$match['clear']};" : '';
 
         $replace .=  '">';
         $replace .= $this->_getAlbumThumbTag($match['force_picasa']);
@@ -874,9 +872,18 @@ class ShashinAlbum {
 
         if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
-            $replace .= $match['float'] ? "float:{$match['float']};" : '';
-            $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
+
+            if ($match['float'] == 'center') {
+                $replace .= " margin-left: auto; margin-right: auto;";
+            }
+
+            else if ($match['float']) {
+                $replace .= " float: {$match['float']};";
+            }
+
+            $replace .= $match['clear'] ? " clear:{$match['clear']};" : '';
             $replace .= '"';
+
             // don't want these applied to the individual images when
             // calling _getDivMarkup
             unset($match['float']);

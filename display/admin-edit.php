@@ -38,6 +38,7 @@ $edit_link = SHASHIN_ADMIN_URL
     echo '<p>' . __("Click a column header to order the photo list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME) . "</p>\n";
     echo '<form action="' . SHASHIN_ADMIN_URL . '" method="post">' . "\n";
     echo '<input type="hidden" name="shashin_action" value="update_album_photos">' . "\n";
+    echo '<input type="hidden" name="album_id" value="' . $album->data['album_id'] . '">' . "\n";
     echo '<table style="border-collapse: seperate; border-spacing: 5px;">' . "\n";
     echo "<tr>\n";
     echo '<th>' . __("Photo", SHASHIN_L10N_NAME) . "</th>\n";

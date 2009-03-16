@@ -347,35 +347,49 @@ class Shashin {
             break;
         // save updated local photo data
         case 'update_album_photos':
-            // compare new values to old to see which records need updating
-            // (better than running a bunch of unneeded updates)
-            foreach ($album->data['photos'] as $photos_data) {
-                foreach($_REQUEST['include_in_random'] as $k=>$v) {
-                    if ($photos_data['photo_id'] == $k && $photos_data['include_in_random'] != $v) {
-                        $photo = new ShashinPhoto();
-                        list($result, $message, $db_error) = $photo->getPhoto(null, $photos_data);
+            if (is_numeric($_REQUEST['album_id'])) {
+                $album = new ShashinAlbum();
+                list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
 
-                        if ($result !== true) {
-                            break;
+                if ($result === true) {
+                    list($result, $message, $db_error) = $album->getAlbumPhotos();
+                    unset($message); // no need to display a message in this case.
+
+                    // compare new values to old to see which records need updating
+                    // (better than running a bunch of unneeded updates)
+                    foreach ($album->data['photos'] as $photos_data) {
+                        foreach($_REQUEST['include_in_random'] as $k=>$v) {
+                            if ($photos_data['photo_id'] == $k && $photos_data['include_in_random'] != $v) {
+                                $photo = new ShashinPhoto();
+                                list($result, $message, $db_error) = $photo->getPhoto(null, $photos_data);
+        
+                                if ($result !== true) {
+                                    break;
+                                }
+        
+                                list($result, $message, $db_error) = $photo->setPhotoLocal(array('include_in_random' => $v));
+        
+                                if ($result !== true) {
+                                    break;
+                                }
+                            }
                         }
-
-                        list($result, $message, $db_error) = $photo->setPhotoLocal(array('include_in_random' => $v));
-
-                        if ($result !== true) {
+        
+                        if ($db_error === true) {
                             break;
                         }
                     }
-                }
-
-                if ($db_error === true) {
-                    break;
+        
+                    if ($db_error !== true) {
+                        $message = __("Updates saved.", SHASHIN_L10N_NAME);
+                    }
                 }
             }
-
-            if ($db_error !== true) {
-                $message = __("Updates saved.", SHASHIN_L10N_NAME);
+            
+            else {
+                $message = __("No valid album ID supplied", SHASHIN_L10N_NAME);
             }
-
+            
             $display = 'admin-main';
             break;
         // add an album (or all of a user's albums)
@@ -817,7 +831,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?(\w{0,}),?(\w{0,6}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
