@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-30 07:55-0500\n"
+"POT-Creation-Date: 2009-03-20 08:34-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Photo updated."
 msgstr ""
 
-#: ShashinPhoto.php:196
+#: ShashinPhoto.php:196 ShashinPhoto.php:593
 msgid "Shashin error:"
 msgstr ""
 
@@ -82,14 +82,14 @@ msgid "Shashin Error: unable to retrieve photo thumbnails."
 msgstr ""
 
 #: ShashinPhoto.php:341
-msgid "Shashin Error: unable to retrive album photos."
+msgid "Shashin Error: unable to retrieve album photos."
 msgstr ""
 
-#: ShashinPhoto.php:347
+#: ShashinPhoto.php:350
 msgid "Go back"
 msgstr ""
 
-#: ShashinPhoto.php:395 ShashinAlbum.php:660 ShashinAlbum.php:855
+#: ShashinPhoto.php:408 ShashinAlbum.php:698 ShashinAlbum.php:905
 msgid "Shashin Error:"
 msgstr ""
 
@@ -97,63 +97,67 @@ msgstr ""
 msgid "Failed to create or update table "
 msgstr ""
 
-#: Shashin.php:376 Shashin.php:473
+#: Shashin.php:384 Shashin.php:487
 msgid "Updates saved."
 msgstr ""
 
-#: Shashin.php:395
+#: Shashin.php:390
+msgid "No valid album ID supplied"
+msgstr ""
+
+#: Shashin.php:409
 msgid "That is not a valid URL for your Picasa server."
 msgstr ""
 
-#: Shashin.php:408
+#: Shashin.php:422
 msgid "Album added."
 msgstr ""
 
-#: Shashin.php:421
+#: Shashin.php:435
 msgid "Albums added."
 msgstr ""
 
-#: Shashin.php:433
+#: Shashin.php:447
 msgid "All albums synced for "
 msgstr ""
 
-#: Shashin.php:468 Shashin.php:532
+#: Shashin.php:482 Shashin.php:546
 msgid "Failed to retrieve album data."
 msgstr ""
 
-#: Shashin.php:487
+#: Shashin.php:501
 msgid "Album synchronized."
 msgstr ""
 
-#: Shashin.php:502 ShashinAlbum.php:248
+#: Shashin.php:516 ShashinAlbum.php:248
 msgid "Album deleted."
 msgstr ""
 
-#: Shashin.php:527
+#: Shashin.php:541
 msgid "Failed to retrieve user data."
 msgstr ""
 
-#: Shashin.php:575
+#: Shashin.php:589
 msgid ""
 "Shashin has been uninstalled. You can now deactivate Shashin on your plugins "
 "management page."
 msgstr ""
 
-#: Shashin.php:579
+#: Shashin.php:593
 msgid "Uninstall of Shashin failed. Database error:"
 msgstr ""
 
-#: Shashin.php:585
+#: Shashin.php:599
 msgid ""
 "You must check the 'Uninstall Shashin' checkbox to confirm you want to "
 "uninstall Shashin"
 msgstr ""
 
-#: Shashin.php:594
+#: Shashin.php:608
 msgid "Invalid URL for Picasa Server"
 msgstr ""
 
-#: Shashin.php:609
+#: Shashin.php:623
 msgid "Shashin settings saved."
 msgstr ""
 
@@ -243,68 +247,68 @@ msgid ""
 "Error:"
 msgstr ""
 
-#: ShashinAlbum.php:372
+#: ShashinAlbum.php:380
 #, php-format
 msgid ""
 "ShashinAlbum::setAlbumPhotos - Failed to update record for photo ID %d. SQL "
 "Error:"
 msgstr ""
 
-#: ShashinAlbum.php:383
+#: ShashinAlbum.php:391
 #, php-format
 msgid ""
 "ShashinAlbum::setAlbumPhotos - Failed to insert record for photo ID %d. SQL "
 "Error:"
 msgstr ""
 
-#: ShashinAlbum.php:392
+#: ShashinAlbum.php:400
 msgid "Album photos synchronized."
 msgstr ""
 
-#: ShashinAlbum.php:405
+#: ShashinAlbum.php:413
 msgid "ShashinAlbum::setAlbumLocal - Called with invalid arguments."
 msgstr ""
 
-#: ShashinAlbum.php:411
+#: ShashinAlbum.php:419
 #, php-format
 msgid ""
 "ShashinAlbum::setAlbumLocal - Failed to update record for photo ID %d. SQL "
 "Error:"
 msgstr ""
 
-#: ShashinAlbum.php:414
+#: ShashinAlbum.php:422
 msgid "Album updated."
 msgstr ""
 
-#: ShashinAlbum.php:545
+#: ShashinAlbum.php:553
 msgid ""
 "ShashinAlbum::setUserAlbums - First argument to setUserAlbums is not a valid "
 "username."
 msgstr ""
 
-#: ShashinAlbum.php:549
+#: ShashinAlbum.php:557
 msgid "ShashinAlbum::setUserAlbums - Failed to parse album feed."
 msgstr ""
 
-#: ShashinAlbum.php:580
+#: ShashinAlbum.php:588
 #, php-format
 msgid ""
 "ShashinAlbum::setUserAlbums - Failed to update database record for album ID %"
 "d. SQL Error:"
 msgstr ""
 
-#: ShashinAlbum.php:589
+#: ShashinAlbum.php:597
 #, php-format
 msgid ""
 "ShashinAlbum::setUserAlbums - Failed to insert database record for album ID %"
 "d. Possible SQL Error:"
 msgstr ""
 
-#: ShashinAlbum.php:613
+#: ShashinAlbum.php:621
 msgid "Album photos updated."
 msgstr ""
 
-#: ShashinAlbum.php:634
+#: ShashinAlbum.php:653
 msgid "Shashin Error: unable to retrieve albums."
 msgstr ""
 
@@ -328,7 +332,7 @@ msgid "Max Cols"
 msgstr ""
 
 #: display/widget_random.php:33 display/widget_newest.php:33
-msgid "# of Images"
+msgid "No. of Images"
 msgstr ""
 
 #: display/widget_random.php:37 display/widget_thumbs.php:34
@@ -339,7 +343,7 @@ msgstr ""
 #: display/widget_random.php:41 display/widget_thumbs.php:38
 #: display/widget_single.php:33 display/widget_album_thumbs.php:40
 #: display/widget_newest.php:41
-msgid "CSS Float"
+msgid "CSS Float/Align"
 msgstr ""
 
 #: display/widget_random.php:45 display/widget_thumbs.php:42
@@ -370,7 +374,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: display/admin-main.php:47 display/admin-edit.php:54
+#: display/admin-main.php:47 display/admin-edit.php:55
 msgid "Include in Random?"
 msgstr ""
 
@@ -386,7 +390,7 @@ msgstr ""
 msgid "Last Sync"
 msgstr ""
 
-#: display/admin-main.php:100 display/admin-edit.php:81
+#: display/admin-main.php:100 display/admin-edit.php:82
 msgid "Update Random Display"
 msgstr ""
 
@@ -497,15 +501,15 @@ msgid ""
 "when using the srandom tag, set 'Include in Random?' to 'No.'"
 msgstr ""
 
-#: display/admin-main.php:168 display/admin-edit.php:100
+#: display/admin-main.php:168 display/admin-edit.php:101
 msgid "<strong>More Help:</strong> see the"
 msgstr ""
 
-#: display/admin-main.php:170 display/admin-edit.php:102
+#: display/admin-main.php:170 display/admin-edit.php:103
 msgid "Shashin page"
 msgstr ""
 
-#: display/admin-main.php:171 display/admin-edit.php:103
+#: display/admin-main.php:171 display/admin-edit.php:104
 msgid "for detailed instructions"
 msgstr ""
 
@@ -523,7 +527,7 @@ msgstr ""
 msgid "Photo Keys"
 msgstr ""
 
-#: display/widget_single.php:21 display/admin-edit.php:46
+#: display/widget_single.php:21 display/admin-edit.php:47
 msgid "Photo Key"
 msgstr ""
 
@@ -756,7 +760,7 @@ msgid "Keys or Sort"
 msgstr ""
 
 #: display/widget_album_thumbs.php:29 display/widget_newest.php:29
-msgid "Max # of Columns"
+msgid "Max No. of Columns"
 msgstr ""
 
 #: display/widget_album_thumbs.php:33
@@ -767,7 +771,7 @@ msgstr ""
 msgid "Show Pub. Date"
 msgstr ""
 
-#: display/admin-edit.php:36 display/admin-edit.php:106
+#: display/admin-edit.php:36 display/admin-edit.php:107
 msgid "Shashin Admin"
 msgstr ""
 
@@ -777,55 +781,55 @@ msgid ""
 "again to reverse the order)."
 msgstr ""
 
-#: display/admin-edit.php:43
+#: display/admin-edit.php:44
 msgid "Photo"
 msgstr ""
 
-#: display/admin-edit.php:49
+#: display/admin-edit.php:50
 msgid "Filename"
 msgstr ""
 
-#: display/admin-edit.php:52
+#: display/admin-edit.php:53
 msgid "Date Taken"
 msgstr ""
 
-#: display/admin-edit.php:53
+#: display/admin-edit.php:54
 msgid "Markup"
 msgstr ""
 
-#: display/admin-edit.php:88
+#: display/admin-edit.php:89
 msgid "Photo Tips"
 msgstr ""
 
-#: display/admin-edit.php:92
+#: display/admin-edit.php:93
 msgid ""
 "<strong>Display an image:</strong> copy and paste the code listed under "
 "<em>Markup</em>, and then edit it as needed. [simage=photo_key,max_size,"
 "caption_yn,float,clear]"
 msgstr ""
 
-#: display/admin-edit.php:93
+#: display/admin-edit.php:94
 msgid "<strong>Valid Picasa image sizes:</strong>"
 msgstr ""
 
-#: display/admin-edit.php:95
+#: display/admin-edit.php:96
 msgid "For a cropped square image, use sizes"
 msgstr ""
 
-#: display/admin-edit.php:97
+#: display/admin-edit.php:98
 msgid ""
 "<strong>Display random images:</strong> [srandom=album_key1|album_key2|etc,"
 "max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the "
 "album_key for any album"
 msgstr ""
 
-#: display/admin-edit.php:98
+#: display/admin-edit.php:99
 msgid ""
 "<strong>Display a group of thumbnails:</strong>[sthumbs=photo_key1|"
 "photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
 msgstr ""
 
-#: display/admin-edit.php:99
+#: display/admin-edit.php:100
 msgid ""
 "<strong>Display newest images:</strong> [snewest=album_key1|album_key2|etc,"
 "max_size,max_cols,how_many,caption_yn,float,clear] Enter 'any' for the "
