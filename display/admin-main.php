@@ -11,7 +11,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.4
+ * @version 2.3.5
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()

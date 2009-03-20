@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.4
+ * @version 2.3.5
  * @package Shashin
  * @subpackage Classes
  */
@@ -190,7 +190,7 @@ class ShashinWidget {
         }
 
         $clear_options = array('none' => 'none', 'left' => 'left', 'right' => 'right', 'both' => 'both');
-        $float_options = array('none' => 'none', 'left' => 'left', 'right' => 'right');
+        $float_options = array('none' => 'none', 'center' => 'center', 'left' => 'left', 'right' => 'right');
 
         // for displaying the control form
         require(SHASHIN_DIR . "/display/$name.php");

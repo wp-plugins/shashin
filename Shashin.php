@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.4
+Version: 2.3.5
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.4
+ * @version 2.3.5
  * @package Shashin
  * @subpackage Classes
  *
@@ -362,34 +362,34 @@ class Shashin {
                             if ($photos_data['photo_id'] == $k && $photos_data['include_in_random'] != $v) {
                                 $photo = new ShashinPhoto();
                                 list($result, $message, $db_error) = $photo->getPhoto(null, $photos_data);
-        
+
                                 if ($result !== true) {
                                     break;
                                 }
-        
+
                                 list($result, $message, $db_error) = $photo->setPhotoLocal(array('include_in_random' => $v));
-        
+
                                 if ($result !== true) {
                                     break;
                                 }
                             }
                         }
-        
+
                         if ($db_error === true) {
                             break;
                         }
                     }
-        
+
                     if ($db_error !== true) {
                         $message = __("Updates saved.", SHASHIN_L10N_NAME);
                     }
                 }
             }
-            
+
             else {
                 $message = __("No valid album ID supplied", SHASHIN_L10N_NAME);
             }
-            
+
             $display = 'admin-main';
             break;
         // add an album (or all of a user's albums)
