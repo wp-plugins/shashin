@@ -35,8 +35,6 @@ Shashin 2.3 is a complete rewrite. It includes more robust error handling, impro
 * The [srandom] and [snewest] tags now let you specify multiple albums
 * Uninstall option
 
-Please see <a href="http://www.toppa.com/2009/shashin-23-beta-is-here/">this post about the previous Shashin 2.3 beta for a full description of the new features</a>.
-
 == Installation ==
 
 **Installation Instructions**
@@ -47,7 +45,7 @@ Go to the "Settings" menu first and take a look at the default options, which fo
 
 Now go to the "Tools" menu and follow the directions to add your first album!
 
-Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **I't simportant to include these tables when making backups of your WordPress tables.** The Shashin tags rely on key numbers from these tables that you won't get back if you lose the data in these tables.
+Note that Shashin will add two tables to your WordPress database, named wp\_shashin\_album and wp\_shashin\_photo. **It's important to include these tables when making backups of your WordPress tables.** The Shashin tags rely on key numbers from these tables that you won't get back if you lose the data in these tables.
 
 == Frequently Asked Questions ==
 
