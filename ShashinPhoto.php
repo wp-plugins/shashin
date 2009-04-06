@@ -384,7 +384,7 @@ class ShashinPhoto {
             }
 
             else if ($match['float']) {
-                $markup .= " float: {$match['float']};";
+                $replace .= " float: {$match['float']};";
             }
 
             $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
