@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.5
+Version: 2.4
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  *
@@ -36,7 +36,13 @@ Author URI: http://www.toppa.com
 // find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
 // xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
-global $wpdb;
+
+// from http://striderweb.com/nerdaphernalia/2008/09/hit-a-moving-target-in-your-wordpress-plugin/
+if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content');
+if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins');
+if (!defined('WP_PLUGIN_DIR'))  define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+
 define('SHASHIN_OPTIONS', get_option('shashin_options'));
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
@@ -45,7 +51,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.3');
+define('SHASHIN_VERSION', '2.4');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -95,8 +101,9 @@ class Shashin {
     function bootstrap() {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
-        // Add the installation and uninstallation hooks
+        // Add the activation and deactivation hooks
         register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
+        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
 
         // For handling errors on install
         if ($_GET['action'] == 'error_scrape') {
@@ -108,13 +115,13 @@ class Shashin {
         }
 
         // load localization
-        load_plugin_textdomain(SHASHIN_L10N_NAME, PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/languages/');
+        load_plugin_textdomain(SHASHIN_L10N_NAME, false, basename(SHASHIN_DIR) . '/languages/');
 
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
         add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array('ShashinWidget', 'initWidgets'));
-        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
+        add_action('template_redirect', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
 
         // the 0 priority flag gets the div in before the autoformatter
         // can wrap it in a paragraph
@@ -129,8 +136,7 @@ class Shashin {
             }
         }
 
-        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
-
+        // setup Highslide counters
         if ($shashin_options['image_display'] == 'highslide') {
             // counter for assigning unique IDs to highslide images
             if (!$_SESSION['hs_id_counter']) {
@@ -648,16 +654,17 @@ class Shashin {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
         if (file_exists(TEMPLATEPATH . '/shashin.css')) {
-            $shashin_css = get_stylesheet_directory_uri() . '/shashin.css';
+            $shashin_css = get_bloginfo('template_directory') . '/shashin.css';
         }
 
         else {
-            $shashin_css = SHASHIN_DISPLAY_URL . 'shashin.css';
+            $shashin_css = '/' . PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/display/shashin.css';
         }
 
-        echo '<link rel="stylesheet" type="text/css" href="' . $shashin_css . '" />' . "\n";
+        //echo '<link rel="stylesheet" type="text/css" href="' . $shashin_css . '" />' . "\n";
+        wp_enqueue_style('shashin_css', $shashin_css);
 
-        if ($shashin_options['image_display'] == 'highslide') {
+       /* if ($shashin_options['image_display'] == 'highslide') {
             if (file_exists(TEMPLATEPATH . '/highslide.css')) {
                 $highslide_css = get_stylesheet_directory_uri() . '/highslide.css';
             }
@@ -701,7 +708,7 @@ class Shashin {
                     hs.preserveContent = false;
                 </script>
             ';
-        }
+        } */
     }
 
     /**
