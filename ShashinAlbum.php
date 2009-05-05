@@ -715,7 +715,7 @@ class ShashinAlbum {
                         $replace .= ' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                             . str_replace(" ", "+", $album->data['geo_pos'])
                             . '"><img src="' . SHASHIN_DISPLAY_URL
-                            . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
+                            . '/mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
                             . '</a>';
                     }
                 }
@@ -838,7 +838,7 @@ class ShashinAlbum {
                 ? (' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                     . str_replace(" ", "+", $this->data['geo_pos'])
                     . '"><img src="' . SHASHIN_DISPLAY_URL
-                    . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')
+                    . '/mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')
                 : '')
             . ($this->data['geo_pos'] ? '</a><br />' : '')
             . $this->data['location']

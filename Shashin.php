@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.5
+Version: 2.4
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  *
@@ -36,7 +36,12 @@ Author URI: http://www.toppa.com
 // find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
 // xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
-global $wpdb;
+// from http://striderweb.com/nerdaphernalia/2008/09/hit-a-moving-target-in-your-wordpress-plugin/
+if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content');
+if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins');
+if (!defined('WP_PLUGIN_DIR'))  define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+
 define('SHASHIN_OPTIONS', get_option('shashin_options'));
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
@@ -52,7 +57,7 @@ define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
 define('SHASHIN_USER_RSS', '/data/feed/api/user/USERNAME?kind=album&alt=rss&hl=en_US');
 define('SHASHIN_ALBUM_RSS', '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('SHASHIN_GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
-define('SHASHIN_DISPLAY_URL', get_bloginfo('wpurl') . '/' . PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/display/');
+define('SHASHIN_DISPLAY_URL', WP_PLUGIN_URL . '/' . basename(SHASHIN_DIR) . '/display');
 define('SHASHIN_FAQ_URL', 'http://www.toppa.com/shashin-wordpress-plugin');
 define('SHASHIN_GOOGLE_PLAYER_URL', 'http://video.google.com/googleplayer.swf?videoUrl=');
 define('SHASHIN_IMAGE_SIZES', serialize(array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800)));
@@ -108,12 +113,15 @@ class Shashin {
         }
 
         // load localization
-        load_plugin_textdomain(SHASHIN_L10N_NAME, PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/languages/');
+        load_plugin_textdomain(SHASHIN_L10N_NAME, false, basename(SHASHIN_DIR) . '/languages/');
 
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
-        add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
+        add_action('admin_print_scripts-' . SHASHIN_FILE, array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array('ShashinWidget', 'initWidgets'));
+        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
+
+
         add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
 
         // the 0 priority flag gets the div in before the autoformatter
@@ -652,7 +660,7 @@ class Shashin {
         }
 
         else {
-            $shashin_css = SHASHIN_DISPLAY_URL . 'shashin.css';
+            $shashin_css = SHASHIN_DISPLAY_URL . '/shashin.css';
         }
 
         echo '<link rel="stylesheet" type="text/css" href="' . $shashin_css . '" />' . "\n";
@@ -663,15 +671,15 @@ class Shashin {
             }
 
             else {
-                $highslide_css = SHASHIN_DISPLAY_URL . 'highslide.css';
+                $highslide_css = SHASHIN_DISPLAY_URL . '/highslide/highslide.css';
             }
 
             echo '
                 <link rel="stylesheet" type="text/css" href="' . $highslide_css . '" />
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/highslide.js"></script>
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/swfobject.js"></script>
+                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . '/highslide/highslide.js"></script>
+                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . '/highslide/swfobject.js"></script>
                 <script type="text/javascript">
-                    hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . 'highslide/graphics/\';
+                    hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . '/highslide/graphics/\';
                     hs.align = \'center\';
                     hs.transitions = [\'expand\', \'crossfade\'];
                     hs.outlineType = \'rounded-white\';
@@ -712,7 +720,7 @@ class Shashin {
      * @access public
      */
     function getAdminCSS() {
-        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin-admin.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . '/shashin-admin.css" />';
     }
 
     /**
