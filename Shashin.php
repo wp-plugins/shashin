@@ -100,8 +100,9 @@ class Shashin {
     function bootstrap() {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
-        // Add the installation and uninstallation hooks
+        // Add the activation and deactivation hooks
         register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
+        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
 
         // For handling errors on install
         if ($_GET['action'] == 'error_scrape') {
@@ -117,14 +118,11 @@ class Shashin {
 
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
-        add_action('admin_print_scripts-' . SHASHIN_FILE, array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array('ShashinWidget', 'initWidgets'));
-        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
+        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminWidgetCSS'));
+        add_action('template_redirect', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
 
-
-        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
-
-        // the 0 priority flag gets the div in before the autoformatter
+        // the 0 priority flag gets the shashin div in before the autoformatter
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
 
@@ -136,8 +134,6 @@ class Shashin {
                 wp_schedule_event(time(), 'daily', 'shashin_scheduled_update_hook');
             }
         }
-
-        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
 
         if ($shashin_options['image_display'] == 'highslide') {
             // counter for assigning unique IDs to highslide images
@@ -175,6 +171,12 @@ class Shashin {
             'highslide_video_height' => 480,
             'highslide_autoplay' => 'false',
             'highslide_interval' => 5000,
+            'highslide_outline_type' => 'rounded-white',
+            'highslide_dimming_opacity' => 0.75,
+            'highslide_repeat' => 'true',
+            'highslide_v_position' => 'top'
+            'highslide_h_position' => 'center',
+            'highslide_hide_controller' => 'false',
             'album_photos_max' => 160,
             'album_photos_cols' => 3,
             'album_photos_order' => 'taken_timestamp desc',
@@ -656,70 +658,47 @@ class Shashin {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
         if (file_exists(TEMPLATEPATH . '/shashin.css')) {
-            $shashin_css = get_stylesheet_directory_uri() . '/shashin.css';
+            $shashin_css = get_bloginfo('template_directory') . '/shashin.css';
         }
 
         else {
             $shashin_css = SHASHIN_DISPLAY_URL . '/shashin.css';
         }
 
-        echo '<link rel="stylesheet" type="text/css" href="' . $shashin_css . '" />' . "\n";
+        wp_enqueue_style('shashin_css', $shashin_css, false, SHASHIN_VERSION);
 
         if ($shashin_options['image_display'] == 'highslide') {
             if (file_exists(TEMPLATEPATH . '/highslide.css')) {
-                $highslide_css = get_stylesheet_directory_uri() . '/highslide.css';
+                $highslide_css = get_bloginfo('template_directory') . '/highslide.css';
             }
 
             else {
-                $highslide_css = SHASHIN_DISPLAY_URL . '/highslide/highslide.css';
+                $highslide_css = SHASHIN_DISPLAY_URL . '/highslide.css';
             }
 
-            echo '
-                <link rel="stylesheet" type="text/css" href="' . $highslide_css . '" />
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . '/highslide/highslide.js"></script>
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . '/highslide/swfobject.js"></script>
-                <script type="text/javascript">
-                    hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . '/highslide/graphics/\';
-                    hs.align = \'center\';
-                    hs.transitions = [\'expand\', \'crossfade\'];
-                    hs.outlineType = \'rounded-white\';
-                    hs.fadeInOut = true;
-                    //hs.dimmingOpacity = 0.75;
-
-                    // Add the controlbar for slideshows
-                    function addHSSlideshow(groupID) {
-                        hs.addSlideshow({
-                            slideshowGroup: groupID,
-                            interval: ' . $shashin_options['highslide_interval'] . ',
-                            repeat: true,
-                            useControls: true,
-                            fixedControls: true,
-                            overlayOptions: {
-                                opacity: .75,
-                                position: \'top center\',
-                                hideOnMouseOut: false
-                            }
-                        });
-                    }
-
-                    // for Flash
-                    hs.outlineWhileAnimating = true;
-                    hs.allowSizeReduction = false;
-                    // always use this with flash, else the movie will not stop on close:
-                    hs.preserveContent = false;
-                </script>
-            ';
+            wp_enqueue_style('highslide_css', $highslide_css, false, SHASHIN_VERSION);
+            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, SHASHIN_VERSION);
+            wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, SHASHIN_VERSION);
+            wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
+            wp_localize_script('highslide_settings_js', 'highslide_settings', array(
+                'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics',
+                'outline_type' => $shashin_options['highslide_outline_type'],
+                'dimming_opacity' => $shashin_options['highslide_dimming_opacity'],
+                'interval' => $shashin_options['highslide_interval'],
+                'repeat' => $shashin_options['highslide_repeat'],
+                'position' => $shashin_options['highslide_v_position'] . ' ' . $shashin_options['highslide_h_position'],
+                'hide_controller' => $shashin_options['highslide_hide_controller']
+            ));
         }
     }
 
     /**
-     * Gets the Shashin Admin CSS file, for inclusion in the document head. This
-     * CSS supports the display of the widget form.
+     * Gets the Shashin Widget Admin CSS file, for inclusion in the document head.
      *
      * @static
      * @access public
      */
-    function getAdminCSS() {
+    function getAdminWidgetCSS() {
         echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . '/shashin-admin.css" />';
     }
 

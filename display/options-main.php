@@ -25,7 +25,7 @@
     <table class="form-table">
     <tr style="vertical-align: top;">
     <td nowrap="nowrap"><?php _e("Your Picasa server:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[picasa_server]" value="<?php echo $shashin_options['picasa_server'] ?>" size="30"></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[picasa_server]" value="<?php echo $shashin_options['picasa_server']; ?>" size="30"></td>
     <td><?php _e("The base URL of your Picasa server. Be sure to include 'http://'", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
@@ -42,13 +42,13 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Image div padding:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[div_padding]" value="<?php echo $shashin_options['div_padding'] ?>" size="30"></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[div_padding]" value="<?php echo $shashin_options['div_padding']; ?>" size="30"></td>
     <td><?php _e("Double the '.shashin_image img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
     <td><?php _e("Thumbnail div padding:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding'] ?>" size="30"></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding']; ?>" size="30"></td>
     <td><?php _e("Double the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
@@ -115,18 +115,92 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Highslide slideshow image display time:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[highslide_interval]" value="<?php echo $shashin_options['highslide_interval'] ?>" size="30"></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[highslide_interval]" value="<?php echo $shashin_options['highslide_interval']; ?>" size="30"></td>
     <td><?php _e("How long each image is displayed in a slideshow (in milliseconds)", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
     <td><?php _e("Highslide video dimensions:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><?php _e("Width:", SHASHIN_L10N_NAME); ?>
-        <input type="text" name="shashin_options[highslide_video_width]" value="<?php echo $shashin_options['highslide_video_width'] ?>" size="3">
+        <input type="text" name="shashin_options[highslide_video_width]" value="<?php echo $shashin_options['highslide_video_width']; ?>" size="3">
         <?php _e("Height:", SHASHIN_L10N_NAME); ?>
-        <input type="text" name="shashin_options[highslide_video_height]" value="<?php echo $shashin_options['highslide_video_height'] ?>" size="3"></td>
+        <input type="text" name="shashin_options[highslide_video_height]" value="<?php echo $shashin_options['highslide_video_height']; ?>" size="3"></td>
     <td><?php _e("If you select Highslide for viewing images, it will also be used for displaying videos. This controls the height and width of the embedded video (unlike images, the dimensions cannot be calculated on the fly). A 4:3 (width:height) ratio is common for videos.", SHASHIN_L10N_NAME); ?></td>
     </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Outline type:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[highslide_outline_type]">
+    <?php
+        $outline_types = array('beveled', 'glossy-dark', 'rounded-black', 'drop-shadow', 'outer-glow', 'rounded-white', 'null');
+        foreach ($outline_types as $type) {
+            echo '<option value="' . $type . '"';
+            if ($shashin_options['highslide_outline_type'] == $type) {
+                echo ' selected="selected"';
+            }
+            echo ">$type</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("The graphic outline applied to expanded images. Select 'null' for no outline.", SHASHIN_L10N_NAME); ?></td>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Controller Position:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[highslide_v_position]">
+    <?php
+        $v_position = array('above', 'top', 'middle', 'bottom', 'below');
+        foreach ($v_position as $pos) {
+            echo '<option value="' . $pos . '"';
+            if ($shashin_options['highslide_v_position'] == $pos) {
+                echo ' selected="selected"';
+            }
+            echo ">$pos</option>\n";
+        }
+    ?>
+    </select>
+    <select name="shashin_options[highslide_h_position]">
+    <?php
+        $h_position = array('leftpanel', 'left', 'center', 'right', 'rightpanel');
+        foreach ($h_position as $pos) {
+            echo '<option value="' . $pos . '"';
+            if ($shashin_options['highslide_h_position'] == $pos) {
+                echo ' selected="selected"';
+            }
+            echo ">$pos</option>\n";
+        }
+    ?>
+    </select></td>
+
+    <td><?php _e("Where to position the slideshow control bar.", SHASHIN_L10N_NAME); ?></td>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Dimming opacity", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[highslide_dimming_opacity]" value="<?php echo $shashin_options['highslide_dimming_opacity']; ?>" size="4"></td>
+    <td><?php _e("Enter a number between 0 and 1. Indicates how much to dim the background when an image is expanded (enter 0 for no dimming). In highslide.css, look for .highslide-dimming to change the color (default is black)", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Repeat slideshow:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_repeat]" value="true"<?php
+        if ($shashin_options['highslide_repeat'] == 'true') echo ' checked="checked"'; ?> />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[highslide_repeat]" value="false"<?php
+        if ($shashin_options['highslide_repeat'] == 'false') echo ' checked="checked"'; ?> />
+            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether to start over from the first slide when going to the next from the last slide.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Hide controller on mouseout:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_hide_controller]" value="true"<?php
+        if ($shashin_options['highslide_hide_controller'] == 'true') echo ' checked="checked"'; ?> />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[highslide_hide_controller]" value="false"<?php
+        if ($shashin_options['highslide_hide_controller'] == 'false') echo ' checked="checked"'; ?> />
+            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether the slideshow controller should be hidden when the mouse leaves the full-size image.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
 
     <tr>
     <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
@@ -152,7 +226,7 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Number of columns:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[album_photos_cols]" value="<?php echo $shashin_options['album_photos_cols'] ?>" size="2"></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[album_photos_cols]" value="<?php echo $shashin_options['album_photos_cols']; ?>" size="2"></td>
     <td><?php _e("The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
