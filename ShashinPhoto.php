@@ -419,7 +419,11 @@ class ShashinPhoto {
         }
 
         $replace .= "</table>";
-        $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['hs_group_counter'] . "');\n</script>\n";
+
+        if ($shashin_options['image_display'] == 'highslide') {
+            $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['hs_group_counter'] . "');\n</script>\n";
+        }
+
         $_SESSION['hs_group_counter']++;
         return $replace;
     }
@@ -572,6 +576,39 @@ class ShashinPhoto {
 
             $markup .= ')">';
             $_SESSION['hs_id_counter']++;
+        }
+
+        // other viewer - use the standard Lightbox syntax
+        else if ($shashin_options['image_display'] == 'other') {
+            $markup .= '<a href="' . $this->data['enclosure_url']
+                . '?imgmax=' . $shashin_options['highslide_max']
+                . '" rel="';
+
+            if ($this->_isVideo()) {
+                $markup .= $shashin_options['other_video_rel'];
+            }
+
+            else {
+                $markup .= $shashin_options['other_image_rel'];
+            }
+
+            if ($group) {
+                if ($shashin_options['other_delimiter'] == 'brackets') {
+                    $markup .= "[" . $_SESSION['hs_group_counter'] . "]";
+                }
+
+                else {
+                    $markup .= "-" . $_SESSION['hs_group_counter'];
+                }
+            }
+
+            $markup .= '"';
+
+            if ($shashin_options['other_class']) {
+                $markup .= ' class="' . $shashin_options['other_class'] . '"';
+            }
+
+            $markup .= '>';
         }
 
         // images or videos at Picasa

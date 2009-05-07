@@ -76,8 +76,22 @@
             <?php _e("Use Highslide", SHASHIN_L10N_NAME); ?><br />
         <input type="radio" name="shashin_options[image_display]" value="none"<?php
             if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
-            <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("This determines how to display an image when its thumbnail is clicked", SHASHIN_L10N_NAME); ?></td>
+            <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[image_display]" value="other"<?php
+            if ($shashin_options['image_display'] == 'other') echo ' checked="checked"'; ?> />
+            <?php _e("Use Other Viewer (e.g. Lightbox)", SHASHIN_L10N_NAME); ?><br />
+            <div style="margin-left: 20px;"><?php _e("Link 'rel' for images:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_image_rel]" value="<?php echo $shashin_options['other_image_rel']; ?>" size="12"><br />
+            <?php _e("Link 'rel' for videos:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_video_rel]" value="<?php echo $shashin_options['other_video_rel']; ?>" size="12"><br />
+            <?php _e("CSS class for link:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_class]" value="<?php echo $shashin_options['other_class']; ?>" size="12"><br />
+            <?php _e("'rel' delimiter for image groups:", SHASHIN_L10N_NAME); ?><br />
+            <input type="radio" name="shashin_options[other_delimiter]" value="brackets"<?php
+            if ($shashin_options['other_delimiter'] == 'brackets') echo ' checked="checked"'; ?> />
+            <?php _e("Brackets", SHASHIN_L10N_NAME); ?>
+            <input type="radio" name="shashin_options[other_delimiter]" value="hyphen"<?php
+            if ($shashin_options['other_delimiter'] == 'hyphen') echo ' checked="checked"'; ?> />
+            <?php _e("Hyphen", SHASHIN_L10N_NAME); ?></div>
+            </td>
+    <td><?php _e("This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works 'out of the box.' If you select 'other', you are responsible for implementing your own image viewer. Shashin will give you link and image tags following the <a href='http://www.lokeshdhakar.com/projects/lightbox2/' target='_blank'>Lightbox 2</a> format. It also allows you to apply a class to the link (necessary for Thickbox), and to specify whether image groups should be delimited by brackets in the link's rel attribute (e.g. 'lightbox[28]') or a hyphen (e.g. 'thickbox-28').", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr>
@@ -106,7 +120,7 @@
     <td><?php _e("Autoplay Highslide slideshows:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_autoplay]" value="true"<?php
         if ($shashin_options['highslide_autoplay'] == 'true') echo ' checked="checked"'; ?> />
-        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
         <input type="radio" name="shashin_options[highslide_autoplay]" value="false"<?php
         if ($shashin_options['highslide_autoplay'] == 'false') echo ' checked="checked"'; ?> />
         <?php _e("No", SHASHIN_L10N_NAME); ?></td>
@@ -117,6 +131,17 @@
     <td><?php _e("Highslide slideshow image display time:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="text" name="shashin_options[highslide_interval]" value="<?php echo $shashin_options['highslide_interval']; ?>" size="30"></td>
     <td><?php _e("How long each image is displayed in a slideshow (in milliseconds)", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Repeat slideshow:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_repeat]" value="true"<?php
+        if ($shashin_options['highslide_repeat'] == 'true') echo ' checked="checked"'; ?> />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[highslide_repeat]" value="false"<?php
+        if ($shashin_options['highslide_repeat'] == 'false') echo ' checked="checked"'; ?> />
+            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether to start over from the first slide when going to the next from the last slide.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -180,21 +205,10 @@
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Repeat slideshow:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_repeat]" value="true"<?php
-        if ($shashin_options['highslide_repeat'] == 'true') echo ' checked="checked"'; ?> />
-            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
-        <input type="radio" name="shashin_options[highslide_repeat]" value="false"<?php
-        if ($shashin_options['highslide_repeat'] == 'false') echo ' checked="checked"'; ?> />
-            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("Whether to start over from the first slide when going to the next from the last slide.", SHASHIN_L10N_NAME); ?></td>
-    </tr>
-
-    <tr style="vertical-align: top;">
     <td><?php _e("Hide controller on mouseout:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_hide_controller]" value="true"<?php
         if ($shashin_options['highslide_hide_controller'] == 'true') echo ' checked="checked"'; ?> />
-            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?>
         <input type="radio" name="shashin_options[highslide_hide_controller]" value="false"<?php
         if ($shashin_options['highslide_hide_controller'] == 'false') echo ' checked="checked"'; ?> />
             <?php _e("No", SHASHIN_L10N_NAME); ?></td>

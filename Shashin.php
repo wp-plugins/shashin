@@ -174,9 +174,13 @@ class Shashin {
             'highslide_outline_type' => 'rounded-white',
             'highslide_dimming_opacity' => 0.75,
             'highslide_repeat' => 'true',
-            'highslide_v_position' => 'top'
+            'highslide_v_position' => 'top',
             'highslide_h_position' => 'center',
             'highslide_hide_controller' => 'false',
+            'other_image_rel' => null,
+            'other_video_rel' => null,
+            'other_delimiter' => null,
+            'other_class' => null,
             'album_photos_max' => 160,
             'album_photos_cols' => 3,
             'album_photos_order' => 'taken_timestamp desc',
@@ -681,7 +685,7 @@ class Shashin {
             wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, SHASHIN_VERSION);
             wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
             wp_localize_script('highslide_settings_js', 'highslide_settings', array(
-                'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics',
+                'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics/',
                 'outline_type' => $shashin_options['highslide_outline_type'],
                 'dimming_opacity' => $shashin_options['highslide_dimming_opacity'],
                 'interval' => $shashin_options['highslide_interval'],

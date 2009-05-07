@@ -26,3 +26,6 @@ hs.outlineWhileAnimating = true;
 hs.allowSizeReduction = false;
 // always use this with flash, else the movie will not stop on close:
 hs.preserveContent = false;
+
+
+
