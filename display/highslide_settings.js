@@ -3,20 +3,20 @@ hs.align = 'center';
 hs.transitions = ['expand', 'crossfade'];
 hs.outlineType = highslide_settings.outline_type;
 hs.fadeInOut = true;
-hs.dimmingOpacity = highslide_settings.dimming_opacity;
+hs.dimmingOpacity = highslide_settings.dimming_opacity-0;
 
 // Add the controlbar for slideshows
 function addHSSlideshow(groupID) {
     hs.addSlideshow({
         slideshowGroup: groupID,
-        interval: highslide_settings.interval,
-        repeat: highslide_settings.repeat,
+        interval: highslide_settings.interval-0,
+        repeat: !!(highslide_settings.repeat-0),
         useControls: true,
         fixedControls: true,
         overlayOptions: {
             opacity: .75,
             position: highslide_settings.position,
-            hideOnMouseOut: highslide_settings.hide_controller
+            hideOnMouseOut: !!(highslide_settings.hide_controller-0)
         }
     });
 }

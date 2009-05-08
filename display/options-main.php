@@ -135,11 +135,11 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Repeat slideshow:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_repeat]" value="true"<?php
-        if ($shashin_options['highslide_repeat'] == 'true') echo ' checked="checked"'; ?> />
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_repeat]" value="1"<?php
+        if ($shashin_options['highslide_repeat'] == '1') echo ' checked="checked"'; ?> />
             <?php _e("Yes", SHASHIN_L10N_NAME); ?>
-        <input type="radio" name="shashin_options[highslide_repeat]" value="false"<?php
-        if ($shashin_options['highslide_repeat'] == 'false') echo ' checked="checked"'; ?> />
+        <input type="radio" name="shashin_options[highslide_repeat]" value="0"<?php
+        if ($shashin_options['highslide_repeat'] == '0') echo ' checked="checked"'; ?> />
             <?php _e("No", SHASHIN_L10N_NAME); ?></td>
     <td><?php _e("Whether to start over from the first slide when going to the next from the last slide.", SHASHIN_L10N_NAME); ?></td>
     </tr>
@@ -206,11 +206,11 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Hide controller on mouseout:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_hide_controller]" value="true"<?php
-        if ($shashin_options['highslide_hide_controller'] == 'true') echo ' checked="checked"'; ?> />
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[highslide_hide_controller]" value="1"<?php
+        if ($shashin_options['highslide_hide_controller'] == '1') echo ' checked="checked"'; ?> />
             <?php _e("Yes", SHASHIN_L10N_NAME); ?>
-        <input type="radio" name="shashin_options[highslide_hide_controller]" value="false"<?php
-        if ($shashin_options['highslide_hide_controller'] == 'false') echo ' checked="checked"'; ?> />
+        <input type="radio" name="shashin_options[highslide_hide_controller]" value="0"<?php
+        if ($shashin_options['highslide_hide_controller'] == '0') echo ' checked="checked"'; ?> />
             <?php _e("No", SHASHIN_L10N_NAME); ?></td>
     <td><?php _e("Whether the slideshow controller should be hidden when the mouse leaves the full-size image.", SHASHIN_L10N_NAME); ?></td>
     </tr>
