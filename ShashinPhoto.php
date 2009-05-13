@@ -38,7 +38,7 @@ class ShashinPhoto {
                 'label' => 'Photo Key', 'source' => 'db'),
             'photo_id' => array(
                 'col_params' => array('type' => 'bigint unsigned',
-                    'not_null' => true, 'other' => 'UNIQUE'),
+                    'not_null' => true, 'unique_key' => true),
                 'label' => 'Photo ID', 'source' => 'feed',
                 'feed_param_1' => 'gphoto', 'feed_param_2' => 'id'),
             'album_id' => array(
@@ -97,6 +97,9 @@ class ShashinPhoto {
                 'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
                 'label' => 'Enclosure Type', 'source' => 'feed',
                 'feed_param_1' => 'enclosure', 'attrs' => 'type'),
+            'picasa_order' => array(
+                'col_params' => array('type' => 'int unsigned'),
+                'label' => 'Picasa Order', 'source' => 'db'),
         );
     }
 

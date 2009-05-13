@@ -349,6 +349,8 @@ class ShashinAlbum {
             }
         }
 
+        $picasa_order = 1;
+
         foreach ($new_photos as $new_id=>$new_photo) {
             // if the photo used to be in another album, it's delete flag will
             // be set to Y. Set it to N in the new_photo data to force an
@@ -361,19 +363,24 @@ class ShashinAlbum {
                 $new_photo['taken_timestamp'] = substr($new_photo['taken_timestamp'],0,10);
             }
 
+            // nulls are problematic - set to 0
             else {
                 $new_photo['taken_timestamp'] = 0;
             }
 
             $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
 
-            // only make an update if something has changed about the photo
+            // track the order in picasa
+            $new_photo['picasa_order'] = $picasa_order++;
+
+            // only make an update if something meaningful has changed about the photo
             if (array_key_exists($new_id, $old_photos)) {
                 if ($new_photo['tags'] != $old_photos[$new_id]['tags']
                   || $new_photo['description'] != $old_photos[$new_id]['description']
                   || $new_photo['taken_timestamp'] != $old_photos[$new_id]['taken_timestamp']
                   || $new_photo['width'] != $old_photos[$new_id]['width']
-                  || $new_photo['height'] != $old_photos[$new_id]['height']) {
+                  || $new_photo['height'] != $old_photos[$new_id]['height']
+                  || $new_photo['picasa_order'] != $old_photos[$new_id]['picasa_order']) {
                     $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $new_photo, array('photo_id' => $new_id));
 
                     if ($sql_result === false) {

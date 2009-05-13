@@ -72,15 +72,16 @@
                 . $all_album['album_id'] . '&amp;user='
                 . $all_album['user'] . '"><img src="'
                 . SHASHIN_DISPLAY_URL
-                . 'arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />'
+                . '/arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />'
                 . "</a></td>\n";
             echo '<td style="text-align: center;"><a href="'
                 . SHASHIN_ADMIN_URL
                 . '&amp;shashin_action=delete_album&amp;album_id='
                 . $all_album['album_id']
-                . '" onclick="return confirm(\'Are you sure you want to delete?\')">'
-                . '<img src="' . SHASHIN_DISPLAY_URL
-                . 'delete.png" alt="Delete Album" width="16" height="16" border="0" />'
+                . '" onclick="return confirm(\''
+                . __("Are you sure you want to delete this album?", SHASHIN_L10N_NAME)
+                . '\')"><img src="' . SHASHIN_DISPLAY_URL
+                . '/delete.png" alt="Delete Album" width="16" height="16" border="0" />'
                 . "</a></td>\n";
             echo '<td style="text-align: center;">';
             ToppaWPFunctions::displayInput(
@@ -158,7 +159,7 @@
 
     <ul>
     <li><?php _e("<strong>Syncing:</strong> after you upload new photos to an album in Picasa, click the", SHASHIN_L10N_NAME); ?>
-    <img src="<?php echo SHASHIN_DISPLAY_URL ?>arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />
+    <img src="<?php echo SHASHIN_DISPLAY_URL ?>/arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />
     <?php _e("icon for it above.", SHASHIN_L10N_NAME); ?></li>
     <li><?php _e("<strong>Display thumbnails for all your albums:</strong> you can choose the sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering). [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]", SHASHIN_L10N_NAME); ?></li>
     <li><?php _e("<strong>Display thumbnails for selected albums:</strong> [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]", SHASHIN_L10N_NAME); ?></li>
