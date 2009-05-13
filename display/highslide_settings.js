@@ -1,3 +1,5 @@
+// The "-0" and "!!" are for type casting, as all vars brought over
+// from wp_localize_script come in as strings
 hs.graphicsDir = highslide_settings.graphics_dir;
 hs.align = 'center';
 hs.transitions = ['expand', 'crossfade'];

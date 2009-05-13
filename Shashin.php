@@ -135,16 +135,14 @@ class Shashin {
             }
         }
 
-        if ($shashin_options['image_display'] == 'highslide') {
-            // counter for assigning unique IDs to highslide images
-            if (!$_SESSION['hs_id_counter']) {
-               $_SESSION['hs_id_counter'] = 1;
-            }
+        // counter for assigning unique IDs to images
+        if (!$_SESSION['shashin_id_counter']) {
+           $_SESSION['shashin_id_counter'] = 1;
+        }
 
-            // counter for distinguishing groups of Highslide photos on a page
-            if (!$_SESSION['hs_group_counter']) {
-               $_SESSION['hs_group_counter'] = 1;
-            }
+        // counter for distinguishing groups of images on a page
+        if (!$_SESSION['shashin_group_counter']) {
+           $_SESSION['shashin_group_counter'] = 1;
         }
     }
 
@@ -183,6 +181,7 @@ class Shashin {
             'other_link_class' => null,
             'other_link_title' => null,
             'other_image_class' => null,
+            'other_image_title' => null,
             'album_photos_max' => 160,
             'album_photos_cols' => 3,
             'album_photos_order' => 'taken_timestamp desc',
@@ -632,6 +631,15 @@ class Shashin {
                 // remove scheduled updates if scheduling is turned off
                 if ($_REQUEST['shashin_options']['scheduled_update'] == 'n') {
                     Shashin::unscheduleUpdate();
+                }
+
+                // deal with checkbox inputs...
+                if (!$_REQUEST['shashin_options']['other_link_title']) {
+                    $_REQUEST['shashin_options']['other_link_title'] = 'n';
+                }
+
+                if (!$_REQUEST['shashin_options']['other_image_title']) {
+                    $_REQUEST['shashin_options']['other_image_title'] = 'n';
                 }
 
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);

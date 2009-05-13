@@ -409,7 +409,7 @@ class ShashinPhoto {
                 return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
-            $markup = $photo->_getDivMarkup($match, true, $_SESSION['hs_group_counter'], true);
+            $markup = $photo->_getDivMarkup($match, true, $_SESSION['shashin_group_counter'], true);
             $replace .= "<td>$markup</td>\n";
             $cell_count++;
 
@@ -422,10 +422,10 @@ class ShashinPhoto {
         $replace .= "</table>";
 
         if ($shashin_options['image_display'] == 'highslide') {
-            $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['hs_group_counter'] . "');\n</script>\n";
+            $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['shashin_group_counter'] . "');\n</script>\n";
         }
 
-        $_SESSION['hs_group_counter']++;
+        $_SESSION['shashin_group_counter']++;
         return $replace;
     }
 
@@ -553,39 +553,38 @@ class ShashinPhoto {
             // need minWidth because width was not autosizing for content
             // need "preserveContent: false" so the video and audio will stop when the window is closed
             $markup .= "<a href=\"$video_url\" id=\"shashin_thumb_link_"
-                . $_SESSION['hs_id_counter']
+                . $_SESSION['shashin_id_counter']
                 . "\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
                 . ($width+20) . ", minHeight: " . ($height+20)
                 . ", objectWidth: $width, objectHeight: $height, allowSizeReduction: false, preserveContent: false";
 
             if ($group) {
-                $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "'";
+                $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['shashin_group_counter'] . "'";
             }
 
             $markup .= ' } )" class="highslide">';
-            $_SESSION['hs_id_counter']++;
+            $_SESSION['shashin_id_counter']++;
         }
 
         // images in highslide
         else if ($shashin_options['image_display'] == 'highslide') {
             $markup .= '<a href="' . $this->data['enclosure_url']
                 . '?imgmax=' . $shashin_options['highslide_max']
-                . '" class="highslide" id="shashin_thumb_link_' . $_SESSION['hs_id_counter']
+                . '" class="highslide" id="shashin_thumb_link_' . $_SESSION['shashin_id_counter']
                 . '" onclick="return hs.expand(this';
 
             if ($group) {
-                $markup .= ", { autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "' }";
+                $markup .= ", { autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['shashin_group_counter'] . "' }";
             }
 
             $markup .= ')">';
-            $_SESSION['hs_id_counter']++;
         }
 
         // other viewer
         else if ($shashin_options['image_display'] == 'other') {
             $markup .= '<a href="' . $this->data['enclosure_url']
                 . '?imgmax=' . $shashin_options['highslide_max']
-                . '" id="shashin_thumb_link_' . $_SESSION['hs_id_counter']
+                . '" id="shashin_thumb_link_' . $_SESSION['shashin_id_counter']
                 . '" rel="';
 
             if ($this->_isVideo()) {
@@ -598,11 +597,11 @@ class ShashinPhoto {
 
             if ($group) {
                 if ($shashin_options['other_rel_delimiter'] == 'brackets') {
-                    $markup .= "[" . $_SESSION['hs_group_counter'] . "]";
+                    $markup .= "[" . $_SESSION['shashin_group_counter'] . "]";
                 }
 
                 else {
-                    $markup .= "-" . $_SESSION['hs_group_counter'];
+                    $markup .= "-" . $_SESSION['shashin_group_counter'];
                 }
             }
 
@@ -630,6 +629,7 @@ class ShashinPhoto {
             $markup .= '>';
         }
 
+        // get alternate thumbnail image if one was specified
         if ($match['alt_thumb']) {
             $alt_thumb = new ShashinPhoto();
             list($result, $message, $db_error) = $alt_thumb->getPhoto(array('photo_key' => $match['alt_thumb']));
@@ -661,7 +661,7 @@ class ShashinPhoto {
             . '" alt="' . $caption
             . '" width="' . $width
             . '" height="' . $height
-            . '"';// id="shashin_thumb_image_' . $_SESSION['hs_id_counter'] . '"';
+            . '" id="shashin_thumb_image_' . $_SESSION['shashin_id_counter'] . '"';
 
         if ($shashin_options['other_image_title'] || $shashin_options['image_display'] == 'highslide') {
             $markup .= ' title="' . $caption . '"';
@@ -687,6 +687,7 @@ class ShashinPhoto {
         }
 
         $markup .= "</div>";
+        $_SESSION['shashin_id_counter']++;
         return $markup;
     }
 

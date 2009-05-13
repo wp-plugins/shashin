@@ -74,28 +74,86 @@
         <input type="radio" name="shashin_options[image_display]" value="highslide"<?php
             if ($shashin_options['image_display'] == 'highslide') echo ' checked="checked"'; ?> />
             <?php _e("Use Highslide", SHASHIN_L10N_NAME); ?><br />
-        <input type="radio" name="shashin_options[image_display]" value="none"<?php
-            if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
-            <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?><br />
         <input type="radio" name="shashin_options[image_display]" value="other"<?php
             if ($shashin_options['image_display'] == 'other') echo ' checked="checked"'; ?> />
             <?php _e("Use Other Viewer (e.g. Lightbox)", SHASHIN_L10N_NAME); ?><br />
-            <div style="margin-left: 20px;"><?php _e("Link 'rel' for images:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_image_rel]" value="<?php echo $shashin_options['other_image_rel']; ?>" size="12"><br />
-            <?php _e("Link 'rel' for videos:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_video_rel]" value="<?php echo $shashin_options['other_video_rel']; ?>" size="12"><br />
-            <?php _e("CSS class for link:", SHASHIN_L10N_NAME); ?><input type="text" name="shashin_options[other_class]" value="<?php echo $shashin_options['other_class']; ?>" size="12"><br />
-            <?php _e("'rel' delimiter for image groups:", SHASHIN_L10N_NAME); ?><br />
-            <input type="radio" name="shashin_options[other_delimiter]" value="brackets"<?php
-            if ($shashin_options['other_delimiter'] == 'brackets') echo ' checked="checked"'; ?> />
-            <?php _e("Brackets", SHASHIN_L10N_NAME); ?>
-            <input type="radio" name="shashin_options[other_delimiter]" value="hyphen"<?php
-            if ($shashin_options['other_delimiter'] == 'hyphen') echo ' checked="checked"'; ?> />
-            <?php _e("Hyphen", SHASHIN_L10N_NAME); ?></div>
+        <input type="radio" name="shashin_options[image_display]" value="none"<?php
+            if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
+            <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?>
             </td>
-    <td><?php _e("This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works 'out of the box.' If you select 'other', you are responsible for implementing your own image viewer. Shashin will give you link and image tags following the <a href='http://www.lokeshdhakar.com/projects/lightbox2/' target='_blank'>Lightbox 2</a> format. It also allows you to apply a class to the link (necessary for Thickbox), and to specify whether image groups should be delimited by brackets in the link's rel attribute (e.g. 'lightbox[28]') or a hyphen (e.g. 'thickbox-28').", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works "out of the box." If you select "Use Other Viewer," you are responsible for implementing your own image viewer. See "Highslide Settings" and "Other Viewer Settings" below.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr>
-    <td colspan="3"><strong><?php _e("Highslide Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("These settings apply only if you select 'Use Highslide' above, for the full-size image display.", SHASHIN_L10N_NAME); ?></td>
+    <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Thumbnail size:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[album_photos_max]">
+    <?php
+        foreach ($shashin_image_sizes as $size) {
+            echo '<option value="' . $size . '"';
+            if ($shashin_options['album_photos_max'] == $size) {
+                echo ' selected="selected"';
+            }
+            echo ">$size</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("This determines the 'maximum dimension' of the thumbnails. This size is applied to either the height or the width (whichever is greater). The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that the sizes", SHASHIN_L10N_NAME); ?>
+    <?php echo implode(", ", $shashin_crop_sizes) ?>
+    <?php _e("are cropped square.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Number of columns:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[album_photos_cols]" value="<?php echo $shashin_options['album_photos_cols']; ?>" size="2"></td>
+    <td><?php _e("The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Sort Order:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[album_photos_order]">
+    <?php
+        $order_options = array('title asc', 'title desc', 'uploaded_timestamp asc', 'uploaded_timestamp desc', 'taken_timestamp asc', 'taken_timestamp desc');
+        foreach ($order_options as $option) {
+            echo '<option value="' . $option . '"';
+            if ($shashin_options['album_photos_order'] == $option) {
+                echo ' selected="selected"';
+            }
+            echo ">$option</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("How to order the photos. 'asc' means ascending from lowest to highest (a-z, oldest to newest), 'desc' means descending from highest to lowest (z-a, newest to oldest).", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Display photo captions:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_captions]" value="y"<?php
+        if ($shashin_options['album_photos_captions'] == 'y') echo ' checked="checked"'; ?> />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[album_photos_captions]" value="n"<?php
+        if ($shashin_options['album_photos_captions'] == 'n') echo ' checked="checked"'; ?> />
+            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether to display a caption under each thumbnail.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Display album description:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_description]" value="y"<?php
+        if ($shashin_options['album_photos_description'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <input type="radio" name="shashin_options[album_photos_description]" value="n"<?php
+        if ($shashin_options['album_photos_description'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The album title will appear above the photos. You can choose whether to also display the album description, after the title.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+
+    <tr>
+    <td colspan="3"><strong><?php _e("Highslide Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e('These settings apply only if you select "Use Highslide" above.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -111,9 +169,7 @@
         }
     ?>
     </select></td>
-    <td><?php _e("This determines the 'maximum dimension' of an image displayed by Highslide when its thumbnail is clicked. This size is applied to either the height or the width (whichever is greater) and then the correct size for the other dimension is calculated on the fly. The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that the sizes", SHASHIN_L10N_NAME); ?>
-    <?php echo implode(", ", $shashin_crop_sizes) ?>
-    <?php _e("are cropped square.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The maximum size to use for displaying the photos. See 'Thumbnail size' above for more information.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -215,72 +271,50 @@
     <td><?php _e("Whether the slideshow controller should be hidden when the mouse leaves the full-size image.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
-
     <tr>
-    <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
+    <td colspan="3"><strong><?php _e("Other Viewer Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e('These settings apply only if you select "Use Other Viewer" above. There are a wide variety of configuration requirements for different viewers. Shashin accomodates them by letting you control the attributes for the link and image tags used for its thumbnails. All links and thumbnails automatically get unique IDs (e.g. "shashin_thumb_link_24", "shashin_thumb_image_24").', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Thumbnail size:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><select name="shashin_options[album_photos_max]">
-    <?php
-        foreach ($shashin_image_sizes as $size) {
-            echo '<option value="' . $size . '"';
-            if ($shashin_options['album_photos_max'] == $size) {
-                echo ' selected="selected"';
-            }
-            echo ">$size</option>\n";
-        }
-    ?>
-    </select></td>
-    <td><?php _e("The size to use for displaying the photos in the album. See 'Highslide image size' above for more information. Note that the sizes", SHASHIN_L10N_NAME); ?>
-    <?php echo implode(", ", $shashin_crop_sizes) ?>
-    <?php _e("are cropped square.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('Link "rel" for images:', SHASHIN_L10N_NAME); ?></td>
+    <td><input type="text" name="shashin_options[other_rel_image]" value="<?php echo $shashin_options['other_rel_image']; ?>" size="30"></td>
+    <td><?php _e('The "rel" attribute for image links; e.g. "lightbox" if you are using Lightbox 2.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Number of columns:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[album_photos_cols]" value="<?php echo $shashin_options['album_photos_cols']; ?>" size="2"></td>
-    <td><?php _e("The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('Link "rel" for videos:', SHASHIN_L10N_NAME); ?></td>
+    <td><input type="text" name="shashin_options[other_rel_video]" value="<?php echo $shashin_options['other_rel_video']; ?>" size="30"></td>
+    <td><?php _e('The "rel" attribute for links if displaying a video; e.g. "vidbox" if you are using Videobox.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Sort Order:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><select name="shashin_options[album_photos_order]">
-    <?php
-        $order_options = array('title asc', 'title desc', 'uploaded_timestamp asc', 'uploaded_timestamp desc', 'taken_timestamp asc', 'taken_timestamp desc');
-        foreach ($order_options as $option) {
-            echo '<option value="' . $option . '"';
-            if ($shashin_options['album_photos_order'] == $option) {
-                echo ' selected="selected"';
-            }
-            echo ">$option</option>\n";
-        }
-    ?>
-    </select></td>
-    <td><?php _e("How to order the photos. 'asc' means ascending from lowest to highest (a-z, oldest to newest), 'desc' means descending from highest to lowest (z-a, newest to oldest).", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('"rel" delimiter for image groups:', SHASHIN_L10N_NAME); ?></td>
+    <td><input type="radio" name="shashin_options[other_rel_delimiter]" value="brackets"<?php if ($shashin_options['other_rel_delimiter'] == 'brackets') echo ' checked="checked"'; ?> />
+        <?php _e("Brackets", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[other_rel_delimiter]" value="hyphen"<?php if ($shashin_options['other_rel_delimiter'] == 'hyphen') echo ' checked="checked"'; ?> />
+        <?php _e("Hyphen", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('How to delimit image groups in a rel tag. Lightbox 2 uses brackets (e.g. "lightbox[33]"). Many other viewers use hyphens (e.g. Slimbox: "lightbox-33").', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Display photo captions:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_captions]" value="y"<?php
-        if ($shashin_options['album_photos_captions'] == 'y') echo ' checked="checked"'; ?> />
-            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
-        <input type="radio" name="shashin_options[album_photos_captions]" value="n"<?php
-        if ($shashin_options['album_photos_captions'] == 'n') echo ' checked="checked"'; ?> />
-            <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("Whether to display a caption under each thumbnail.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Class for links:", SHASHIN_L10N_NAME); ?></td>
+    <td><input type="text" name="shashin_options[other_link_class]" value="<?php echo $shashin_options['other_link_class']; ?>" size="30"></td>
+    <td><?php _e('A CSS class to apply to the links. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Display album description:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_description]" value="y"<?php
-        if ($shashin_options['album_photos_description'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
-        <input type="radio" name="shashin_options[album_photos_description]" value="n"<?php
-        if ($shashin_options['album_photos_description'] == 'n') echo ' checked="checked"'; ?> />
-        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("The album title will appear above the photos. You can choose whether to also display the album description, after the title.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Use photo caption as title for:", SHASHIN_L10N_NAME); ?></td>
+    <td><input type="checkbox" name="shashin_options[other_link_title]" value="y"<?php if ($shashin_options['other_link_title'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Links", SHASHIN_L10N_NAME); ?>
+        <input type="checkbox" name="shashin_options[other_image_title]" value="y"<?php if ($shashin_options['other_image_title'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Images", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('You can use the photo\'s caption as the title for for its link tag, its image tag, or both.', SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Class for images:", SHASHIN_L10N_NAME); ?></td>
+    <td><input type="text" name="shashin_options[other_image_class]" value="<?php echo $shashin_options['other_image_class']; ?>" size="30"></td>
+    <td><?php _e('A CSS class to apply to the thumbnails. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
     </tr>
     </table>
     <p class="submit"><input class="button-primary" type="submit" name="save" value="<?php _e("Save Options", SHASHIN_L10N_NAME); ?>" /></p>
