@@ -134,16 +134,6 @@ class Shashin {
                 wp_schedule_event(time(), 'daily', 'shashin_scheduled_update_hook');
             }
         }
-
-        // counter for assigning unique IDs to images
-        if (!$_SESSION['shashin_id_counter']) {
-           $_SESSION['shashin_id_counter'] = 1;
-        }
-
-        // counter for distinguishing groups of images on a page
-        if (!$_SESSION['shashin_group_counter']) {
-           $_SESSION['shashin_group_counter'] = 1;
-        }
     }
 
     /**

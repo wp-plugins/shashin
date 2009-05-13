@@ -375,21 +375,28 @@ class ShashinPhoto {
      */
     function _getTableMarkup($photos, $match, $desc = null) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        // counter for distinguishing groups of images on a page
+        if (!$_SESSION['shashin_group_counter']) {
+           $_SESSION['shashin_group_counter'] = 1;
+        }
+
         $replace = '<table class="shashin_thumbs_table"';
 
         if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
 
             if ($match['float'] == 'center') {
-                $replace .= " margin-left: auto; margin-right: auto;";
+                $replace .= "margin-left: auto; margin-right: auto;";
             }
 
             else if ($match['float']) {
-                $replace .= " float: {$match['float']};";
+                $replace .= "float: {$match['float']};";
             }
 
             $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
             $replace .= '"';
+
             // don't want these applied to the individual images when
             // calling _getDivMarkup
             unset($match['float']);
@@ -496,6 +503,11 @@ class ShashinPhoto {
     function _getDivMarkup($match, $thumb = false, $group = null, $controller = false, $admin = false) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
+        // counter for assigning unique IDs to images
+        if (!$_SESSION['shashin_id_counter']) {
+           $_SESSION['shashin_id_counter'] = 1;
+        }
+
         // set the dimensions
         if ($this->_setDimensions($match['max_size']) === false) {
             return '<span class="shashin_error">Shashin Error: invalid size for image</span>';
@@ -563,7 +575,6 @@ class ShashinPhoto {
             }
 
             $markup .= ' } )" class="highslide">';
-            $_SESSION['shashin_id_counter']++;
         }
 
         // images in highslide
@@ -663,11 +674,12 @@ class ShashinPhoto {
             . '" height="' . $height
             . '" id="shashin_thumb_image_' . $_SESSION['shashin_id_counter'] . '"';
 
-        if ($shashin_options['other_image_title'] || $shashin_options['image_display'] == 'highslide') {
+        if (($shashin_options['image_display'] == 'other' && $shashin_options['other_image_title'])
+            || $shashin_options['image_display'] == 'highslide') {
             $markup .= ' title="' . $caption . '"';
         }
 
-        if ($shashin_options['other_image_class']) {
+        if ($shashin_options['image_display'] == 'other' && $shashin_options['other_image_class']) {
             $markup .= ' class="' . $shashin_options['other_image_class'] . '"';
         }
 
