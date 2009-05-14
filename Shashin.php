@@ -179,6 +179,7 @@ class Shashin {
             'album_photos_captions' => 'n',
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
+            'theme_max_size' => 640,
         );
 
         // create/update tables
@@ -744,7 +745,7 @@ class Shashin {
      * @uses ShashinAlbum::getAlbumListMarkup()
      */
     function parseContent($content) {
-        $simage = "/\[simage=(\d+),(\d{2,4}),?(\w?),?(\w{0,6}),?(\w{0,5}),?(\d*)\]/";
+        $simage = "/\[simage=(\d+),(\d{2,4}|max),?(\w?),?(\w{0,6}),?(\w{0,5}),?(\d*)\]/";
 
         if (preg_match_all($simage, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -757,7 +758,7 @@ class Shashin {
             }
         }
 
-        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}|max),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($srandom, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -783,7 +784,7 @@ class Shashin {
             }
         }
 
-        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($sthumbs, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -797,7 +798,7 @@ class Shashin {
             }
         }
 
-        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}|max),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($snewest, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -823,7 +824,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d{2,4}|max),(\d+),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {

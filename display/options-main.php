@@ -64,6 +64,22 @@
     </tr>
 
     <tr style="vertical-align: top;">
+    <td><?php _e("Maximum image width for your theme:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><select name="shashin_options[theme_max_size]">
+    <?php
+        foreach ($shashin_image_sizes as $size) {
+            echo '<option value="' . $size . '"';
+            if ($shashin_options['theme_max_size'] == $size) {
+                echo ' selected="selected"';
+            }
+            echo ">$size</option>\n";
+        }
+    ?>
+    </select></td>
+    <td><?php _e("Indicate the maximum image width your theme can accomodate in a post. If you use the word 'max' for the size in your Shashin tags, Shashin will assign this size to the image. This makes it easy to adjust your image sizes if you change to a wider or narrower theme. You can also use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
     <td><?php _e("Full-size image display:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[image_display]" value="same_window"<?php
             if ($shashin_options['image_display'] == 'same_window') echo ' checked="checked"'; ?> />
@@ -116,17 +132,25 @@
     <td><?php _e("Sort Order:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><select name="shashin_options[album_photos_order]">
     <?php
-        $order_options = array('title asc', 'title desc', 'uploaded_timestamp asc', 'uploaded_timestamp desc', 'taken_timestamp asc', 'taken_timestamp desc');
-        foreach ($order_options as $option) {
+        $order_options = array(
+            'Picasa Order' => 'picasa_order',
+            'Reverse Picasa Order' => 'picasa_order desc',
+            'Filename A-Z' =>  'title',
+            'Filename Z-A' =>  'title desc',
+            'Upload Date (old to new)' => 'uploaded_timestamp',
+            'Upload Date (new to old)' =>  'uploaded_timestamp desc',
+            'Taken Date (old to new)' => 'taken_timestamp',
+            'Taken Date (new to old)' => 'taken_timestamp desc');
+        foreach ($order_options as $label=>$option) {
             echo '<option value="' . $option . '"';
             if ($shashin_options['album_photos_order'] == $option) {
                 echo ' selected="selected"';
             }
-            echo ">$option</option>\n";
+            echo ">$label</option>\n";
         }
     ?>
     </select></td>
-    <td><?php _e("How to order the photos. 'asc' means ascending from lowest to highest (a-z, oldest to newest), 'desc' means descending from highest to lowest (z-a, newest to oldest).", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Select the display order for the photos.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
