@@ -1,3 +1,57 @@
+exif data display format:
+04/05/2008 18:34 - Canon EOS DIGITAL REBEL XSi, F 10, 20 mm, 1/1600 sec
+make, model, fstop/aperature, focal length, exposure time, Scott says add ISO (like film speed) too
+in the Picasa feed the data looks like this:
+
+   ["exif:tags"]=>
+    array(0) {
+    }
+    ["exif:fstop"]=>
+    array(1) {
+      ["data"]=>
+      string(3) "2.8"
+    }
+    ["exif:make"]=>
+    array(1) {
+      ["data"]=>
+      string(4) "SONY"
+    }
+    ["exif:model"]=>
+    array(1) {
+      ["data"]=>
+      string(7) "DSC-W55"
+    }
+    ["exif:exposure"]=>
+    array(1) {
+      ["data"]=>
+      string(4) "0.02"
+    }
+    ["exif:flash"]=>
+    array(1) {
+      ["data"]=>
+      string(5) "false"
+    }
+    ["exif:focallength"]=>
+    array(1) {
+      ["data"]=>
+      string(3) "6.3"
+    }
+    ["exif:iso"]=>
+    array(1) {
+      ["data"]=>
+      string(3) "100"
+    }
+    ["exif:time"]=>
+    array(1) {
+      ["data"]=>
+      string(13) "1215064510000"
+    }
+    ["exif:imageUniqueID"]=>
+    array(1) {
+      ["data"]=>
+      string(32) "1038a4c03e8021bd2c2e6c5813430d1f"
+    }
+
 2.3.4
 ShashinAlbum::deleteAlbum - was not correctly checking for "false" on query error
 ShashinAlbum::getAlbumPhotos - sets timestamp to 0 if photo doesn't have one (fix for mySQL error under Windows)

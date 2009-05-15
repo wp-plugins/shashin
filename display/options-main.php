@@ -254,7 +254,7 @@
     <td><?php _e("Controller Position:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><select name="shashin_options[highslide_v_position]">
     <?php
-        $v_position = array('above', 'top', 'middle', 'bottom', 'below');
+        $v_position = array('top', 'middle', 'bottom');
         foreach ($v_position as $pos) {
             echo '<option value="' . $pos . '"';
             if ($shashin_options['highslide_v_position'] == $pos) {
@@ -266,7 +266,7 @@
     </select>
     <select name="shashin_options[highslide_h_position]">
     <?php
-        $h_position = array('leftpanel', 'left', 'center', 'right', 'rightpanel');
+        $h_position = array('left', 'center', 'right');
         foreach ($h_position as $pos) {
             echo '<option value="' . $pos . '"';
             if ($shashin_options['highslide_h_position'] == $pos) {
