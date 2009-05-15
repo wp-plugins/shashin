@@ -53,14 +53,9 @@
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Prefix album titles on captions:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="radio" name="shashin_options[prefix_captions]" value="y"<?php
-        if ($shashin_options['prefix_captions'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
-        <input type="radio" name="shashin_options[prefix_captions]" value="n"<?php
-        if ($shashin_options['prefix_captions'] == 'n') echo ' checked="checked"'; ?> />
-        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("Clicking 'yes' means a photo's album title will be prefixed on its caption.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Thumbnail div padding:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding']; ?>" size="30"></td>
+    <td><?php _e("Double the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -151,6 +146,12 @@
     ?>
     </select></td>
     <td><?php _e("Select the display order for the photos.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Photos per page:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[photos_per_page]" value="<?php echo $shashin_options['photos_per_page']; ?>" size="30"></td>
+    <td><?php _e("The maximum number of photos to show per page. Leave blank to show all album photos on one page.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">

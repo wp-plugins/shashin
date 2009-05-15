@@ -493,7 +493,7 @@ class ShashinAlbum {
 
         $markup = '<a href="';
 
-        if ($shashin_options['image_display'] == 'highslide') {
+        if ($shashin_options['image_display'] == 'highslide' || $shashin_options['image_display'] == 'other') {
             $permalink = get_permalink();
             $glue = strpos($permalink, "?") ? "&amp;" : "?";
             $markup .=  $permalink . $glue . 'shashin_album_key=' . $this->data['album_key'] . '"';

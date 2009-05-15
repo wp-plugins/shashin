@@ -308,9 +308,9 @@ class ShashinPhoto {
     }
 
     /**
-     * Static method that display thumbnails for an album. Can be invoked by
-     * the salbumphotos tag, or by a $_REQUEST flag when an album cover
-     * thumbnail is clicked.
+     * Static method that display thumbnails for photos in an album. Can be
+     * invoked by the salbumphotos tag, or with $_REQUEST['shashin_album_key']
+     * when an album cover thumbnail is clicked.
      *
      * @static
      * @access public
@@ -322,9 +322,13 @@ class ShashinPhoto {
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getAlbumPhotosMarkup($match) {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        // check to see if we're making a list of photos from salbumphotos, or
+        // from salbumthumbs/salbumlist ($album_list_parent = true)
         // the is_numeric check also provides a de facto check on XSS attacks
-        if (is_numeric($_REQUEST['shashin_album_key'])) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+        if (!$match && is_numeric($_REQUEST['shashin_album_key'])) {
+            $album_list_parent = true;
             $match['album_key'] = $_REQUEST['shashin_album_key'];
             $match['max_size'] = $shashin_options['album_photos_max'];
             $match['max_cols'] = $shashin_options['album_photos_cols'];
@@ -337,7 +341,16 @@ class ShashinPhoto {
         $conditions = " inner join " . SHASHIN_ALBUM_TABLE
             . " sa where sa.album_id = sp.album_id and sp.deleted = 'N' and sa.album_key = "
             . $match['album_key'];
+
         $other = "order by $order";
+
+        // limit photos per page if requested
+        if (is_numeric($shashin_options['photos_per_page'])) {
+            $shashin_page = is_numeric($_REQUEST['shashin_page']) ? $_REQUEST['shashin_page'] : 1;
+            $other .= " limit " . $shashin_options['photos_per_page']
+                . " offset " . ($shashin_page - 1) * $shashin_options['photos_per_page'];
+        }
+
         $photos = ShashinPhoto::getPhotos('sp.*, sa.title as album_title, sa.description as album_description', $conditions, $other);
 
         if (!$photos) {
@@ -349,14 +362,41 @@ class ShashinPhoto {
 
         $desc = "";
 
-        if (is_numeric($_REQUEST['shashin_album_key'])) {
-            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back", SHASHIN_L10N_NAME) . '</a></span>';
+        if ($album_list_parent) {
+            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Return to album list", SHASHIN_L10N_NAME) . '</a></span>';
         }
 
         $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
 
         if ($photo['album_description'] &&  $match['description_yn'] == 'y') {
             $desc .= ' <span class="shashin_caption_description">' . preg_replace("/\s/", " ", $photo['album_description']) . '</span>';
+        }
+
+        // build next and previous links if we're limiting photos per page
+        if ($shashin_page) {
+            if (!$_SESSION['shashin_last_page_' . $match['album_key']]) {
+                $where = 'where album_id in (select album_id from ' . SHASHIN_ALBUM_TABLE
+                    . ' where album_key = ' . $match['album_key'] . ')';
+                $row_count = ToppaWPFunctions::sqlSelect(SHASHIN_PHOTO_TABLE, 'count(photo_id)', $where, null, 'get_var');
+                $_SESSION['shashin_last_page_' . $match['album_key']] = ceil($row_count / $shashin_options['photos_per_page']);
+            }
+
+            $permalink = get_permalink();
+            $glue = strpos($permalink, "?") ? "&amp;" : "?";
+            $link =  $permalink . $glue . 'shashin_album_key=' . $match['album_key'];
+            $desc .= '<div class="shashin_nav">';
+
+            if ($shashin_page > 1) {
+                $link_back = $link . '&amp;shashin_page=' . ($shashin_page - 1);
+                $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; Previous</a></div>';
+            }
+
+            if ($shashin_page < $_SESSION['shashin_last_page']) {
+                $link_next = $link . '&amp;shashin_page=' . ($shashin_page + 1);
+                $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">Next &raquo;</a></div>';
+            }
+
+            $desc .= "</div>\n";
         }
 
         return ShashinPhoto::_getTableMarkup($photos, $match, $desc);
@@ -384,9 +424,13 @@ class ShashinPhoto {
            $_SESSION['shashin_group_counter'] = 1;
         }
 
+        if ($match['max_size'] == 'max' && $match['max_cols'] == 'max') {
+                return '<span class="shashin_error">' . __("Shashin Error: image size and the number of columns cannot both be 'max'", SHASHIN_L10N_NAME) . '</span>';
+        }
+
         // if 'max' is the width, figure out the size for the thumbnails
         // (this will be imperfect if they're all portrait orientation...)
-        if ($match['max_size'] == 'max') {
+        else if ($match['max_size'] == 'max') {
             $sizes = unserialize(SHASHIN_IMAGE_SIZES);
             $max_size = $shashin_options['theme_max_size'] / $match['max_cols'];
             $max_size -= 10; // guess for padding/margins per image
@@ -400,6 +444,11 @@ class ShashinPhoto {
                     break;
                 }
             }
+        }
+
+        else if ($match['max_cols'] == 'max') {
+            $max_cols = $shashin_options['theme_max_size'] / ($match['max_size'] + 10);
+            $match['max_cols'] = floor($max_cols);
         }
 
         $replace = '<table class="shashin_thumbs_table"';

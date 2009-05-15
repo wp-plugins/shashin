@@ -180,6 +180,7 @@ class Shashin {
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
             'theme_max_size' => 640,
+            'photos_per_page' => null,
         );
 
         // create/update tables
@@ -758,7 +759,7 @@ class Shashin {
             }
         }
 
-        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}|max),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}|max),(\d+|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($srandom, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -784,7 +785,7 @@ class Shashin {
             }
         }
 
-        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($sthumbs, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -798,7 +799,7 @@ class Shashin {
             }
         }
 
-        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}|max),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}|max),(\d+|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($snewest, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -824,7 +825,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d{2,4}|max),(\d+),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
