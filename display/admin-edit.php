@@ -41,22 +41,36 @@ $edit_link = SHASHIN_ADMIN_URL
     echo '<input type="hidden" name="album_id" value="' . $album->data['album_id'] . '">' . "\n";
     echo '<table style="border-collapse: seperate; border-spacing: 5px;">' . "\n";
     echo "<tr>\n";
-    echo '<th>' . __("Photo", SHASHIN_L10N_NAME) . "</th>\n";
+    echo '<th><a href="' . $edit_link
+        . (($order_by == 'picasa_order') ? 'picasa_order%20desc' : 'picasa_order')
+        . '">' . __("Picasa", SHASHIN_L10N_NAME)
+        . (($_GET['shashin_orderby'] == 'picasa_order desc') ? '&uarr' : '')
+        . (($_GET['shashin_orderby'] == 'picasa_order' || !$_GET['shashin_orderby']) ? '&darr' : '')
+        . "</th>\n";
     echo '<th><a href="' . $edit_link
         . (($order_by == 'photo_key') ? 'photo_key%20desc' : 'photo_key')
-        . '">' . __("Photo Key", SHASHIN_L10N_NAME) . "</th>\n";
+        . '">' . __("Photo Key", SHASHIN_L10N_NAME)
+        . (($_GET['shashin_orderby'] == 'photo_key desc') ? '&uarr' : '')
+        . (($_GET['shashin_orderby'] == 'photo_key') ? '&darr' : '')
+        . "</th>\n";
     echo '<th><a href="' . $edit_link
         . (($order_by == 'title') ? 'title%20desc' : 'title')
-        . '">' . __("Filename", SHASHIN_L10N_NAME) . "</th>\n";
+        . '">' . __("Filename", SHASHIN_L10N_NAME)
+        . (($_GET['shashin_orderby'] == 'title desc') ? '&uarr' : '')
+        . (($_GET['shashin_orderby'] == 'title') ? '&darr' : '')
+        . "</th>\n";
     echo '<th><a href="' . $edit_link
         . (($order_by == 'taken_timestamp') ? 'taken_timestamp%20desc' : 'taken_timestamp')
-        . '">' . __("Date Taken", SHASHIN_L10N_NAME) . "</th>\n";
+        . '">' . __("Date Taken", SHASHIN_L10N_NAME)
+        . (($_GET['shashin_orderby'] == 'taken_timestamp desc') ? '&uarr' : '')
+        . (($_GET['shashin_orderby'] == 'taken_timestamp') ? '&darr' : '')
+        . "</th>\n";
     echo '<th>' . __("Markup", SHASHIN_L10N_NAME) . "</th>\n";
     echo '<th>' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
     echo "</tr>\n";
 
     $i = 1;
-    $markup_args = array('max_size' => 160, 'caption_yn' => 'y');
+    $markup_args = array('max_size' => 64, 'caption_yn' => 'n');
 
     foreach ($album->data['photos'] as $photos_data) {
         $photo = new ShashinPhoto();
@@ -69,7 +83,7 @@ $edit_link = SHASHIN_ADMIN_URL
         echo "<td>" . (is_numeric($photo->data['taken_timestamp'])
             ? date("d-M-y H:i", $photo->data['taken_timestamp']) : 'Unknown')
             . "</td>\n";
-        echo "<td>[simage=" . $photo->data['photo_key'] . ",640,y,left]</td>\n";
+        echo "<td>[simage=" . $photo->data['photo_key'] . ",640,y,center]</td>\n";
         echo "<td>";
         ToppaWPFunctions::displayInput("include_in_random[{$photo->data['photo_id']}]", $photo->ref_data['include_in_random'], ($photo->data['include_in_random'] ? $photo->data['include_in_random'] : "Y"));
         echo "</td>\n";

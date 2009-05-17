@@ -76,7 +76,7 @@ class ShashinPhoto {
             'uploaded_timestamp' => array(
                 'col_params' => array('type' => 'int unsigned', 'not_null' => true),
                 'label' => 'Date Uploaded', 'source' => 'feed',
-                'feed_param_1' => 'gphoto', 'feed_param_2' => 'timestamp'),
+                'feed_param_1' => 'pubDate'),
             'tags' => array(
                 'col_params' => array('type' => 'varchar', 'length' => '255'),
                 'label' => 'Tags', 'source' => 'feed',
@@ -100,6 +100,30 @@ class ShashinPhoto {
             'picasa_order' => array(
                 'col_params' => array('type' => 'int unsigned'),
                 'label' => 'Picasa Order', 'source' => 'db'),
+            'fstop' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'F-Stop', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'fstop'),
+            'make' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '20'),
+                'label' => 'Make', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'make'),
+            'model' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '20'),
+                'label' => 'Model', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'model'),
+            'exposure' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'Model', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'exposure'),
+            'focal_length' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'Focal Length', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'focallength'),
+            'iso' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'ISO', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'iso'),
         );
     }
 
@@ -588,25 +612,34 @@ class ShashinPhoto {
             return '<span class="shashin_error">Shashin Error: invalid size for image</span>';
         }
 
-        // set the caption to include the album name if that option is set
+        $caption = "";
+
+        // set the caption to include the album name if requested
         if ($shashin_options['prefix_captions'] == 'y') {
             $album = new ShashinAlbum();
             $album->getAlbum($this->data['album_id']);
-            $caption = $album->data['title'] . " &ndash; " . $this->data['description'];
+            $caption .= $album->data['title'] . " &ndash; ";
         }
 
-        else {
-            $caption = $this->data['description'];
-        }
+        $caption .= $this->data['description'];
 
         // a caption on the thumbnail is optional
         if ($match['caption_yn'] == 'y') {
             $opt_caption = $caption;
         }
 
-        // 'enlarge' or 'play' as a caption option
+        // set the caption to include the date and time if requested,
+        // and if we're not including exif data (since it's already in exif)
+        if ($shashin_options['caption_date'] == 'y' && $shashin_options['caption_exif'] == 'n'
+          && $this->data['taken_timestamp']) {
+            $caption .= " &ndash; " . date("d-M-Y", $this->data['taken_timestamp']);
+        }
+
+        // 'enlarge' or 'play' as a thumbnail caption option
         else if ($match['caption_yn'] == 'c') {
-            $opt_caption = $this->_isVideo() ? 'Click picture to play video' : 'Click picture to enlarge';
+            $opt_caption = $this->_isVideo()
+                ? __('Click picture to play video', SHASHIN_L10N_NAME)
+                : __('Click picture to enlarge', SHASHIN_L10N_NAME);
         }
 
         $class = $thumb ? 'shashin_thumb' : 'shashin_image';
@@ -765,8 +798,19 @@ class ShashinPhoto {
         }
 
         // whether to display the caption under the photo
-        if ($opt_caption) {
+        if ($opt_caption && !$admin) {
             $markup .= '<span class="shashin_caption">' . $opt_caption . '</span>';
+        }
+
+        // add date and exif data to the highslide caption if requested
+        // and data exists
+        if ($shashin_options['caption_exif'] == 'y' && $this->data['taken_timestamp']) {
+            $caption .= '<span class="shashin_caption_exif">'
+                . date("d-M-Y H:i", $this->data['taken_timestamp'])
+                . " &ndash; " . $this->data['make'] . " " . $this->data['model']
+                . ", F " . $this->data['fstop'] . ", " . $this->data['focal_length']
+                . "mm, " . $this->data['exposure'] . " sec, ISO " . $this->data['iso']
+                . '</span>';
         }
 
         if ($caption && $shashin_options['image_display'] == 'highslide' && !$admin) {

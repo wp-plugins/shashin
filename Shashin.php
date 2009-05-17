@@ -175,12 +175,14 @@ class Shashin {
             'other_image_title' => null,
             'album_photos_max' => 160,
             'album_photos_cols' => 3,
-            'album_photos_order' => 'taken_timestamp desc',
+            'album_photos_order' => 'picasa_order',
             'album_photos_captions' => 'n',
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
             'theme_max_size' => 640,
             'photos_per_page' => null,
+            'caption_date' => 'n',
+            'caption_exif' => 'n',
         );
 
         // create/update tables
@@ -345,7 +347,7 @@ class Shashin {
                 list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
 
                 if ($result === true) {
-                    $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'taken_timestamp desc';
+                    $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'picasa_order';
                     list($result, $message, $db_error) = $album->getAlbumPhotos($order_by);
                     unset($message); // no need to display a message in this case.
                 }
@@ -626,13 +628,14 @@ class Shashin {
                     Shashin::unscheduleUpdate();
                 }
 
-                // deal with checkbox inputs...
-                if (!$_REQUEST['shashin_options']['other_link_title']) {
-                    $_REQUEST['shashin_options']['other_link_title'] = 'n';
-                }
+                // deal with y/n checkbox inputs (better abstraction for this would be nice...)
+                $checkboxes = array('other_link_title', 'other_image_title',
+                    'prefix_captions', 'caption_date', 'caption_exif');
 
-                if (!$_REQUEST['shashin_options']['other_image_title']) {
-                    $_REQUEST['shashin_options']['other_image_title'] = 'n';
+                foreach ($checkboxes as $checkbox) {
+                    if (!$_REQUEST['shashin_options'][$checkbox]) {
+                        $_REQUEST['shashin_options'][$checkbox] = 'n';
+                    }
                 }
 
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);

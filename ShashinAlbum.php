@@ -96,7 +96,7 @@ class ShashinAlbum {
     }
 
     /**
-     * Populates a ShashinAlbum object based on an album indetifier (can be a
+     * Populates a ShashinAlbum object based on an album identifier (can be a
      * Picasa ID, album name, or Shashin key) or a passed-in array of album
      * data.
      *
@@ -368,7 +368,8 @@ class ShashinAlbum {
                 $new_photo['taken_timestamp'] = 0;
             }
 
-            $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
+            // pubDate format: Mon, 17 Nov 2008 02:35:00 +0000 - convert to timestamp
+            $new_photo['uploaded_timestamp'] = strtotime($new_photo['uploaded_timestamp']);
 
             // track the order in picasa
             $new_photo['picasa_order'] = $picasa_order++;
@@ -378,6 +379,7 @@ class ShashinAlbum {
                 if ($new_photo['tags'] != $old_photos[$new_id]['tags']
                   || $new_photo['description'] != $old_photos[$new_id]['description']
                   || $new_photo['taken_timestamp'] != $old_photos[$new_id]['taken_timestamp']
+                  || $new_photo['uploaded_timestamp'] != $old_photos[$new_id]['uploaded_timestamp']
                   || $new_photo['width'] != $old_photos[$new_id]['width']
                   || $new_photo['height'] != $old_photos[$new_id]['height']
                   || $new_photo['picasa_order'] != $old_photos[$new_id]['picasa_order']) {

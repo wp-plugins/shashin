@@ -166,3 +166,9 @@
     float: right;
 }
 
+/* Applied to EXIF data in Highslide captions */
+.shashin_caption_exif {
+    display: block;
+    color: DarkGray;
+}
+

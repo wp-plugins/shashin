@@ -37,19 +37,30 @@
         <input type="radio" name="shashin_options[scheduled_update]" value="n"<?php
         if ($shashin_options['scheduled_update'] == 'n') echo ' checked="checked"'; ?> />
         <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("This will make Shashin sync all your albums automatically on a daily basis.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("This will make Shashin sync all your albums automatically on a daily basis. NOTE: This may fail if you have several hundered albums, and/or several hundred photos per album.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Add to photo caption:", SHASHIN_L10N_NAME); ?></td>
+    <td><input type="checkbox" name="shashin_options[prefix_captions]" value="y"<?php if ($shashin_options['prefix_captions'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Album Title", SHASHIN_L10N_NAME); ?>
+        <input type="checkbox" name="shashin_options[caption_date]" value="y"<?php if ($shashin_options['caption_date'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Date", SHASHIN_L10N_NAME); ?>
+        <input type="checkbox" name="shashin_options[caption_exif]" value="y"<?php if ($shashin_options['caption_exif'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("EXIF Data", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('You can add any of these items to the photo captions. Dates are added to expanded view captions but not thumbnail captions. EXIF data is included in Highslide captions only.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
     <td><?php _e("Image div padding:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="text" name="shashin_options[div_padding]" value="<?php echo $shashin_options['div_padding']; ?>" size="30"></td>
-    <td><?php _e("Double the '.shashin_image img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Make this 2x the '.shashin_image img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
     <td><?php _e("Thumbnail div padding:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding']; ?>" size="30"></td>
-    <td><?php _e("Double the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Make this 2x the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -96,7 +107,7 @@
     </tr>
 
     <tr>
-    <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("If you are using Highslide and the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
+    <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("When using the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed on your site when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -324,22 +335,22 @@
     <tr style="vertical-align: top;">
     <td><?php _e("Class for links:", SHASHIN_L10N_NAME); ?></td>
     <td><input type="text" name="shashin_options[other_link_class]" value="<?php echo $shashin_options['other_link_class']; ?>" size="30"></td>
-    <td><?php _e('A CSS class to apply to the links. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('A CSS class to apply to the link tags. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Use photo caption as title for:", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('Use photo caption as "title" in:', SHASHIN_L10N_NAME); ?></td>
     <td><input type="checkbox" name="shashin_options[other_link_title]" value="y"<?php if ($shashin_options['other_link_title'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Links", SHASHIN_L10N_NAME); ?>
+        <?php _e("Link tags", SHASHIN_L10N_NAME); ?>
         <input type="checkbox" name="shashin_options[other_image_title]" value="y"<?php if ($shashin_options['other_image_title'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Images", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e('You can use the photo\'s caption as the title for for its link tag, its image tag, or both.', SHASHIN_L10N_NAME); ?></td>
+        <?php _e("Image tags", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('You can use the photo\'s caption as the "title" for for its link tag, its image tag, or both.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Class for images:", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Class for thumbnails:", SHASHIN_L10N_NAME); ?></td>
     <td><input type="text" name="shashin_options[other_image_class]" value="<?php echo $shashin_options['other_image_class']; ?>" size="30"></td>
-    <td><?php _e('A CSS class to apply to the thumbnails. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('A CSS class to apply to the thumbnails image tags. Leave blank for none.', SHASHIN_L10N_NAME); ?></td>
     </tr>
     </table>
     <p class="submit"><input class="button-primary" type="submit" name="save" value="<?php _e("Save Options", SHASHIN_L10N_NAME); ?>" /></p>
@@ -362,3 +373,4 @@
         </form>
     </div>
 </div>
+<?php var_dump(time()); ?>
