@@ -364,7 +364,7 @@ class ToppaWPFunctions {
         case 'radio':
             foreach ($ref_data['input_subgroup'] as $value=>$label) {
                 echo '<input type="radio" name="' . $input_name
-                    . '" id="' . $input_id
+                    . '" id="' . $input_id . "_" . htmlspecialchars($value)
                     . '" value="' . htmlspecialchars($value) . '"';
 
                 if ($input_value == $value) {

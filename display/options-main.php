@@ -14,6 +14,16 @@
 ?>
 
 <div class="wrap">
+    <div style="float: right; font-weight: bold; margin-top: 15px;">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="5378623">
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /><?php _e("Support Shashin", SHASHIN_L10N_NAME); ?> &raquo;
+        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="<?php _e("Support Deko Boko", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
+        <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin Help", SHASHIN_L10N_NAME); ?></a>
+        </form>
+    </div>
+
     <h2><?php echo SHASHIN_DISPLAY_NAME . " " . __("Settings", SHASHIN_L10N_NAME); ?></h2>
 
     <?php if (strlen($message)) {
@@ -42,13 +52,18 @@
 
     <tr style="vertical-align: top;">
     <td><?php _e("Add to photo caption:", SHASHIN_L10N_NAME); ?></td>
-    <td><input type="checkbox" name="shashin_options[prefix_captions]" value="y"<?php if ($shashin_options['prefix_captions'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Album Title", SHASHIN_L10N_NAME); ?>
-        <input type="checkbox" name="shashin_options[caption_date]" value="y"<?php if ($shashin_options['caption_date'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Date", SHASHIN_L10N_NAME); ?>
-        <input type="checkbox" name="shashin_options[caption_exif]" value="y"<?php if ($shashin_options['caption_exif'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("EXIF Data", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e('You can add any of these items to the photo captions. Dates are added to expanded view captions but not thumbnail captions. EXIF data is included in Highslide captions only.', SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Album Title:", SHASHIN_L10N_NAME); ?><input type="radio" name="shashin_options[prefix_captions]" value="y"<?php if ($shashin_options['prefix_captions'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[prefix_captions]" value="n"<?php
+        if ($shashin_options['prefix_captions'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?><br />
+        EXIF Data: <input type="radio" name="shashin_options[caption_exif]" value="date"<?php if ($shashin_options['caption_exif'] == 'date') echo ' checked="checked"'; ?> />
+        <?php _e("Date only", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[caption_exif]" value="all"<?php if ($shashin_options['caption_exif'] == 'all') echo ' checked="checked"'; ?> />
+        <?php _e("All", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[caption_exif]" value="none"<?php if ($shashin_options['caption_exif'] == 'none' || !$shashin_options['caption_exif']) echo ' checked="checked"'; ?> />
+        <?php _e("None", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('Album titles are prefixed to all captions. Dates are appended to expanded view captions only. EXIF data is appended to Highslide captions only, and includes the camera make, model, fstop, focal length, exposure time, and ISO.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
@@ -64,12 +79,6 @@
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Thumbnail div padding:", SHASHIN_L10N_NAME); ?></td>
-    <td nowrap="nowrap"><input type="text" name="shashin_options[thumb_padding]" value="<?php echo $shashin_options['thumb_padding']; ?>" size="30"></td>
-    <td><?php _e("Double the '.shashin_thumb img' padding value in shashin.css", SHASHIN_L10N_NAME); ?></td>
-    </tr>
-
-    <tr style="vertical-align: top;">
     <td><?php _e("Maximum image width for your theme:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><select name="shashin_options[theme_max_size]">
     <?php
@@ -82,11 +91,11 @@
         }
     ?>
     </select></td>
-    <td><?php _e("Indicate the maximum image width your theme can accomodate in a post. If you use the word 'max' for the size in your Shashin tags, Shashin will assign this size to the image. This makes it easy to adjust your image sizes if you change to a wider or narrower theme. You can also use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The maximum image width your theme can accomodate in a post. If you use the word 'max' for the size in your Shashin tags, Shashin will assign this size to the image. You can also use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Full-size image display:", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Expanded image display:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[image_display]" value="same_window"<?php
             if ($shashin_options['image_display'] == 'same_window') echo ' checked="checked"'; ?> />
             <?php _e("At Picasa, in same browser window", SHASHIN_L10N_NAME); ?><br />
@@ -103,7 +112,7 @@
             if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
             <?php _e("Do not make thumbnails clickable", SHASHIN_L10N_NAME); ?>
             </td>
-    <td><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works "out of the box." If you select "Use Other Viewer," you are responsible for implementing your own image viewer. See "Highslide Settings" and "Other Viewer Settings" below.', SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works "out of the box." <strong>If you select "Use Other Viewer," you are responsible for implementing your own image viewer.</strong> See "Highslide Settings" and "Other Viewer Settings" below.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr>
@@ -169,7 +178,7 @@
     <td><?php _e("Display photo captions:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_captions]" value="y"<?php
         if ($shashin_options['album_photos_captions'] == 'y') echo ' checked="checked"'; ?> />
-            <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+            <?php _e("Yes", SHASHIN_L10N_NAME); ?>
         <input type="radio" name="shashin_options[album_photos_captions]" value="n"<?php
         if ($shashin_options['album_photos_captions'] == 'n') echo ' checked="checked"'; ?> />
             <?php _e("No", SHASHIN_L10N_NAME); ?></td>
@@ -180,7 +189,7 @@
     <td><?php _e("Display album description:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[album_photos_description]" value="y"<?php
         if ($shashin_options['album_photos_description'] == 'y') echo ' checked="checked"'; ?> />
-        <?php _e("Yes", SHASHIN_L10N_NAME); ?><br />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
         <input type="radio" name="shashin_options[album_photos_description]" value="n"<?php
         if ($shashin_options['album_photos_description'] == 'n') echo ' checked="checked"'; ?> />
         <?php _e("No", SHASHIN_L10N_NAME); ?></td>
@@ -304,7 +313,7 @@
         <input type="radio" name="shashin_options[highslide_hide_controller]" value="0"<?php
         if ($shashin_options['highslide_hide_controller'] == '0') echo ' checked="checked"'; ?> />
             <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("Whether the slideshow controller should be hidden when the mouse leaves the full-size image.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Whether the slideshow controller should be hidden when the mouse leaves the expanded image.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr>
@@ -373,4 +382,3 @@
         </form>
     </div>
 </div>
-<?php var_dump(time()); ?>

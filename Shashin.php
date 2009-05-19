@@ -120,7 +120,7 @@ class Shashin {
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
         add_action('plugins_loaded', array('ShashinWidget', 'initWidgets'));
-        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminWidgetCSS'));
+        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
         add_action('template_redirect', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
 
         // the 0 priority flag gets the shashin div in before the autoformatter
@@ -181,7 +181,6 @@ class Shashin {
             'scheduled_update' => 'n',
             'theme_max_size' => 640,
             'photos_per_page' => null,
-            'caption_date' => 'n',
             'caption_exif' => 'n',
         );
 
@@ -316,6 +315,9 @@ class Shashin {
     function initAdminMenus() {
         add_options_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getOptionsMenu'));
         add_management_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getAdminMenu'));
+        if (basename($_SERVER['REQUEST_URI']) == SHASHIN_FILE) {
+            add_action("admin_print_scripts", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
+        }
     }
 
     /**
@@ -629,8 +631,7 @@ class Shashin {
                 }
 
                 // deal with y/n checkbox inputs (better abstraction for this would be nice...)
-                $checkboxes = array('other_link_title', 'other_image_title',
-                    'prefix_captions', 'caption_date', 'caption_exif');
+                $checkboxes = array('other_link_title', 'other_image_title');
 
                 foreach ($checkboxes as $checkbox) {
                     if (!$_REQUEST['shashin_options'][$checkbox]) {
@@ -703,13 +704,16 @@ class Shashin {
     }
 
     /**
-     * Gets the Shashin Widget Admin CSS file, for inclusion in the document head.
+     * Gets the Shashin Admin CSS file, for inclusion on the widget management
+     * page and the Shashin tools page.
      *
      * @static
      * @access public
      */
-    function getAdminWidgetCSS() {
+    function getAdminHeadTags() {
+        //wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/shashin-admin.css', false, SHASHIN_VERSION);
         echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . '/shashin-admin.css" />';
+
     }
 
     /**
