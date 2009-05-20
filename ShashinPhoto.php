@@ -351,7 +351,7 @@ class ShashinPhoto {
         // check to see if we're making a list of photos from salbumphotos, or
         // from salbumthumbs/salbumlist ($album_list_parent = true)
         // the is_numeric check also provides a de facto check on XSS attacks
-        if (!$match && is_numeric($_REQUEST['shashin_album_key'])) {
+        if (is_numeric($_REQUEST['shashin_album_key'])) {
             $album_list_parent = true;
             $match['album_key'] = $_REQUEST['shashin_album_key'];
             $match['max_size'] = $shashin_options['album_photos_max'];
@@ -793,7 +793,7 @@ class ShashinPhoto {
 
         $markup .= ' />';
 
-        if ($shashin_options['image_display'] != 'none') {
+        if ($shashin_options['image_display'] != 'none' && !$admin) {
             $markup .= '</a>';
         }
 

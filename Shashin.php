@@ -315,8 +315,8 @@ class Shashin {
     function initAdminMenus() {
         add_options_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getOptionsMenu'));
         add_management_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getAdminMenu'));
-        if (basename($_SERVER['REQUEST_URI']) == SHASHIN_FILE) {
-            add_action("admin_print_scripts", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
+        if (strpos(basename($_SERVER['REQUEST_URI']), SHASHIN_FILE) !== false) {
+            add_action("admin_print_styles", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
         }
     }
 
@@ -705,15 +705,13 @@ class Shashin {
 
     /**
      * Gets the Shashin Admin CSS file, for inclusion on the widget management
-     * page and the Shashin tools page.
+     * page and the Shashin admin pages.
      *
      * @static
      * @access public
      */
     function getAdminHeadTags() {
-        //wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/shashin-admin.css', false, SHASHIN_VERSION);
-        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . '/shashin-admin.css" />';
-
+        wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/shashin-admin.css', false, SHASHIN_VERSION);
     }
 
     /**

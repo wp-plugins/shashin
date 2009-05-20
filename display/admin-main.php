@@ -39,7 +39,7 @@
 
     if ($all_albums) {
         echo '<p>';
-        _e("Click an album title to view its photos. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME);
+        _e("Click an album title to view its photos. See the <a href='#ref'>quick reference</a> below for help with Shashin album tags. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME);
         echo "</p>\n";
         echo '<form action="' . SHASHIN_ADMIN_URL . '" method="post">' . "\n";
         echo '<input type="hidden" name="shashin_action" value="update_albums" />' . "\n";
@@ -48,22 +48,37 @@
         echo '<th class="manage-column"><a href="'
             . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'title') ? 'title%20desc' : 'title')
-            . '">' . __("Title", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Title", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'title desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'title' || !$_GET['shashin_orderby']) ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'album_key') ? 'album_key%20desc' : 'album_key')
-            . '">' . __("Album Key", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Album Key", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'album_key desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'album_key') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Sync", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Delete", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'photo_count') ? 'photo_count%20desc' : 'photo_count')
-            . '">' . __("Photo Count", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Photo Count", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'photo_count desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'photo_count') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'pub_date') ? 'pub_date%20desc' : 'pub_date')
-            . '">' . __("Pub Date", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Pub Date", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'pub_date desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'pub_date') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'last_updated') ? 'last_updated%20desc' : 'last_updated')
-            . '">' . __("Last Sync", SHASHIN_L10N_NAME). "</a></th>\n";
+            . '">' . __("Last Sync", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'last_updated desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'last_updated') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo "</tr>\n";
 
         $i = 1;
@@ -151,8 +166,8 @@
 
     <p><?php _e("The URL should have one of these formats:", SHASHIN_L10N_NAME); ?></p>
 
-    <p><?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em><br />
-    <strong><?php _e("- OR -", SHASHIN_L10N_NAME); ?></strong><br />
+    <p><?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em>
+    <strong><?php _e("OR", SHASHIN_L10N_NAME); ?></strong>
     <?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em>/<em><?php _e("albumname", SHASHIN_L10N_NAME); ?></em></p>
 
     <p><?php _e("Picasa URL:", SHASHIN_L10N_NAME); ?>
@@ -165,7 +180,7 @@
 
     <hr />
 
-    <h3><?php _e("Album Tags Quick Reference", SHASHIN_L10N_NAME); ?></h3>
+    <h3><a name="ref"></a><?php _e("Album Tags Quick Reference", SHASHIN_L10N_NAME); ?></h3>
 
     <dl class="shashin_help">
     <dt><?php _e("Display thumbnails for your albums in a table layout", SHASHIN_L10N_NAME); ?></dt>
