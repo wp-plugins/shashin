@@ -51,7 +51,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.3');
+define('SHASHIN_VERSION', '2.5');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -570,6 +570,11 @@ class Shashin {
                 $sync_all = array('input_type' => 'select', 'input_subgroup' => $user_names);
             }
 
+            // check that re-activation has been done
+            if ($shashin_options['version'] != SHASHIN_VERSION) {
+                $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+            }
+
             require(SHASHIN_DIR . '/display/admin-main.php');
         }
 
@@ -648,6 +653,11 @@ class Shashin {
 
         $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
         $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
+
+        // check that re-activation has been done
+        if ($shashin_options['version'] != SHASHIN_VERSION) {
+            $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+        }
 
         // Get the markup and display
         require(SHASHIN_DIR . '/display/options-main.php');

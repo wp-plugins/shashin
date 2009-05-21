@@ -348,11 +348,12 @@ class ShashinPhoto {
     function getAlbumPhotosMarkup($match) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
-        // check to see if we're making a list of photos from salbumphotos, or
-        // from salbumthumbs/salbumlist ($album_list_parent = true)
+        // check to see if we're making a list of photos from salbumphotos
+        // (which has max_size), or from salbumthumbs/salbumlist (which doesn't)
+        $salbumphotos = $match['max_size'] ? true : false;
+
         // the is_numeric check also provides a de facto check on XSS attacks
         if (is_numeric($_REQUEST['shashin_album_key'])) {
-            $album_list_parent = true;
             $match['album_key'] = $_REQUEST['shashin_album_key'];
             $match['max_size'] = $shashin_options['album_photos_max'];
             $match['max_cols'] = $shashin_options['album_photos_cols'];
@@ -386,7 +387,7 @@ class ShashinPhoto {
 
         $desc = "";
 
-        if ($album_list_parent) {
+        if (!$salbumphotos) {
             $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Return to album list", SHASHIN_L10N_NAME) . '</a></span>';
         }
 
@@ -415,7 +416,7 @@ class ShashinPhoto {
                 $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; Previous</a></div>';
             }
 
-            if ($shashin_page < $_SESSION['shashin_last_page']) {
+            if ($shashin_page < $_SESSION['shashin_last_page_' . $match['album_key']]) {
                 $link_next = $link . '&amp;shashin_page=' . ($shashin_page + 1);
                 $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">Next &raquo;</a></div>';
             }
@@ -628,10 +629,8 @@ class ShashinPhoto {
             $opt_caption = $caption;
         }
 
-        // set the caption to include the date and time if requested,
-        // and if we're not including exif data (since it's already in exif)
-        if ($shashin_options['caption_date'] == 'y' && $shashin_options['caption_exif'] == 'n'
-          && $this->data['taken_timestamp']) {
+        // set the caption to include the date if requested
+        if ($shashin_options['caption_exif'] == 'date' && $this->data['taken_timestamp']) {
             $caption .= " &ndash; " . date("d-M-Y", $this->data['taken_timestamp']);
         }
 
@@ -804,7 +803,7 @@ class ShashinPhoto {
 
         // add date and exif data to the highslide caption if requested
         // and data exists
-        if ($shashin_options['caption_exif'] == 'y' && $this->data['taken_timestamp']) {
+        if ($shashin_options['caption_exif'] == 'all' && $this->data['taken_timestamp']) {
             $caption .= '<span class="shashin_caption_exif">'
                 . date("d-M-Y H:i", $this->data['taken_timestamp'])
                 . " &ndash; " . $this->data['make'] . " " . $this->data['model']
