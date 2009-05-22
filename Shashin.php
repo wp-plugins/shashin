@@ -179,7 +179,8 @@ class Shashin {
             'album_photos_captions' => 'n',
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
-            'theme_max_size' => 640,
+            'theme_max_size' => 600,
+			'theme_max_single' => 576,
             'photos_per_page' => null,
             'caption_exif' => 'n',
         );
@@ -643,6 +644,9 @@ class Shashin {
                         $_REQUEST['shashin_options'][$checkbox] = 'n';
                     }
                 }
+
+				// determine the largest Picasa size for single images
+     			$shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
 
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
                 update_option('shashin_options', serialize($shashin_options));
