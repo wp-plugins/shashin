@@ -1,0 +1,36 @@
+2.3.4
+ShashinAlbum::deleteAlbum - was not correctly checking for "false" on query error
+ShashinAlbum::getAlbumPhotos - sets timestamp to 0 if photo doesn't have one (fix for mySQL error under Windows)
+ShashinAlbum::getAlbumThumbsMarkup - checks album key when displaying album photos (fixes bug if there were multiple salbumthumbs tags on one page)
+ShashinAlbum::getAlbumListMarkup - fixed multiple bugs
+clarified organization of shashin.css
+
+
+wish list:
+
+editor buttons
+support for new highslide slideshow feature
+custom captions (allow where y or n is put now)
+embed Picasa flash slideshow: http://picasa.google.com/support/bin/answer.py?answer=66969
+timeout when adding/updating a lot of albums - set_time_limit(120); for now
+brian hsu updates
+allow for "newest" album in random photo display
+separate albums by username in display
+unlisted album support
+
+
+in 2.4:
+
+other viewer support
+exif data in captions
+keep track of order in RSS feed-  save that as an ordering option for photos
+pagination of photos
+option to center Shashin tags
+background dimming option: http://highslide.com/ref/hs.dimmingOpacity
+hide controlbar on mouseout: http://highslide.com/ref/hs.registerOverlay
+vertical and horizontal position options for Highslide control bar. See http://highslide.com/ref/hs.registerOverlay
+
+
+translation contacts:
+
+
