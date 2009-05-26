@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.1
 Tested up to: 2.7.1
-Stable tag: 2.3.5
+Stable tag: 2.4
 
 Shashin is a powerful WordPress plugin that lets you display Picasa photos, albums, and videos anywhere in your WordPress site.
 
@@ -18,8 +18,10 @@ Shashin is a powerful WordPress plugin that lets you display Picasa photos, albu
 * New settings for customizing Highslide's borders, navigation bar, and background color/opacity.
 * Dynamically set thumbnails sizes and the number of thumbnail columns to suit your WordPress theme (this means you don't have to worry about images being too large or small if you switch to a wider or narrower theme).
 * Show camera EXIF data in Highslide captions.
-* Improved usabilty for the Shashin admin screens, with detailed examples of Shashin tags.
+* Improved usability for the Shashin admin screens, with detailed examples of Shashin tags.
 * Align images and groups of thumbnails to the center
+* Specify an alternate image to use as a thumbnail - this is often useful for videos.
+* Includes the latest version of Highslide (4.1.4)
 
 **Overview**
 

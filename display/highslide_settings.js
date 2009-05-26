@@ -1,3 +1,13 @@
+/**
+ * Accepts variables passed in from Shashin, and customizes the display of Highslide.
+ *
+ * This file is part of Shashin. Please see the Shashin.php file for
+ * copyright and license information.
+ *
+ * @author Michael Toppa
+ * @version 2.4
+ */
+
 // The "-0" and "!!" are for type casting, as all vars brought over
 // from wp_localize_script come in as strings
 hs.graphicsDir = highslide_settings.graphics_dir;

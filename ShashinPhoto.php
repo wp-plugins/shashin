@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -430,39 +430,39 @@ class ShashinPhoto {
 
     /**
      * Finds the maximum possible Picasa image size for a given number
-	 * of thumbnail columns. Assumes 10px of padding/margin per image.
-	 *
-	 * NOTE: The calculation will be incorrect for pictures with a
-	 * portrait orientation
-	 *
+     * of thumbnail columns. Assumes 10px of padding/margin per image.
+     *
+     * NOTE: The calculation will be incorrect for pictures with a
+     * portrait orientation
+     *
      * @static
      * @access private
      * @param int $theme_max The content width of the theme, minus padding
      * @param int $cols The number of columns of thumbnails
      * @return int The largest possible allowed Picasa size
      */
-	function _setMaxPicasaSize($theme_max, $cols) {
-		if (!is_numeric($theme_max) || !is_numeric($cols)) {
-			return 0;
-		}
+    function _setMaxPicasaSize($theme_max, $cols) {
+        if (!is_numeric($theme_max) || !is_numeric($cols)) {
+            return 0;
+        }
 
-		$max_size = $theme_max / $cols;
-		$max_size -= 10; // guess for padding/margins per image
+        $max_size = $theme_max / $cols;
+        $max_size -= 10; // guess for padding/margins per image
 
-		// figure out which allowed Picasa size is closest, but not larger
-		// $sizes is ordered from smallest to largest
-		$sizes = unserialize(SHASHIN_IMAGE_SIZES);
+        // figure out which allowed Picasa size is closest, but not larger
+        // $sizes is ordered from smallest to largest
+        $sizes = unserialize(SHASHIN_IMAGE_SIZES);
 
-		for($i=0; $i<count($sizes); $i++) {
-			// stop on the first size that's bigger and go back one
-			if ($max_size < $sizes[$i]) {
-				$picasa_max = $sizes[$i-1];
-				break;
-			}
-		}
+        for($i=0; $i<count($sizes); $i++) {
+            // stop on the first size that's bigger and go back one
+            if ($max_size < $sizes[$i]) {
+                $picasa_max = $sizes[$i-1];
+                break;
+            }
+        }
 
-		return $picasa_max;
-	}
+        return $picasa_max;
+    }
 
     /**
      * Generates an xhtml table containing the passed in photos. Note that
@@ -493,7 +493,7 @@ class ShashinPhoto {
         // if 'max' is the width, figure out the size for the thumbnails
         // (this will be imperfect if they're all portrait orientation...)
         else if ($match['max_size'] == 'max') {
-			$match['max_size'] = ShashinPhoto::_setMaxPicasaSize($shashin_options['theme_max_size'], $match['max_cols']);
+            $match['max_size'] = ShashinPhoto::_setMaxPicasaSize($shashin_options['theme_max_size'], $match['max_cols']);
         }
 
         else if ($match['max_cols'] == 'max') {

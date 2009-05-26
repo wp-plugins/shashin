@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage AdminPanels
  */
@@ -81,7 +81,7 @@
     <tr style="vertical-align: top;">
     <td><?php _e("Maximum image width for your theme:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="text" name="shashin_options[theme_max_size]" value="<?php echo $shashin_options['theme_max_size']; ?>" size="30" /></td>
-    <td><?php _e("The width of your theme's content area, minus any padding. If you use the word 'max' for the size in your Shashin tags, Shashin will use the closest, smaller supported Picasa size for the images. You can use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The width of your theme's content area in pixels, minus any padding. If you use the word 'max' for the size in your Shashin tags, Shashin will use the closest, smaller supported Picasa size for the images. You can use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
