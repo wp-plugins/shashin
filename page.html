@@ -16,17 +16,17 @@ Shashin is a powerful WordPress plugin that enables you display Picasa images an
 
 <ul>
 <li>Embed a gallery of your Picasa albums, and all the photos and videos in each album, with customizable pagination of photos.</li>
-<li><a href="http://vikjavev.no/highslide/">Highslide</a> comes included with Shashin, for displaying your images and videos. You can configure Shashin to work with other viewers as well, such as Lightbox or Fancybox.</li>
+<li><a href="http://highslide.com/">Highslide</a> comes included with Shashin, for displaying your images and videos. You can configure Shashin to work with other viewers as well, such as Lightbox, Thickbox, Fancybox, etc.</li>
 <li>Pick individual photos or videos to display, in any size supported by Picasa.</li>
 <li>Pick photos and videos from any combination of albums to display in groups of thumbnails.</li>
 <li>Show thumbnails of your newest photos and videos, from one or more albums.</li>
 <li>Display album thumbnails for albums you choose, or all your albums, sorted however you like. Includes links to Google Maps.</li>
 <li>Display any number of random photos and videos, from one or more albums. You can also choose to exclude certain photos or albums from random display.</li>
 <li>Use widgets for all of the above!</li>
-<li>Optionally include camera EXIF data in photo captions</li>
-<li>Dynamically set thumbnail sizes or columns to suit the width of your theme (useful if you change themes in the future)</li>
-<li><a href="http://en.wikipedia.org/wiki/Internationalization_and_localization">Internationalization</a>: Shashin is designed to support translation into other languages (please contribute a translation if you're bilingual!)</li>
-<li>Customize the Shashin stylesheet to suit the theme of your site.</li>
+<li>Optionally include camera EXIF data in photo captions.</li>
+<li>Dynamically set thumbnail sizes or columns to suit the width of your theme (useful if you change themes in the future).</li>
+<li><a href="http://en.wikipedia.org/wiki/Internationalization_and_localization">Internationalization</a>: Shashin is designed to support translations into other languages, and comes with several translations (please contribute a translation if you're bilingual!).</li>
+<li>Customize the Shashin and Highslide stylesheets to suit the theme of your site.</li>
 <li>Schedule daily automatic synchronization of Shashin with your Picasa albums.</li>
 </ul>
 
@@ -40,7 +40,7 @@ Please use the comments section in [p2p type="cat-slug" value="shashin" text="my
 
 <h3>Commercial Use of Highslide</h3>
 
-Shashin comes bundled with Highslide. Although I do not charge anything for using Shashin on a commercial site, <strong>Highslide is free for non-commercial use only</strong>. If you are using Shashin for commercial purposes, you must either 1. deactivate Shashin's Highslide option or 2. <a href="http://vikjavev.no/highslide/">pay the appropriate fee for Highslide to its creator</a>.
+Shashin comes bundled with Highslide. Although I do not charge anything for using Shashin on a commercial site, <strong>Highslide is free for non-commercial use only</strong>. If you are using Shashin for commercial purposes, you must either 1. deactivate Shashin's Highslide option or 2. <a href="http://highslide.com/#licence">pay the appropriate fee for Highslide to its creator</a>.
 
 <h3><a name="top" id="top" href="#shashinA">Usage Guide</a></h3>
 
@@ -49,8 +49,10 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
 <li><a href="#shashin1">Installing and configuring Shashin</a></li>
 <li><a href="#shashin2">Keeping Shashin synchronized with Picasa</a></li>
 <li><a href="#shashin3">Using Shashin with Highslide</a>
+<li><a href="#shashin3.5">Using Shashin with other image viewers, such as Lightbox</a></li>
 <li><a href="#shashin4">Using Shashin tags</a>
     <ul>
+    <li><a href="#shashin4.5">Controlling the position of Shashin's thumbnails</a></li>
     <li><a href="#shashin5">Supported image sizes</a></li>
     <li><a href="#shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></li>
     <li><a href="#shashin7">Displaying thumbnails of your albums and linking them to the photos in each album - the &#91;salbumthumbs&#93; tag and widget, and the &#91;salbumlist&#93; tag</a></li>
@@ -100,12 +102,7 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
 <li>Go to the "Tools" menu and follow the directions to add your first album!</li>
 </ol>
 
-<strong>Important Notes:</strong>
-
-<ul>
-<li>If you choose to use an image viewer other than Highslide, you are responsible for installing it, configuring it, and understanding it yourself. I am happy to consider making further adjustments to Shashin for supporting other viewers, but I can not help you with setting up Lightbox, Fancybox, Thickbox, etc.</li>
-<li>Shashin will add two tables to your WordPress database, named wp_shashin_album and wp_shashin_photo. You should include these tables when making backups of your WordPress tables. The Shashin tags rely on key numbers from these tables that you won't get back if you lose the data in these tables.</li>
-</ul>
+<strong>Note:</strong> Shashin will add two tables to your WordPress database, named wp_shashin_album and wp_shashin_photo. You should include these tables when making backups of your WordPress tables. The Shashin tags rely on key numbers from these tables that you won't get back if you lose the data in these tables.
 
 <a href="#top">&uArr; top</a>
 
@@ -121,23 +118,46 @@ If you have an extremely large number of albums or photos, see the <a href="#sha
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin3">Using Shashin with Highslide</a></strong>
+<h4><a name="shashin3">Using Shashin with Highslide</a></h4>
 
 Shashin comes bundled with a specially configured version of Highslide, so you don't need to download Highslide separately. On the "Settings" page you can specify the maximum size for images displayed with Highslide. For any photos that you display in groups, the Highslide navigation controls will appear on the image display. For images displayed individually, no navigation controls will appear. Highslide is activated for use with Shashin by default, but you can turn it off on the "Settings" page if you don't wish to use it.
 
-Do not upgrade Highslide independently of Shashin, as that may cause it to stop working with Shashin. Note that <strong><a href="http://vikjavev.no/highslide/">Highslide is free for non-commercial use only</a>.</strong>
+Do not upgrade Highslide independently of Shashin, as that may cause it to stop working with Shashin. Note that <strong><a href="http://highslide.com/#licence">Highslide is free for non-commercial use only</a>.</strong>
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin4">Using Shashin tags</a></strong>
+<h4><a name="shashin3.5">Using Shashin with other image viewers, such as Lightbox</a></h4>
 
-There are a number of options available in Shashin's tags. The easiest thing to do is to keep two windows or tabs open in your browser - one for writing your post and one for the Shashin "Tools" page. These pages have example markup for Shashin tags that you can copy and paste into your post. After pasting them you can then edit the options as needed.
+Shashin provides settings that allow you to configure it for use image viewers other than Highslide. If you want to use another viewer, there are several things to consider:
 
-<strong>An important thing to note is that Shashin assigns its own numbers to Picasa albums and photos. In the documentation below these are referred to as album keys and photo keys.</strong> This is mainly to avoid the impracticality of you having to type the extremely long Picasa ID numbers when you use Shashin tags.
+<ul>
+<li>If you choose to use an image viewer other than Highslide, you are responsible for installing it, configuring it, and understanding it yourself. I am happy to consider making adjustments to Shashin for supporting other viewers, but I can not help you with setting up Lightbox, Fancybox, Thickbox, etc.</li>
+<li>The Shashin Settings menu lets you control the "id", "class", and "title" attributes of Shashin's image tags and anchor tags. You will need to know how to structure the values for these attributes for your viewer.</li>
+<li>If you use a viewer that does not support Flash videos, your Picasa videos will not work. In that case you many want to install and configure a second viewer for videos, such as <a href="http://videobox-lb.sourceforge.net/">Videobox</a>.</li>
+</ul>
 
-A Shashin tag will be translated into an xhtml "div" container.  Always use a Shashin tag on a line by itself in your post or page. This is important because of how WordPress auto-formats your posts. If you put a Shashin tag on the same line as other text, then it will get wrapped in the paragraph tag that WordPress adds to the line. That is not valid xhtml (although in most cases browsers will still display it correctly).
+<a href="#top">&uArr; top</a>
 
-All the Shashin tags have options that let you set a <a href="http://www.w3schools.com/css/pr_class_float.asp">css float</a> value and a <a href="http://www.w3schools.com/css/pr_class_clear.asp">css clear</a> value. Both are optional. If you set a float value, there's usually no need to set a clear value (e.g. floating left or right and then clearing margins typically defeats the point of the float). Remember that the purpose of a float is to let the floated container flow around other containers. If you float an image near the end of your post, it may flow down below the post. To avoid this, put a &lt;br clear="all" /&gt; tag at the very end of your post.
+<h4><a name="shashin4">Using Shashin tags</a></h4>
+
+There are a number of options available in Shashin's tags. The easiest thing to do is to keep two windows or tabs open in your browser - one for writing your post and one for the Shashin "Tools" page. It has example markup for Shashin tags that you can copy and paste into your post. After pasting a tag, you can edit it as needed.
+
+<strong>An important thing to note is that Shashin assigns its own numbers to Picasa albums and photos. In the documentation below these are referred to as "album keys" and "photo keys".</strong> This is mainly to avoid the impracticality of you having to type the extremely long Picasa ID numbers when you use Shashin tags.
+
+A Shashin tag will be translated into an xhtml "div" container.  Always use a Shashin tag on a line by itself in your post or page. This is important because of how WordPress auto-formats your posts. If you put a Shashin tag on the same line as other text, then it will get wrapped in the paragraph tag that WordPress adds to the line. This will result in invalid xhtml, as nesting a div tag inside a paragraph tag is not allowed (although in most cases browsers will still display it correctly).
+
+<a href="#top">&uArr; top</a>
+
+<h4><a name="shashin4.5">Controlling the position of Shashin's thumbnails</a></h4>
+
+All the Shashin tags have options that let you center or float thumbnails, and control the clearing of margins.
+
+<ul>
+<li>Positioning: if you specify "left", "right", or "none" for the position in a tag, then Shashin will apply it as a <a href="http://www.w3schools.com/css/pr_class_float.asp">CSS float</a> value. If you specify "center" then Shashin will center the thumbnails using the CSS "margin-left: auto; margin-right: auto;" technique.</li>
+<li>Clearing margins: you can specify any valid <a href="http://www.w3schools.com/css/pr_class_clear.asp">CSS clear</a> value in a Shashin tag. For most layout purporses you will not need to clear margins, but the option is there if you need it.</li>
+</ul>
+
+Remember that the purpose of a floating an image is to have it flow around other elements on the page. If you float an image near the end of your post, it may flow down below the post. To avoid this, put a &lt;br clear="all" /&gt; tag at the very end of your post.
 
 <a href="#top">&uArr; top</a>
 
@@ -156,21 +176,22 @@ Note that 32, 48, 64, and 160 are special sizes. Picasa will crop them to a squa
 <strong><a name="shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></strong>
 
 In a post or page, use the simage tag:
-<pre>&#91;simage=photo_key,max_size,caption_yn,float,clear&#93;</pre>
+<pre>&#91;simage=photo_key,max_size,caption_yn,position,clear,alt_thumb&#93;</pre>
+
+<ul>
+<li>photo_key: (required) the Photo Key listed for the image in the album's page in the Shashin "Tools" menu</li>
+<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a></li>
+<li>caption_yn: (optional, defaults to 'n') use 'y' or 'n' to indicate whether you want the caption to appear under the image (you can also use 'c' to have a "Click to enlarge" caption applied to every image)</li>
+<li>position: (optional) <a href="#shashin4.5">position options</a></li>
+<li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
+<li>alt_thumb: (optional) a Photo Key for an image to substitute as the thumbnail (this is useful for videos, as Picasa sometimes does not generate good thumbnails)</li>
+</ul>
 
 Example:
 <pre>&#91;simage=268,200,n,left&#93;</pre>
 
 For your sidebar, you can pick the Single Image widget, or if you're not using widgets, use this code and substitute the desired values:
 <pre>&lt;?php echo Shashin::getSingle(photo_key,max_size,'caption_yn','float','clear'); ?&gt;</pre>
-
-<ul>
-<li>photo_key: (required) the Photo Key listed for the image in its Shashin admin page</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a></li>
-<li>caption_yn: (optional, defaults to 'n') use y or n to indicate whether you want the caption to appear under the image (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
-</ul>
 
 <a href="#top">&uArr; top</a>
 
