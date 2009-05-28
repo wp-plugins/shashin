@@ -194,7 +194,9 @@
     <dd><?php _e("Example: [salbumlist=pub_date desc,y]  All albums in reverse order by publication date, with additional album information shown between the title and description (photo count, publication date, and location)", SHASHIN_L10N_NAME); ?></dd>
     <dd><?php _e("Example: [salbumlist=2|24|33,n] Albums with Shashin keys 2, 24, and 33 only, no additional information shown.", SHASHIN_L10N_NAME); ?></dd>
     <dd><?php _e("Notes: For ordering, options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering).", SHASHIN_L10N_NAME); ?></dd>
-    <dt>See the <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin page", SHASHIN_L10N_NAME); ?></a> for detailed instructions</dt>
+    <dt><?php _e("See the", SHASHIN_L10N_NAME); ?>
+        <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin page", SHASHIN_L10N_NAME); ?></a>
+        <?php _e("for detailed instructions.", SHASHIN_L10N_NAME); ?></dt>
     </dl>
 </div>
 

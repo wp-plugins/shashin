@@ -413,12 +413,12 @@ class ShashinPhoto {
 
             if ($shashin_page > 1) {
                 $link_back = $link . '&amp;shashin_page=' . ($shashin_page - 1);
-                $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; Previous</a></div>';
+                $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; ' . __('Previous', SHASHIN_L10N_NAME) . '</a></div>';
             }
 
             if ($shashin_page < $_SESSION['shashin_last_page_' . $match['album_key']]) {
                 $link_next = $link . '&amp;shashin_page=' . ($shashin_page + 1);
-                $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">Next &raquo;</a></div>';
+                $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">' . __('Next', SHASHIN_L10N_NAME) . ' &raquo;</a></div>';
             }
 
             $desc .= "</div>\n";

@@ -137,7 +137,9 @@ $edit_link = SHASHIN_ADMIN_URL
     <dd><?php _e("[snewest=source,max_size,max_cols,how_many,caption_yn,position,clear]", SHASHIN_L10N_NAME); ?></dd>
     <dd><?php _e("See the srandom examples above - the snewest tag works the same way", SHASHIN_L10N_NAME); ?></dd>
 
-    <dt>See the <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin page", SHASHIN_L10N_NAME); ?></a> for detailed instructions</dt>
+    <dt><?php _e("See the", SHASHIN_L10N_NAME); ?>
+        <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin page", SHASHIN_L10N_NAME); ?></a>
+        <?php _e("for detailed instructions.", SHASHIN_L10N_NAME); ?></dt>
     </dl>
 
 </div>

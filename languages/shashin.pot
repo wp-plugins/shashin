@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-26 08:05-0400\n"
+"POT-Creation-Date: 2009-05-28 08:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,6 +89,14 @@ msgstr ""
 
 #: ShashinPhoto.php:391
 msgid "Return to album list"
+msgstr ""
+
+#: ShashinPhoto.php:416
+msgid "Previous"
+msgstr ""
+
+#: ShashinPhoto.php:421
+msgid "Next"
 msgstr ""
 
 #: ShashinPhoto.php:490
@@ -333,6 +341,14 @@ msgstr ""
 msgid "Shashin Error: unable to retrieve albums."
 msgstr ""
 
+#: ShashinAlbum.php:718 ShashinAlbum.php:841
+msgid "pictures"
+msgstr ""
+
+#: ShashinAlbum.php:718 ShashinAlbum.php:841
+msgid "picture"
+msgstr ""
+
 #: display/widget_random.php:17 display/admin-main.php:51
 #: display/widget_thumbs.php:17 display/widget_single.php:17
 #: display/widget_album_thumbs.php:17 display/widget_newest.php:17
@@ -549,7 +565,15 @@ msgid ""
 msgstr ""
 
 #: display/admin-main.php:197 display/admin-edit.php:140
+msgid "See the"
+msgstr ""
+
+#: display/admin-main.php:198 display/admin-edit.php:141
 msgid "Shashin page"
+msgstr ""
+
+#: display/admin-main.php:199 display/admin-edit.php:142
+msgid "for detailed instructions."
 msgstr ""
 
 #: display/widget_thumbs.php:21
@@ -960,6 +984,19 @@ msgstr ""
 
 #: display/options-main.php:371
 msgid "Are you sure you want to uninstall Shashin?"
+msgstr ""
+
+#: display/widget_album_thumbs.php:22
+msgid ""
+"If you want to display all your albums, indicate how to order them: options "
+"are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse "
+"ordering)."
+msgstr ""
+
+#: display/widget_album_thumbs.php:23
+msgid ""
+"<strong>- OR -</strong> If you want only certain albums, enter their album "
+"keys instead, for example '12|22|14|17'"
 msgstr ""
 
 #: display/widget_album_thumbs.php:25
