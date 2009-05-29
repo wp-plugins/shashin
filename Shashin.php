@@ -701,8 +701,8 @@ class Shashin {
                 $highslide_css = SHASHIN_DISPLAY_URL . '/highslide.css';
             }
 
-            wp_enqueue_style('highslide_css', $highslide_css, false, '4.1.4');
-            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, '4.1.4');
+            wp_enqueue_style('highslide_css', $highslide_css, false, SHASHIN_VERSION);
+            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, SHASHIN_VERSION);
             wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, '2.1');
             wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
             wp_localize_script('highslide_settings_js', 'highslide_settings', array(
