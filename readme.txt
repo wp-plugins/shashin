@@ -10,20 +10,6 @@ Shashin is a powerful WordPress plugin that lets you display Picasa photos, albu
 
 == Description ==
 
-**New in Shashin 2.4**
-
-* Support for image viewers other than Highslide, such as Lightbox, Fancybox, etc.
-* Display album photos using the order you've set in Picasa.
-* Customizable pagination of album photos.
-* New settings for customizing Highslide's borders, navigation bar, and background color/opacity.
-* Dynamically set thumbnails sizes and the number of thumbnail columns to suit your WordPress theme (this means you don't have to worry about images being too large or small if you switch to a wider or narrower theme).
-* Show camera EXIF data in Highslide captions.
-* Improved usability for the Shashin admin screens, with detailed examples of Shashin tags.
-* Align images and groups of thumbnails to the center
-* Specify an alternate image to use as a thumbnail - this is often useful for videos.
-* Updated to the latest version of Highslide (4.1.4)
-* Includes Russian and Dutch translations
-
 **Overview**
 
 Shashin has many features for displaying your Picasa photos and videos in your Wordpress posts and pages:
@@ -39,6 +25,20 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 * Customize the Shashin and Highslide stylesheets to suit the theme of your site.
 * Internationalization: Shashin supports translations into other languages (please contribute a translation if you're bilingual!)
 * Schedule daily automatic synchronization of Shashin with your Picasa albums.
+
+**New in Shashin 2.4**
+
+* Support for image viewers other than Highslide, such as Lightbox, Fancybox, etc.
+* Display album photos using the order you've set in Picasa.
+* Customizable pagination of album photos.
+* New settings for customizing Highslide's borders, navigation bar, and background color/opacity.
+* Dynamically set thumbnails sizes and the number of thumbnail columns to suit your WordPress theme (this means you don't have to worry about images being too large or small if you switch to a wider or narrower theme).
+* Show camera EXIF data in Highslide captions.
+* Improved usability for the Shashin admin screens, with detailed examples of Shashin tags.
+* Align images and groups of thumbnails to the center
+* Specify an alternate image to use as a thumbnail - this is often useful for videos.
+* Updated to the latest version of Highslide (4.1.4)
+* Includes Russian and Dutch translations
 
 == Installation ==
 
