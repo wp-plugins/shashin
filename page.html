@@ -36,7 +36,7 @@ See my personal [p2p type="slug" value="photo-albums" text="photos page"] for an
 
 <h3>Help!</h3>
 
-Please use the comments section in [p2p type="cat-slug" value="shashin" text="my most recent blog post about Shashin"] for questions.
+Please use the comments section in [p2p type="cat_slug" value="shashin" text="my most recent blog post about Shashin"] for questions.
 
 <h3>Commercial Use of Highslide</h3>
 
@@ -55,7 +55,8 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
     <li><a href="#shashin4.5">Controlling the position of Shashin's thumbnails</a></li>
     <li><a href="#shashin5">Supported image sizes</a></li>
     <li><a href="#shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></li>
-    <li><a href="#shashin7">Displaying thumbnails of your albums and linking them to the photos in each album - the &#91;salbumthumbs&#93; tag and widget, and the &#91;salbumlist&#93; tag</a></li>
+    <li><a href="#shashin7">Displaying thumbnails of your albums in table layout - the &#91;salbumthumbs&#93; tag and widget</li>
+    <li><a href="#shashin7.5">Displaying thumbnails of your albums and their descriptions in a list layout - the &#91;salbumlist&#93; tag</a></li>
     <li><a href="#shashin8">Displaying all the photos from a single album - the &#91;salbumphotos&#93; tag</a></li>
     <li><a href="#shashin9">Displaying a table of any photos you choose - the &#91;sthumbs&#93; tag and widget</a></li>
     <li><a href="#shashin10">Displaying random photos - the &#91;srandom&#93; tag and widget</a></li>
@@ -157,11 +158,11 @@ All the Shashin tags have options that let you center or float thumbnails, and c
 <li>Clearing margins: you can specify any valid <a href="http://www.w3schools.com/css/pr_class_clear.asp">CSS clear</a> value in a Shashin tag. For most layout purporses you will not need to clear margins, but the option is there if you need it.</li>
 </ul>
 
-Remember that the purpose of a floating an image is to have it flow around other elements on the page. If you float an image near the end of your post, it may flow down below the post. To avoid this, put a &lt;br clear="all" /&gt; tag at the very end of your post.
+Remember that the purpose of floating an image is to have it flow around other elements on the page. If you float an image near the end of your post, it may flow down below the post. To avoid this, put a &lt;br clear="all" /&gt; tag at the very end of your post.
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin5">Supported image sizes</a></strong>
+<h4><a name="shashin5">Supported image sizes</a></h4>
 
 Picasa supports only a specific set of image sizes. If you try to use a size not listed, your image will not display at all. The sizes are:
 
@@ -171,73 +172,105 @@ Note that these sizes represent a "maximum dimension." This means if you pick 64
 
 Note that 32, 48, 64, and 160 are special sizes. Picasa will crop them to a square shape. This makes them good sizes for displaying tables of thumbnails.
 
+The Shashin tags also allow you to use the word "max" as an image size. In the Shashin Settings menu, if you provide the maximum width of your theme's content area, Shashin will use that to dynamically determine the largest image size it can use. It will even take into account the number of thumbnail columns. [p2p type="slug" value="shashin-24-beta-available" text="See this post on new features in Shashin 2.4 for more details"].
+
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></strong>
+<h4><a name="shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></h4>
 
 In a post or page, use the simage tag:
 <pre>&#91;simage=photo_key,max_size,caption_yn,position,clear,alt_thumb&#93;</pre>
 
 <ul>
 <li>photo_key: (required) the Photo Key listed for the image in the album's page in the Shashin "Tools" menu</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a></li>
+<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a> or the keyword "max"</li>
 <li>caption_yn: (optional, defaults to 'n') use 'y' or 'n' to indicate whether you want the caption to appear under the image (you can also use 'c' to have a "Click to enlarge" caption applied to every image)</li>
 <li>position: (optional) <a href="#shashin4.5">position options</a></li>
 <li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
 <li>alt_thumb: (optional) a Photo Key for an image to substitute as the thumbnail (this is useful for videos, as Picasa sometimes does not generate good thumbnails)</li>
 </ul>
 
-Example:
-<pre>&#91;simage=268,200,n,left&#93;</pre>
+<h5>Tag examples</h5>
 
-For your sidebar, you can pick the Single Image widget, or if you're not using widgets, use this code and substitute the desired values:
-<pre>&lt;?php echo Shashin::getSingle(photo_key,max_size,'caption_yn','float','clear'); ?&gt;</pre>
+This displays the photo with Shashin key 17, maximum possible size, show the caption, centered (the size of the image depends on the width of your theme's content area):
+
+<pre>&#91;simage=17,max,y,center&#93;</pre>
+
+Displays the video with Shashin key 22, size of 200 pixels, no caption, float left, do not clear margins, use photo with Shashin key 33 as the thumbnail:
+
+<pre>&#91;simage=22,200,n,left,none,33&#93;</pre>
+
+<h5>Displaying in the sidebar</h5>
+
+You can pick the Shashin Single Image widget in your widgets menu, or if you're not using widgets, use this code and substitute the desired values:
+
+<pre>&lt;?php echo Shashin::getSingle(photo_key,max_size,'caption_yn','position','clear'); ?&gt;</pre>
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin7">Displaying thumbnails of your albums and linking them to the photos in each album - the &#91;salbumthumbs&#93; tag and widget, and the &#91;salbumlist&#93; tag</a></strong>
+<h4><a name="shashin7">Displaying thumbnails of your albums in a table layout - the &#91;salbumthumbs&#93; tag and widget</a></h4>
 
-In a post or page, use the the &#91;salbumthumbs&#93; tag:
-<pre>&#91;salbumthumbs=to_show,max_cols,location_yn,pubdate_yn,float,clear&#93;</pre>
+In a post or page, use the &#91;salbumthumbs&#93; tag:
 
-This example will show all your albums, in reverse order by date:
-<pre>&#91;salbumthumbs=pub_date desc,2,y,n,left&#93;</pre>
-
-You can use "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order.
-
-If you only want to show some of your albums, you can specify a list of album keys instead of a sort order. Like this:
-<pre>&#91;salbumthumbs=2|24|33,2,y,n&#93;</pre>
-
-For your sidebar, you can pick the Album Thumbnails widget, or if you're not using widgets, use this code and substitute the desired values:
-
-<pre>&lt;?php echo Shashin::getAlbumThumbs('to_show',max_cols,'location_yn','pubdate_yn','float','clear'); ?&gt;</pre>
-
-If you click on an album thumbnail and you're using Highslide, the page will reload, showing all the photos for that album (if you're not using Highslide, the links will go to the album at Picasa). The display options for the photos are set on the Shashin "Settings" page.
+<pre>&#91;salbumthumbs=to_show,max_cols,location_yn,pubdate_yn,position,clear&#93;</pre>
 
 <ul>
-<li>to_show: (required) see the two examples above (you can provide album keys or a sort order)</li>
+<li>to_show: (required) see the examples below (you can provide album keys or a sort order)</li>
 <li>max_cols: (required) how many columns the table should have</li>
 <li>location_yn: (optional, defaults to n) use y or n to indicate whether you want the location to appear under the title. A Google Maps icon will also be added</li>
 <li>pubdate_yn: (optional, defaults to n) use y or n to indicate whether you want the album's pubdate to appear under the title</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
+<li>position: (optional) <a href="#shashin4.5">position options</a></li>
+<li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
 </ul>
 
-Note that With album thumbnails, the size is fixed by Picasa at 160x160, so adjusting the size is not an option. Shashin automatically displays the album title below the thumbnail.
+<h5>Tag examples</h5>
 
-The &#91;salbumlist&#93; tag is similar to the &#91;salbumphotos&#93; tag. The difference is that it displays the album description alongside each album thumbnail. With the default CSS, the display is a two column layout, with the album titles and descriptions to the right of the thumbnails. You can adjust shashin_album_list* in shashin.css if you want a different layout.
+For showing all albums in reverse order by publication date, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page. You can use "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order:
+
+<pre>&#91;salbumthumbs=pub_date desc,3,y,n,center&#93;</pre>
+
+For showing albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left:
+
+<pre>&#91;salbumthumbs=2|24|33,1,n,y,left&#93;</pre>
+
+<h5>Displaying in the sidebar</h5>
+
+For your sidebar, you can pick the Album Thumbnails widget, or if you're not using widgets, use this code and substitute the desired values:
+
+<pre>&lt;?php echo Shashin::getAlbumThumbs('to_show',max_cols,'location_yn','pubdate_yn','position','clear'); ?&gt;</pre>
+
+<h5>Notes</h5>
+
+Album thumbnail sizes are fixed by Picasa at 160x160, so adjusting the size is not an option. Shashin automatically displays the album title below the thumbnail.
+
+If you click on an album thumbnail and you're using Highslide or your own image viewer, the page will reload, showing all the photos for that album. The display options for the photos are set on the Shashin "Settings" page. However, album thumbnails in your sidebar will always link to Picasa, as it's not practical to show all the album photos in the sidebar.
+
+<h4><a name="shashin7.5">Displaying thumbnails of your albums and their descriptions in a list layout - the &#91;salbumlist&#93; tag</a></h4>
+
+With the default layout, the album thumbnails are displayed in a two column layout, with the album titles and descriptions to the right of the thumbnails. You can adjust shashin_album_list* in shashin.css if you want a different layout.
+
 <pre>&#91;salbumlist=to_show,max_cols,info_yn&#93;</pre>
 
-Example:
-<pre>&#91;salbumlist=pub_date desc,n&#93;</pre>
+<ul>
+<li>to_show: (required) see the examples for &#91;salbumthumbs&#93; above.</li>
+<li>info_yn: (optional, defaults to n) if 'y', will display the album photo count, publication date, and location between the title and the description.</li>
+</ul>
+
+<h5>Tag examples</h5>
+
+All albums in reverse order by publication date, with additional album information shown between the title and description (photo count, publication date, and location):
+
+<pre>&#91;salbumlist=pub_date desc,y&#93;</pre>
+
+Albums with Shashin keys 2, 24, and 33 only, no additional information shown:
+
+<pre>&#91;salbumlist=2|24|33,n&#93;</pre>
+
+<h5>Displaying in the sidebar</h5>
 
 There is no widget for &#91;salbumlist&#93;, but you can put it in your sidebar with this code:
-<pre>&lt;?php echo Shashin::getAlbumList('to_show','info_yn'); ?&gt;</pre>
 
-<ul>
-<li>to_show: (required) see the examples for &#91;salbumthumbs&#93; above</li>
-<li>info_yn: (optional, defaults to n) if y, will display the album photo count, pub date, and location between the title and the description.</li>
-</ul>
+<pre>&lt;?php echo Shashin::getAlbumList('to_show','info_yn'); ?&gt;</pre>
 
 <a href="#top">&uArr; top</a>
 
