@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.3.5
+Version: 2.4
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  *
@@ -37,6 +37,12 @@ Author URI: http://www.toppa.com
 // xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
 global $wpdb;
+// from http://striderweb.com/nerdaphernalia/2008/09/hit-a-moving-target-in-your-wordpress-plugin/
+if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content');
+if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins');
+if (!defined('WP_PLUGIN_DIR'))  define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+
 define('SHASHIN_OPTIONS', get_option('shashin_options'));
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
@@ -45,14 +51,14 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.3');
+define('SHASHIN_VERSION', '2.5');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
 define('SHASHIN_USER_RSS', '/data/feed/api/user/USERNAME?kind=album&alt=rss&hl=en_US');
 define('SHASHIN_ALBUM_RSS', '/data/feed/api/user/USERNAME/albumid/ALBUMID?kind=photo&alt=rss');
 define('SHASHIN_GOOGLE_MAPS_QUERY_URL', 'http://maps.google.com/maps?q=');
-define('SHASHIN_DISPLAY_URL', get_bloginfo('wpurl') . '/' . PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/display/');
+define('SHASHIN_DISPLAY_URL', WP_PLUGIN_URL . '/' . basename(SHASHIN_DIR) . '/display');
 define('SHASHIN_FAQ_URL', 'http://www.toppa.com/shashin-wordpress-plugin');
 define('SHASHIN_GOOGLE_PLAYER_URL', 'http://video.google.com/googleplayer.swf?videoUrl=');
 define('SHASHIN_IMAGE_SIZES', serialize(array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800)));
@@ -95,8 +101,9 @@ class Shashin {
     function bootstrap() {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
-        // Add the installation and uninstallation hooks
+        // Add the activation and deactivation hooks
         register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
+        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
 
         // For handling errors on install
         if ($_GET['action'] == 'error_scrape') {
@@ -108,15 +115,15 @@ class Shashin {
         }
 
         // load localization
-        load_plugin_textdomain(SHASHIN_L10N_NAME, PLUGINDIR . '/' . basename(SHASHIN_DIR) . '/languages/');
+        load_plugin_textdomain(SHASHIN_L10N_NAME, false, basename(SHASHIN_DIR) . '/languages/');
 
         // Add the actions and filters
         add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
-        add_action('admin_head', array(SHASHIN_PLUGIN_NAME, 'getAdminCSS'));
         add_action('plugins_loaded', array('ShashinWidget', 'initWidgets'));
-        add_action('wp_head', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
+        add_action('admin_print_scripts-widgets.php', array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
+        add_action('template_redirect', array(SHASHIN_PLUGIN_NAME, 'getHeadTags'));
 
-        // the 0 priority flag gets the div in before the autoformatter
+        // the 0 priority flag gets the shashin div in before the autoformatter
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
 
@@ -126,20 +133,6 @@ class Shashin {
 
             if (!wp_next_scheduled('shashin_scheduled_update_hook')) {
                 wp_schedule_event(time(), 'daily', 'shashin_scheduled_update_hook');
-            }
-        }
-
-        register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
-
-        if ($shashin_options['image_display'] == 'highslide') {
-            // counter for assigning unique IDs to highslide images
-            if (!$_SESSION['hs_id_counter']) {
-               $_SESSION['hs_id_counter'] = 1;
-            }
-
-            // counter for distinguishing groups of Highslide photos on a page
-            if (!$_SESSION['hs_group_counter']) {
-               $_SESSION['hs_group_counter'] = 1;
             }
         }
     }
@@ -167,12 +160,29 @@ class Shashin {
             'highslide_video_height' => 480,
             'highslide_autoplay' => 'false',
             'highslide_interval' => 5000,
+            'highslide_outline_type' => 'rounded-white',
+            'highslide_dimming_opacity' => 0.75,
+            'highslide_repeat' => '1',
+            'highslide_v_position' => 'top',
+            'highslide_h_position' => 'center',
+            'highslide_hide_controller' => '0',
+            'other_rel_image' => null,
+            'other_rel_video' => null,
+            'other_rel_delimiter' => null,
+            'other_link_class' => null,
+            'other_link_title' => null,
+            'other_image_class' => null,
+            'other_image_title' => null,
             'album_photos_max' => 160,
             'album_photos_cols' => 3,
-            'album_photos_order' => 'taken_timestamp desc',
+            'album_photos_order' => 'picasa_order',
             'album_photos_captions' => 'n',
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
+            'theme_max_size' => 600,
+			'theme_max_single' => 576,
+            'photos_per_page' => null,
+            'caption_exif' => 'n',
         );
 
         // create/update tables
@@ -306,6 +316,9 @@ class Shashin {
     function initAdminMenus() {
         add_options_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getOptionsMenu'));
         add_management_page(SHASHIN_DISPLAY_NAME, SHASHIN_DISPLAY_NAME, 6, __FILE__, array(SHASHIN_PLUGIN_NAME, 'getAdminMenu'));
+        if (strpos(basename($_SERVER['REQUEST_URI']), SHASHIN_FILE) !== false) {
+            add_action("admin_print_styles", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
+        }
     }
 
     /**
@@ -337,7 +350,7 @@ class Shashin {
                 list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
 
                 if ($result === true) {
-                    $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'taken_timestamp desc';
+                    $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'picasa_order';
                     list($result, $message, $db_error) = $album->getAlbumPhotos($order_by);
                     unset($message); // no need to display a message in this case.
                 }
@@ -558,6 +571,11 @@ class Shashin {
                 $sync_all = array('input_type' => 'select', 'input_subgroup' => $user_names);
             }
 
+            // check that re-activation has been done
+            if ($shashin_options['version'] != SHASHIN_VERSION) {
+                $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+            }
+
             require(SHASHIN_DIR . '/display/admin-main.php');
         }
 
@@ -618,6 +636,18 @@ class Shashin {
                     Shashin::unscheduleUpdate();
                 }
 
+                // deal with y/n checkbox inputs (better abstraction for this would be nice...)
+                $checkboxes = array('other_link_title', 'other_image_title');
+
+                foreach ($checkboxes as $checkbox) {
+                    if (!$_REQUEST['shashin_options'][$checkbox]) {
+                        $_REQUEST['shashin_options'][$checkbox] = 'n';
+                    }
+                }
+
+				// determine the largest Picasa size for single images
+     			$shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
+
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
                 update_option('shashin_options', serialize($shashin_options));
                 $message = __("Shashin settings saved.", SHASHIN_L10N_NAME);
@@ -627,6 +657,11 @@ class Shashin {
 
         $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
         $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
+
+        // check that re-activation has been done
+        if ($shashin_options['version'] != SHASHIN_VERSION) {
+            $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+        }
 
         // Get the markup and display
         require(SHASHIN_DIR . '/display/options-main.php');
@@ -648,71 +683,49 @@ class Shashin {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
         if (file_exists(TEMPLATEPATH . '/shashin.css')) {
-            $shashin_css = get_stylesheet_directory_uri() . '/shashin.css';
+            $shashin_css = get_bloginfo('template_directory') . '/shashin.css';
         }
 
         else {
-            $shashin_css = SHASHIN_DISPLAY_URL . 'shashin.css';
+            $shashin_css = SHASHIN_DISPLAY_URL . '/shashin.css';
         }
 
-        echo '<link rel="stylesheet" type="text/css" href="' . $shashin_css . '" />' . "\n";
+        wp_enqueue_style('shashin_css', $shashin_css, false, SHASHIN_VERSION);
 
         if ($shashin_options['image_display'] == 'highslide') {
             if (file_exists(TEMPLATEPATH . '/highslide.css')) {
-                $highslide_css = get_stylesheet_directory_uri() . '/highslide.css';
+                $highslide_css = get_bloginfo('template_directory') . '/highslide.css';
             }
 
             else {
-                $highslide_css = SHASHIN_DISPLAY_URL . 'highslide.css';
+                $highslide_css = SHASHIN_DISPLAY_URL . '/highslide.css';
             }
 
-            echo '
-                <link rel="stylesheet" type="text/css" href="' . $highslide_css . '" />
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/highslide.js"></script>
-                <script type="text/javascript" src="' . SHASHIN_DISPLAY_URL . 'highslide/swfobject.js"></script>
-                <script type="text/javascript">
-                    hs.graphicsDir = \'' . SHASHIN_DISPLAY_URL . 'highslide/graphics/\';
-                    hs.align = \'center\';
-                    hs.transitions = [\'expand\', \'crossfade\'];
-                    hs.outlineType = \'rounded-white\';
-                    hs.fadeInOut = true;
-                    //hs.dimmingOpacity = 0.75;
-
-                    // Add the controlbar for slideshows
-                    function addHSSlideshow(groupID) {
-                        hs.addSlideshow({
-                            slideshowGroup: groupID,
-                            interval: ' . $shashin_options['highslide_interval'] . ',
-                            repeat: true,
-                            useControls: true,
-                            fixedControls: true,
-                            overlayOptions: {
-                                opacity: .75,
-                                position: \'top center\',
-                                hideOnMouseOut: false
-                            }
-                        });
-                    }
-
-                    // for Flash
-                    hs.outlineWhileAnimating = true;
-                    hs.allowSizeReduction = false;
-                    // always use this with flash, else the movie will not stop on close:
-                    hs.preserveContent = false;
-                </script>
-            ';
+            wp_enqueue_style('highslide_css', $highslide_css, false, SHASHIN_VERSION);
+            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, SHASHIN_VERSION);
+            wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, SHASHIN_VERSION);
+            wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
+            wp_localize_script('highslide_settings_js', 'highslide_settings', array(
+                'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics/',
+                'outline_type' => $shashin_options['highslide_outline_type'],
+                'dimming_opacity' => $shashin_options['highslide_dimming_opacity'],
+                'interval' => $shashin_options['highslide_interval'],
+                'repeat' => $shashin_options['highslide_repeat'],
+                'position' => $shashin_options['highslide_v_position'] . ' ' . $shashin_options['highslide_h_position'],
+                'hide_controller' => $shashin_options['highslide_hide_controller']
+            ));
         }
     }
 
     /**
-     * Gets the Shashin Admin CSS file, for inclusion in the document head. This
-     * CSS supports the display of the widget form.
+     * Gets the Shashin Admin CSS file, for inclusion on the widget management
+     * page and the Shashin admin pages.
      *
      * @static
      * @access public
      */
-    function getAdminCSS() {
-        echo '<link rel="stylesheet" type="text/css" href="' . SHASHIN_DISPLAY_URL . 'shashin-admin.css" />';
+    function getAdminHeadTags() {
+        wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/shashin-admin.css', false, SHASHIN_VERSION);
     }
 
     /**
@@ -752,7 +765,7 @@ class Shashin {
      * @uses ShashinAlbum::getAlbumListMarkup()
      */
     function parseContent($content) {
-        $simage = "/\[simage=(\d+),(\d{2,4}),?(\w?),?(\w{0,6}),?(\w{0,5}),?(\d*)\]/";
+        $simage = "/\[simage=(\d+),(\d{2,4}|max),?(\w?),?(\w{0,6}),?(\w{0,5}),?(\d*)\]/";
 
         if (preg_match_all($simage, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -765,7 +778,7 @@ class Shashin {
             }
         }
 
-        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $srandom = "/\[srandom=([\w\|]+),(\d{2,4}|max),(\d+|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($srandom, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -791,7 +804,7 @@ class Shashin {
             }
         }
 
-        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $sthumbs = "/\[sthumbs=([\d\|]+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($sthumbs, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -805,7 +818,7 @@ class Shashin {
             }
         }
 
-        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}),(\d+),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
+        $snewest = "/\[snewest=([\w\|]+),(\d{2,4}|max),(\d+|max),(\d+),?(\w?),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($snewest, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -831,7 +844,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d+),(\d+),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {

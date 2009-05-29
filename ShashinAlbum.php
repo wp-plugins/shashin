@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -96,7 +96,7 @@ class ShashinAlbum {
     }
 
     /**
-     * Populates a ShashinAlbum object based on an album indetifier (can be a
+     * Populates a ShashinAlbum object based on an album identifier (can be a
      * Picasa ID, album name, or Shashin key) or a passed-in array of album
      * data.
      *
@@ -349,6 +349,8 @@ class ShashinAlbum {
             }
         }
 
+        $picasa_order = 1;
+
         foreach ($new_photos as $new_id=>$new_photo) {
             // if the photo used to be in another album, it's delete flag will
             // be set to Y. Set it to N in the new_photo data to force an
@@ -361,19 +363,26 @@ class ShashinAlbum {
                 $new_photo['taken_timestamp'] = substr($new_photo['taken_timestamp'],0,10);
             }
 
+            // nulls are problematic - set to 0
             else {
                 $new_photo['taken_timestamp'] = 0;
             }
 
-            $new_photo['uploaded_timestamp'] = substr($new_photo['uploaded_timestamp'],0,10);
+            // pubDate format: Mon, 17 Nov 2008 02:35:00 +0000 - convert to timestamp
+            $new_photo['uploaded_timestamp'] = strtotime($new_photo['uploaded_timestamp']);
 
-            // only make an update if something has changed about the photo
+            // track the order in picasa
+            $new_photo['picasa_order'] = $picasa_order++;
+
+            // only make an update if something meaningful has changed about the photo
             if (array_key_exists($new_id, $old_photos)) {
                 if ($new_photo['tags'] != $old_photos[$new_id]['tags']
                   || $new_photo['description'] != $old_photos[$new_id]['description']
                   || $new_photo['taken_timestamp'] != $old_photos[$new_id]['taken_timestamp']
+                  || $new_photo['uploaded_timestamp'] != $old_photos[$new_id]['uploaded_timestamp']
                   || $new_photo['width'] != $old_photos[$new_id]['width']
-                  || $new_photo['height'] != $old_photos[$new_id]['height']) {
+                  || $new_photo['height'] != $old_photos[$new_id]['height']
+                  || $new_photo['picasa_order'] != $old_photos[$new_id]['picasa_order']) {
                     $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $new_photo, array('photo_id' => $new_id));
 
                     if ($sql_result === false) {
@@ -486,7 +495,7 @@ class ShashinAlbum {
 
         $markup = '<a href="';
 
-        if ($shashin_options['image_display'] == 'highslide') {
+        if ($shashin_options['image_display'] == 'highslide' || $shashin_options['image_display'] == 'other') {
             $permalink = get_permalink();
             $glue = strpos($permalink, "?") ? "&amp;" : "?";
             $markup .=  $permalink . $glue . 'shashin_album_key=' . $this->data['album_key'] . '"';
@@ -704,9 +713,9 @@ class ShashinAlbum {
 
             // option to show album info
             if ($match['info_yn'] == 'y') {
-                $replace .= date("M j, Y", $album->data['pub_date']) . ' &mdash; '
-                    . $album->data['photo_count'] . " picture"
-                    . (($album->data['photo_count'] > 1) ? 's' : '');
+                $replace .= date_i18n("M j, Y", $album->data['pub_date']) . ' &mdash; '
+                    . $album->data['photo_count'] . ' '
+                    . (($album->data['photo_count'] > 1) ? __('pictures', SHASHIN_L10N_NAME) : __('picture', SHASHIN_L10N_NAME));
 
                 if ($album->data['location']) {
                     $replace .= ' &mdash; ' . $album->data['location'];
@@ -715,7 +724,7 @@ class ShashinAlbum {
                         $replace .= ' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                             . str_replace(" ", "+", $album->data['geo_pos'])
                             . '"><img src="' . SHASHIN_DISPLAY_URL
-                            . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
+                            . '/mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="vertical-align: bottom; border: none;" />'
                             . '</a>';
                     }
                 }
@@ -828,8 +837,8 @@ class ShashinAlbum {
             . $this->data['title']
             . "</a></span>";
 
-        $replace .= '<span class="shashin_album_count">' . $this->data['photo_count'] . " picture";
-        $replace .= ($this->data['photo_count'] > 1) ? 's' : '';
+        $replace .= '<span class="shashin_album_count">' . $this->data['photo_count'] . ' ';
+        $replace .= ($this->data['photo_count'] > 1) ? __('pictures', SHASHIN_L10N_NAME) : __('picture', SHASHIN_L10N_NAME);
         $replace .= '</span>';
 
         if ($match['location_yn'] == 'y' && $this->data['location']) {
@@ -838,7 +847,7 @@ class ShashinAlbum {
                 ? (' <a href="' . SHASHIN_GOOGLE_MAPS_QUERY_URL
                     . str_replace(" ", "+", $this->data['geo_pos'])
                     . '"><img src="' . SHASHIN_DISPLAY_URL
-                    . 'mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')
+                    . '/mapped_sm.gif" alt="Google Maps Location" width="15" height="12" style="border: none;" />')
                 : '')
             . ($this->data['geo_pos'] ? '</a><br />' : '')
             . $this->data['location']
@@ -846,7 +855,7 @@ class ShashinAlbum {
         }
 
         if ($match['pubdate_yn'] == 'y' && $this->data['pub_date']) {
-            $replace .= '<span class="shashin_album_date">' . date("M j, Y", $this->data['pub_date']) . "</span>";
+            $replace .= '<span class="shashin_album_date">' . date_i18n("M j, Y", $this->data['pub_date']) . "</span>";
         }
 
         $replace .= "</div>";

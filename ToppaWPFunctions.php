@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -31,6 +31,7 @@ class ToppaWPFunctions {
      * @return mixed passes along the return value of WordPress' dbDelta()
      */
     function createTable(&$object, $table) {
+        $sql_end = "";
         $sql = "CREATE TABLE $table (\n";
         foreach ($object->ref_data as $k=>$v) {
             $sql .= $k . " " . $v['col_params']['type'];
@@ -59,8 +60,14 @@ class ToppaWPFunctions {
             }
 
             $sql .= ",\n";
+
+            // WP requires unqiue indexes declared at the end, using KEY
+            if ($v['col_params']['unique_key']) {
+                $sql_end .= "UNIQUE KEY $k ($k),\n";
+            }
         }
 
+        $sql = $sql . $sql_end;
         $sql = substr($sql, 0, -2);
         $sql .= "\n)\nDEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
         require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
@@ -357,7 +364,7 @@ class ToppaWPFunctions {
         case 'radio':
             foreach ($ref_data['input_subgroup'] as $value=>$label) {
                 echo '<input type="radio" name="' . $input_name
-                    . '" id="' . $input_id
+                    . '" id="' . $input_id . "_" . htmlspecialchars($value)
                     . '" value="' . htmlspecialchars($value) . '"';
 
                 if ($input_value == $value) {

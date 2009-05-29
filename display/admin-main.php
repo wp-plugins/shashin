@@ -11,7 +11,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -19,6 +19,16 @@
  ?>
 
 <div class="wrap">
+    <div style="float: right; font-weight: bold; margin-top: 15px;">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_s-xclick" />
+        <input type="hidden" name="hosted_button_id" value="5378623" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /><?php _e("Support Shashin", SHASHIN_L10N_NAME); ?> &raquo;
+        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="<?php _e("Support Deko Boko", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
+        <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin Help", SHASHIN_L10N_NAME); ?></a>
+        </form>
+    </div>
+
     <h2><?php echo SHASHIN_DISPLAY_NAME ?></h2>
 
     <?php if ($message) {
@@ -29,7 +39,7 @@
 
     if ($all_albums) {
         echo '<p>';
-        _e("Click an album title to view its photos. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME);
+        _e("Click an album title to view its photos. See the <a href='#ref'>quick reference</a> below for help with Shashin album tags. Click a column header to order the album list by that column (and click again to reverse the order).", SHASHIN_L10N_NAME);
         echo "</p>\n";
         echo '<form action="' . SHASHIN_ADMIN_URL . '" method="post">' . "\n";
         echo '<input type="hidden" name="shashin_action" value="update_albums" />' . "\n";
@@ -38,22 +48,37 @@
         echo '<th class="manage-column"><a href="'
             . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'title') ? 'title%20desc' : 'title')
-            . '">' . __("Title", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Title", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'title desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'title' || !$_GET['shashin_orderby']) ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'album_key') ? 'album_key%20desc' : 'album_key')
-            . '">' . __("Album Key", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Album Key", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'album_key desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'album_key') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Sync", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Delete", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;">' . __("Include in Random?", SHASHIN_L10N_NAME) . "</th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'photo_count') ? 'photo_count%20desc' : 'photo_count')
-            . '">' . __("Photo Count", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Photo Count", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'photo_count desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'photo_count') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'pub_date') ? 'pub_date%20desc' : 'pub_date')
-            . '">' . __("Pub Date", SHASHIN_L10N_NAME) . "</a></th>\n";
+            . '">' . __("Pub Date", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'pub_date desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'pub_date') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo '<th class="manage-column" style="text-align: center;"><a href="' . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'last_updated') ? 'last_updated%20desc' : 'last_updated')
-            . '">' . __("Last Sync", SHASHIN_L10N_NAME). "</a></th>\n";
+            . '">' . __("Last Sync", SHASHIN_L10N_NAME)
+            . (($_GET['shashin_orderby'] == 'last_updated desc') ? ' &uarr;' : '')
+            . (($_GET['shashin_orderby'] == 'last_updated') ? ' &darr;' : '')
+            . "</a></th>\n";
         echo "</tr>\n";
 
         $i = 1;
@@ -72,15 +97,16 @@
                 . $all_album['album_id'] . '&amp;user='
                 . $all_album['user'] . '"><img src="'
                 . SHASHIN_DISPLAY_URL
-                . 'arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />'
+                . '/arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />'
                 . "</a></td>\n";
             echo '<td style="text-align: center;"><a href="'
                 . SHASHIN_ADMIN_URL
                 . '&amp;shashin_action=delete_album&amp;album_id='
                 . $all_album['album_id']
-                . '" onclick="return confirm(\'Are you sure you want to delete?\')">'
-                . '<img src="' . SHASHIN_DISPLAY_URL
-                . 'delete.png" alt="Delete Album" width="16" height="16" border="0" />'
+                . '" onclick="return confirm(\''
+                . __("Are you sure you want to delete this album?", SHASHIN_L10N_NAME)
+                . '\')"><img src="' . SHASHIN_DISPLAY_URL
+                . '/delete.png" alt="Delete Album" width="16" height="16" border="0" />'
                 . "</a></td>\n";
             echo '<td style="text-align: center;">';
             ToppaWPFunctions::displayInput(
@@ -138,10 +164,10 @@
 
     <p><?php _e("Please enter the URL for your &quot;My Photos&quot; page on Picasa if you want to add all your public albums to Shashin, or enter the URL of an individual album. Use the regular URL, <strong>not the RSS URL</strong>.", SHASHIN_L10N_NAME); ?></p>
 
-    <p><?php _e("The URL should have one of these formats:", SHASHIN_L10N_NAME); ?><p>
+    <p><?php _e("The URL should have one of these formats:", SHASHIN_L10N_NAME); ?></p>
 
-    <p><?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em><br />
-    <strong><?php _e("- OR -", SHASHIN_L10N_NAME); ?></strong><br />
+    <p><?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em>
+    <strong><?php _e("OR", SHASHIN_L10N_NAME); ?></strong>
     <?php echo $shashin_options['picasa_server'] ?>/<em><?php _e("username", SHASHIN_L10N_NAME); ?></em>/<em><?php _e("albumname", SHASHIN_L10N_NAME); ?></em></p>
 
     <p><?php _e("Picasa URL:", SHASHIN_L10N_NAME); ?>
@@ -154,36 +180,23 @@
 
     <hr />
 
-    <h3><?php _e("Album Tips", SHASHIN_L10N_NAME); ?></h3>
+    <h3><a name="ref"></a><?php _e("Album Tags Quick Reference", SHASHIN_L10N_NAME); ?></h3>
 
-    <ul>
-    <li><?php _e("<strong>Syncing:</strong> after you upload new photos to an album in Picasa, click the", SHASHIN_L10N_NAME); ?>
-    <img src="<?php echo SHASHIN_DISPLAY_URL ?>arrow_refresh.png" alt="Sync Album" width="16" height="16" border="0" />
-    <?php _e("icon for it above.", SHASHIN_L10N_NAME); ?></li>
-    <li><?php _e("<strong>Display thumbnails for all your albums:</strong> you can choose the sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering). [salbumthumbs=order_option,max_cols,location_yn,pubdate_yn,float,clear]", SHASHIN_L10N_NAME); ?></li>
-    <li><?php _e("<strong>Display thumbnails for selected albums:</strong> [salbumthumbs=album_key1|album_key2|etc,max_cols,location_yn,pubdate_yn,float,clear]", SHASHIN_L10N_NAME); ?></li>
-    <li><?php _e("<strong>Display thumbnails and descriptions for all your albums:</strong> you can choose the sort order - options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering). [salbumlist=order_option,info_yn]", SHASHIN_L10N_NAME); ?></li>
-    <li><?php _e("<strong>Display thumbnails and descriptions for selected albums:</strong> [salbumlist=album_key1|album_key2|etc,info_yn]", SHASHIN_L10N_NAME); ?></li>
-    <li><?php _e("<strong>Random images:</strong> if you want to exclude an album's images when using the srandom tag, set 'Include in Random?' to 'No.'", SHASHIN_L10N_NAME); ?></li>
-    <li><?php echo __("<strong>More Help:</strong> see the", SHASHIN_L10N_NAME)
-        . ' <a href="' . SHASHIN_FAQ_URL . '">'
-        . __("Shashin page", SHASHIN_L10N_NAME) . '</a> '
-        . __("for detailed instructions", SHASHIN_L10N_NAME); ?></li>
-    </ul>
+    <dl class="shashin_help">
+    <dt><?php _e("Display thumbnails for your albums in a table layout", SHASHIN_L10N_NAME); ?></dt>
+    <dd><?php _e("[salbumthumbs=to_show,max_cols,location_yn,pubdate_yn,position,clear]", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [salbumthumbs=pub_date desc,3,y,n,center] All albums in reverse order by publication date, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [salbumthumbs=2|24|33,1,n,y,left] Albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Notes: For ordering, options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering).", SHASHIN_L10N_NAME); ?></dd>
 
-    <hr />
-
-    <h3><?php _e("Tipping: it isn't just for cows", SHASHIN_L10N_NAME); ?></h3>
-
-    <p><?php _e("Shashin has taken hundreds of hours for me to develop and maintain. I do it for the love of course, but a tip would be nice :-) Thanks!", SHASHIN_L10N_NAME); ?></p>
-
-    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-    <input type="hidden" name="cmd" value="_s-xclick" />
-    <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" /></p>
-    <p><img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /></p>
-    <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----" />
-    </form>
-
-
+    <dt><?php _e("Display thumbnails and descriptions for your albums in a list layout", SHASHIN_L10N_NAME); ?></dt>
+    <dd><?php _e("[salbumlist=to_show,info_yn]", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [salbumlist=pub_date desc,y]  All albums in reverse order by publication date, with additional album information shown between the title and description (photo count, publication date, and location)", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [salbumlist=2|24|33,n] Albums with Shashin keys 2, 24, and 33 only, no additional information shown.", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Notes: For ordering, options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering).", SHASHIN_L10N_NAME); ?></dd>
+    <dt><?php _e("See the", SHASHIN_L10N_NAME); ?>
+        <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin page", SHASHIN_L10N_NAME); ?></a>
+        <?php _e("for detailed instructions.", SHASHIN_L10N_NAME); ?></dt>
+    </dl>
 </div>
 

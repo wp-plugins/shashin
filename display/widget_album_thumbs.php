@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -19,8 +19,8 @@
     echo ToppaWPFunctions::displayInput('shashin_widget_album_thumbs[title]', $title_data, $shashin_options['widget_album_thumbs']['title']); ?></dd>
 
 <dt>&nbsp;</dt>
-<dd>If you want to display all your albums, indicate how to order them: options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering).
-<strong>- OR -</strong> If you want only certain albums, enter their album keys instead, for example '12|22|14|17'</dd>
+<dd><?php _e("If you want to display all your albums, indicate how to order them: options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering).", SHASHIN_L10N_NAME); ?>
+<?php _e("<strong>- OR -</strong> If you want only certain albums, enter their album keys instead, for example '12|22|14|17'", SHASHIN_L10N_NAME); ?></dd>
 
 <dt><label for="shashin_widget_album_thumbs_album_key"><?php _e("Albums", SHASHIN_L10N_NAME); ?> -<br /><?php _e("Keys or Sort"); ?>:</label></dt>
 <dd><?php $keys_data = array('input_type' => 'text', 'input_size' => 25);

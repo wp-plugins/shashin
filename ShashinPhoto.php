@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.3.5
+ * @version 2.4
  * @package Shashin
  * @subpackage Classes
  */
@@ -38,7 +38,7 @@ class ShashinPhoto {
                 'label' => 'Photo Key', 'source' => 'db'),
             'photo_id' => array(
                 'col_params' => array('type' => 'bigint unsigned',
-                    'not_null' => true, 'other' => 'UNIQUE'),
+                    'not_null' => true, 'unique_key' => true),
                 'label' => 'Photo ID', 'source' => 'feed',
                 'feed_param_1' => 'gphoto', 'feed_param_2' => 'id'),
             'album_id' => array(
@@ -76,7 +76,7 @@ class ShashinPhoto {
             'uploaded_timestamp' => array(
                 'col_params' => array('type' => 'int unsigned', 'not_null' => true),
                 'label' => 'Date Uploaded', 'source' => 'feed',
-                'feed_param_1' => 'gphoto', 'feed_param_2' => 'timestamp'),
+                'feed_param_1' => 'pubDate'),
             'tags' => array(
                 'col_params' => array('type' => 'varchar', 'length' => '255'),
                 'label' => 'Tags', 'source' => 'feed',
@@ -97,6 +97,33 @@ class ShashinPhoto {
                 'col_params' => array('type' => 'varchar', 'length' => '255', 'not_null' => true),
                 'label' => 'Enclosure Type', 'source' => 'feed',
                 'feed_param_1' => 'enclosure', 'attrs' => 'type'),
+            'picasa_order' => array(
+                'col_params' => array('type' => 'int unsigned'),
+                'label' => 'Picasa Order', 'source' => 'db'),
+            'fstop' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'F-Stop', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'fstop'),
+            'make' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '20'),
+                'label' => 'Make', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'make'),
+            'model' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '20'),
+                'label' => 'Model', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'model'),
+            'exposure' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'Model', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'exposure'),
+            'focal_length' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'Focal Length', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'focallength'),
+            'iso' => array(
+                'col_params' => array('type' => 'varchar', 'length' => '10'),
+                'label' => 'ISO', 'source' => 'feed',
+                'feed_param_1' => 'exif', 'feed_param_2' => 'iso'),
         );
     }
 
@@ -305,9 +332,9 @@ class ShashinPhoto {
     }
 
     /**
-     * Static method that display thumbnails for an album. Can be invoked by
-     * the salbumphotos tag, or by a $_REQUEST flag when an album cover
-     * thumbnail is clicked.
+     * Static method that display thumbnails for photos in an album. Can be
+     * invoked by the salbumphotos tag, or with $_REQUEST['shashin_album_key']
+     * when an album cover thumbnail is clicked.
      *
      * @static
      * @access public
@@ -319,9 +346,14 @@ class ShashinPhoto {
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getAlbumPhotosMarkup($match) {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        // check to see if we're making a list of photos from salbumphotos
+        // (which has max_size), or from salbumthumbs/salbumlist (which doesn't)
+        $salbumphotos = $match['max_size'] ? true : false;
+
         // the is_numeric check also provides a de facto check on XSS attacks
         if (is_numeric($_REQUEST['shashin_album_key'])) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
             $match['album_key'] = $_REQUEST['shashin_album_key'];
             $match['max_size'] = $shashin_options['album_photos_max'];
             $match['max_cols'] = $shashin_options['album_photos_cols'];
@@ -334,7 +366,16 @@ class ShashinPhoto {
         $conditions = " inner join " . SHASHIN_ALBUM_TABLE
             . " sa where sa.album_id = sp.album_id and sp.deleted = 'N' and sa.album_key = "
             . $match['album_key'];
+
         $other = "order by $order";
+
+        // limit photos per page if requested
+        if (is_numeric($shashin_options['photos_per_page'])) {
+            $shashin_page = is_numeric($_REQUEST['shashin_page']) ? $_REQUEST['shashin_page'] : 1;
+            $other .= " limit " . $shashin_options['photos_per_page']
+                . " offset " . ($shashin_page - 1) * $shashin_options['photos_per_page'];
+        }
+
         $photos = ShashinPhoto::getPhotos('sp.*, sa.title as album_title, sa.description as album_description', $conditions, $other);
 
         if (!$photos) {
@@ -346,8 +387,8 @@ class ShashinPhoto {
 
         $desc = "";
 
-        if (is_numeric($_REQUEST['shashin_album_key'])) {
-            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Go back", SHASHIN_L10N_NAME) . '</a></span>';
+        if (!$salbumphotos) {
+            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Return to album list", SHASHIN_L10N_NAME) . '</a></span>';
         }
 
         $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
@@ -356,7 +397,71 @@ class ShashinPhoto {
             $desc .= ' <span class="shashin_caption_description">' . preg_replace("/\s/", " ", $photo['album_description']) . '</span>';
         }
 
+        // build next and previous links if we're limiting photos per page
+        if ($shashin_page) {
+            if (!$_SESSION['shashin_last_page_' . $match['album_key']]) {
+                $where = 'where album_id in (select album_id from ' . SHASHIN_ALBUM_TABLE
+                    . ' where album_key = ' . $match['album_key'] . ')';
+                $row_count = ToppaWPFunctions::sqlSelect(SHASHIN_PHOTO_TABLE, 'count(photo_id)', $where, null, 'get_var');
+                $_SESSION['shashin_last_page_' . $match['album_key']] = ceil($row_count / $shashin_options['photos_per_page']);
+            }
+
+            $permalink = get_permalink();
+            $glue = strpos($permalink, "?") ? "&amp;" : "?";
+            $link =  $permalink . $glue . 'shashin_album_key=' . $match['album_key'];
+            $desc .= '<div class="shashin_nav">';
+
+            if ($shashin_page > 1) {
+                $link_back = $link . '&amp;shashin_page=' . ($shashin_page - 1);
+                $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; ' . __('Previous', SHASHIN_L10N_NAME) . '</a></div>';
+            }
+
+            if ($shashin_page < $_SESSION['shashin_last_page_' . $match['album_key']]) {
+                $link_next = $link . '&amp;shashin_page=' . ($shashin_page + 1);
+                $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">' . __('Next', SHASHIN_L10N_NAME) . ' &raquo;</a></div>';
+            }
+
+            $desc .= "</div>\n";
+        }
+
         return ShashinPhoto::_getTableMarkup($photos, $match, $desc);
+    }
+
+
+    /**
+     * Finds the maximum possible Picasa image size for a given number
+     * of thumbnail columns. Assumes 10px of padding/margin per image.
+     *
+     * NOTE: The calculation will be incorrect for pictures with a
+     * portrait orientation
+     *
+     * @static
+     * @access private
+     * @param int $theme_max The content width of the theme, minus padding
+     * @param int $cols The number of columns of thumbnails
+     * @return int The largest possible allowed Picasa size
+     */
+    function _setMaxPicasaSize($theme_max, $cols) {
+        if (!is_numeric($theme_max) || !is_numeric($cols)) {
+            return 0;
+        }
+
+        $max_size = $theme_max / $cols;
+        $max_size -= 10; // guess for padding/margins per image
+
+        // figure out which allowed Picasa size is closest, but not larger
+        // $sizes is ordered from smallest to largest
+        $sizes = unserialize(SHASHIN_IMAGE_SIZES);
+
+        for($i=0; $i<count($sizes); $i++) {
+            // stop on the first size that's bigger and go back one
+            if ($max_size < $sizes[$i]) {
+                $picasa_max = $sizes[$i-1];
+                break;
+            }
+        }
+
+        return $picasa_max;
     }
 
     /**
@@ -374,21 +479,44 @@ class ShashinPhoto {
      * @return string xhtml markup for the table containing the photos
      */
     function _getTableMarkup($photos, $match, $desc = null) {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        // counter for distinguishing groups of images on a page
+        if (!$_SESSION['shashin_group_counter']) {
+           $_SESSION['shashin_group_counter'] = 1;
+        }
+
+        if ($match['max_size'] == 'max' && $match['max_cols'] == 'max') {
+                return '<span class="shashin_error">' . __("Shashin Error: image size and the number of columns cannot both be 'max'", SHASHIN_L10N_NAME) . '</span>';
+        }
+
+        // if 'max' is the width, figure out the size for the thumbnails
+        // (this will be imperfect if they're all portrait orientation...)
+        else if ($match['max_size'] == 'max') {
+            $match['max_size'] = ShashinPhoto::_setMaxPicasaSize($shashin_options['theme_max_size'], $match['max_cols']);
+        }
+
+        else if ($match['max_cols'] == 'max') {
+            $max_cols = $shashin_options['theme_max_size'] / ($match['max_size'] + 10);
+            $match['max_cols'] = floor($max_cols);
+        }
+
         $replace = '<table class="shashin_thumbs_table"';
 
         if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
 
             if ($match['float'] == 'center') {
-                $replace .= " margin-left: auto; margin-right: auto;";
+                $replace .= "margin-left: auto; margin-right: auto;";
             }
 
             else if ($match['float']) {
-                $replace .= " float: {$match['float']};";
+                $replace .= "float: {$match['float']};";
             }
 
             $replace .= $match['clear'] ? "clear:{$match['clear']};" : '';
             $replace .= '"';
+
             // don't want these applied to the individual images when
             // calling _getDivMarkup
             unset($match['float']);
@@ -408,7 +536,7 @@ class ShashinPhoto {
                 return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
-            $markup = $photo->_getDivMarkup($match, true, $_SESSION['hs_group_counter'], true);
+            $markup = $photo->_getDivMarkup($match, true, $_SESSION['shashin_group_counter'], true);
             $replace .= "<td>$markup</td>\n";
             $cell_count++;
 
@@ -419,8 +547,12 @@ class ShashinPhoto {
         }
 
         $replace .= "</table>";
-        $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['hs_group_counter'] . "');\n</script>\n";
-        $_SESSION['hs_group_counter']++;
+
+        if ($shashin_options['image_display'] == 'highslide') {
+            $replace .= "\n<script type=\"text/javascript\">\naddHSSlideshow('group" . $_SESSION['shashin_group_counter'] . "');\n</script>\n";
+        }
+
+        $_SESSION['shashin_group_counter']++;
         return $replace;
     }
 
@@ -440,8 +572,13 @@ class ShashinPhoto {
      * @return boolean true: set dimension successfully; false: failed to set dimension
      */
     function _setDimensions($max) {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
         $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
         $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
+
+        if ($max == 'max') {
+            $max = $shashin_options['theme_max_single'];
+        }
 
         if (!in_array($max, $shashin_image_sizes)) {
             return false;
@@ -491,30 +628,42 @@ class ShashinPhoto {
     function _getDivMarkup($match, $thumb = false, $group = null, $controller = false, $admin = false) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
+        // counter for assigning unique IDs to images
+        if (!$_SESSION['shashin_id_counter']) {
+           $_SESSION['shashin_id_counter'] = 1;
+        }
+
         // set the dimensions
         if ($this->_setDimensions($match['max_size']) === false) {
             return '<span class="shashin_error">Shashin Error: invalid size for image</span>';
         }
 
-        // set the caption to include the album name if that option is set
+        $caption = "";
+
+        // set the caption to include the album name if requested
         if ($shashin_options['prefix_captions'] == 'y') {
             $album = new ShashinAlbum();
             $album->getAlbum($this->data['album_id']);
-            $caption = $album->data['title'] . " &ndash; " . $this->data['description'];
+            $caption .= $album->data['title'] . " &ndash; ";
         }
 
-        else {
-            $caption = $this->data['description'];
-        }
+        $caption .= $this->data['description'];
 
         // a caption on the thumbnail is optional
         if ($match['caption_yn'] == 'y') {
             $opt_caption = $caption;
         }
 
-        // 'enlarge' or 'play' as a caption option
+        // set the caption to include the date if requested
+        if ($shashin_options['caption_exif'] == 'date' && $this->data['taken_timestamp']) {
+            $caption .= " &ndash; " . date_i18n("d-M-Y", $this->data['taken_timestamp']);
+        }
+
+        // 'enlarge' or 'play' as a thumbnail caption option
         else if ($match['caption_yn'] == 'c') {
-            $opt_caption = $this->_isVideo() ? 'Click picture to play video' : 'Click picture to enlarge';
+            $opt_caption = $this->_isVideo()
+                ? __('Click picture to play video', SHASHIN_L10N_NAME)
+                : __('Click picture to enlarge', SHASHIN_L10N_NAME);
         }
 
         $class = $thumb ? 'shashin_thumb' : 'shashin_image';
@@ -547,31 +696,69 @@ class ShashinPhoto {
 
             // need minWidth because width was not autosizing for content
             // need "preserveContent: false" so the video and audio will stop when the window is closed
-            $markup .= "<a href=\"$video_url\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
+            $markup .= "<a href=\"$video_url\" id=\"shashin_thumb_link_"
+                . $_SESSION['shashin_id_counter']
+                . "\" onclick=\"return hs.htmlExpand(this,{ objectType:'swf', minWidth: "
                 . ($width+20) . ", minHeight: " . ($height+20)
                 . ", objectWidth: $width, objectHeight: $height, allowSizeReduction: false, preserveContent: false";
 
             if ($group) {
-                $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "'";
+                $markup .= ", autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['shashin_group_counter'] . "'";
             }
 
             $markup .= ' } )" class="highslide">';
-            $_SESSION['hs_id_counter']++;
         }
 
         // images in highslide
         else if ($shashin_options['image_display'] == 'highslide') {
             $markup .= '<a href="' . $this->data['enclosure_url']
                 . '?imgmax=' . $shashin_options['highslide_max']
-                . '" class="highslide" id="thumb' . $_SESSION['hs_id_counter']
+                . '" class="highslide" id="shashin_thumb_link_' . $_SESSION['shashin_id_counter']
                 . '" onclick="return hs.expand(this';
 
             if ($group) {
-                $markup .= ", { autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['hs_group_counter'] . "' }";
+                $markup .= ", { autoplay: $autoplay, slideshowGroup: 'group" . $_SESSION['shashin_group_counter'] . "' }";
             }
 
             $markup .= ')">';
-            $_SESSION['hs_id_counter']++;
+        }
+
+        // other viewer
+        else if ($shashin_options['image_display'] == 'other') {
+            $markup .= '<a href="' . $this->data['enclosure_url']
+                . '?imgmax=' . $shashin_options['highslide_max']
+                . '" id="shashin_thumb_link_' . $_SESSION['shashin_id_counter']
+                . '" rel="';
+
+            if ($this->_isVideo()) {
+                $markup .= $shashin_options['other_rel_video'];
+            }
+
+            else {
+                $markup .= $shashin_options['other_rel_image'];
+            }
+
+            if ($group) {
+                if ($shashin_options['other_rel_delimiter'] == 'brackets') {
+                    $markup .= "[" . $_SESSION['shashin_group_counter'] . "]";
+                }
+
+                else {
+                    $markup .= "-" . $_SESSION['shashin_group_counter'];
+                }
+            }
+
+            $markup .= '"';
+
+            if ($shashin_options['other_link_class']) {
+                $markup .= ' class="' . $shashin_options['other_link_class'] . '"';
+            }
+
+            if ($shashin_options['other_link_title']) {
+                $markup .= ' title="' . $caption . '"';
+            }
+
+            $markup .= '>';
         }
 
         // images or videos at Picasa
@@ -585,6 +772,7 @@ class ShashinPhoto {
             $markup .= '>';
         }
 
+        // get alternate thumbnail image if one was specified
         if ($match['alt_thumb']) {
             $alt_thumb = new ShashinPhoto();
             list($result, $message, $db_error) = $alt_thumb->getPhoto(array('photo_key' => $match['alt_thumb']));
@@ -614,17 +802,39 @@ class ShashinPhoto {
         $markup .= '<img src="' . $src
             . '?imgmax='. $imgmax
             . '" alt="' . $caption
-            . '" title="' . $caption
             . '" width="' . $width
-            . '" height="' . $height . '" />';
+            . '" height="' . $height
+            . '" id="shashin_thumb_image_' . $_SESSION['shashin_id_counter'] . '"';
 
-        if ($shashin_options['image_display'] != 'none') {
+        if (($shashin_options['image_display'] == 'other' && $shashin_options['other_image_title'])
+            || $shashin_options['image_display'] == 'highslide') {
+            $markup .= ' title="' . $caption . '"';
+        }
+
+        if ($shashin_options['image_display'] == 'other' && $shashin_options['other_image_class']) {
+            $markup .= ' class="' . $shashin_options['other_image_class'] . '"';
+        }
+
+        $markup .= ' />';
+
+        if ($shashin_options['image_display'] != 'none' && !$admin) {
             $markup .= '</a>';
         }
 
         // whether to display the caption under the photo
-        if ($opt_caption) {
+        if ($opt_caption && !$admin) {
             $markup .= '<span class="shashin_caption">' . $opt_caption . '</span>';
+        }
+
+        // add date and exif data to the highslide caption if requested
+        // and data exists
+        if ($shashin_options['caption_exif'] == 'all' && $this->data['taken_timestamp']) {
+            $caption .= '<span class="shashin_caption_exif">'
+                . date_i18n("d-M-Y H:i", $this->data['taken_timestamp'])
+                . " &ndash; " . $this->data['make'] . " " . $this->data['model']
+                . ", F " . $this->data['fstop'] . ", " . $this->data['focal_length']
+                . "mm, " . $this->data['exposure'] . " sec, ISO " . $this->data['iso']
+                . '</span>';
         }
 
         if ($caption && $shashin_options['image_display'] == 'highslide' && !$admin) {
@@ -632,6 +842,7 @@ class ShashinPhoto {
         }
 
         $markup .= "</div>";
+        $_SESSION['shashin_id_counter']++;
         return $markup;
     }
 
