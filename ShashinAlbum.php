@@ -713,7 +713,7 @@ class ShashinAlbum {
 
             // option to show album info
             if ($match['info_yn'] == 'y') {
-                $replace .= date("M j, Y", $album->data['pub_date']) . ' &mdash; '
+                $replace .= date_i18n("M j, Y", $album->data['pub_date']) . ' &mdash; '
                     . $album->data['photo_count'] . ' '
                     . (($album->data['photo_count'] > 1) ? __('pictures', SHASHIN_L10N_NAME) : __('picture', SHASHIN_L10N_NAME));
 
@@ -855,7 +855,7 @@ class ShashinAlbum {
         }
 
         if ($match['pubdate_yn'] == 'y' && $this->data['pub_date']) {
-            $replace .= '<span class="shashin_album_date">' . date("M j, Y", $this->data['pub_date']) . "</span>";
+            $replace .= '<span class="shashin_album_date">' . date_i18n("M j, Y", $this->data['pub_date']) . "</span>";
         }
 
         $replace .= "</div>";

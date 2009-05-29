@@ -656,7 +656,7 @@ class ShashinPhoto {
 
         // set the caption to include the date if requested
         if ($shashin_options['caption_exif'] == 'date' && $this->data['taken_timestamp']) {
-            $caption .= " &ndash; " . date("d-M-Y", $this->data['taken_timestamp']);
+            $caption .= " &ndash; " . date_i18n("d-M-Y", $this->data['taken_timestamp']);
         }
 
         // 'enlarge' or 'play' as a thumbnail caption option
@@ -830,7 +830,7 @@ class ShashinPhoto {
         // and data exists
         if ($shashin_options['caption_exif'] == 'all' && $this->data['taken_timestamp']) {
             $caption .= '<span class="shashin_caption_exif">'
-                . date("d-M-Y H:i", $this->data['taken_timestamp'])
+                . date_i18n("d-M-Y H:i", $this->data['taken_timestamp'])
                 . " &ndash; " . $this->data['make'] . " " . $this->data['model']
                 . ", F " . $this->data['fstop'] . ", " . $this->data['focal_length']
                 . "mm, " . $this->data['exposure'] . " sec, ISO " . $this->data['iso']

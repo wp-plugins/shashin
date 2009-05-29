@@ -21,11 +21,12 @@ Shashin is a powerful WordPress plugin that lets you display Picasa photos, albu
 * Improved usability for the Shashin admin screens, with detailed examples of Shashin tags.
 * Align images and groups of thumbnails to the center
 * Specify an alternate image to use as a thumbnail - this is often useful for videos.
-* Includes the latest version of Highslide (4.1.4)
+* Updated to the latest version of Highslide (4.1.4)
+* Includes Russian and Dutch translations
 
 **Overview**
 
-Shashin has many features for displaying your Picasa photos in a variety of ways in your Wordpress posts and pages:
+Shashin has many features for displaying your Picasa photos and videos in your Wordpress posts and pages:
 
 * Show a gallery of your Picasa albums, and all the photos and videos in each album.
 * Show your photos and vidoes with your favorite image viewer. Highslide is included with Shashin, but you ay also use a different viewer of your choice.
@@ -45,7 +46,7 @@ Shashin has many features for displaying your Picasa photos in a variety of ways
 
 1. Download the zip file, unzip it, and upload to your plugins directory, replacing your shashin folder.
 1. Deactivate and reactivate Shashin in your plugin panel.
-1. Sync all your albums (this is needed to get camera EXIF data from Picasa).
+1. Sync all your albums (this is needed to get new camera EXIF data from Picasa).
 1. Review the Shashin Settings menu, as there are several new options.
 1. If you use an image viewer other than the version of Highslide included with Shashin, you need to set it up and configure it yourself. The Shashin settings menu provides several options for image and link IDs, classes, titles, etc. in order to support a variety of image viewers.
 
@@ -59,4 +60,4 @@ Shashin has many features for displaying your Picasa photos in a variety of ways
 
 == Frequently Asked Questions ==
 
-Please go to <a href="http://www.toppa.com/shashin-wordpress-plugin">the Shashin page for detailed instructions on how to use Shashin</a>.
+Please go to [the Shashin page for detailed instructions on how to use Shashin](http://www.toppa.com/shashin-wordpress-plugin).
