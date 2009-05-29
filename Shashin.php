@@ -51,7 +51,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.5');
+define('SHASHIN_VERSION', '2.4');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -180,7 +180,7 @@ class Shashin {
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
             'theme_max_size' => 600,
-			'theme_max_single' => 576,
+            'theme_max_single' => 576,
             'photos_per_page' => null,
             'caption_exif' => 'n',
         );
@@ -645,8 +645,8 @@ class Shashin {
                     }
                 }
 
-				// determine the largest Picasa size for single images
-     			$shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
+                // determine the largest Picasa size for single images
+                $shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
 
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
                 update_option('shashin_options', serialize($shashin_options));
@@ -701,9 +701,9 @@ class Shashin {
                 $highslide_css = SHASHIN_DISPLAY_URL . '/highslide.css';
             }
 
-            wp_enqueue_style('highslide_css', $highslide_css, false, SHASHIN_VERSION);
-            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, SHASHIN_VERSION);
-            wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, SHASHIN_VERSION);
+            wp_enqueue_style('highslide_css', $highslide_css, false, '4.1.4');
+            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, '4.1.4');
+            wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, '2.1');
             wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
             wp_localize_script('highslide_settings_js', 'highslide_settings', array(
                 'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics/',
