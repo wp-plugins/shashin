@@ -40,10 +40,10 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 * Updated to the latest version of Highslide (4.1.4)
 * Includes Russian and Dutch translations
 
-** Bug fix releases**
+**Bug fix releases**
 
-2.4.1: fixed version numbers applied to highslide.js and highslide.css when enqueued
-2.4.2: added back the Shashin::getAlbumList() function
+* 2.4.1: fixed version numbers applied to highslide.js and highslide.css when enqueued
+* 2.4.2: added back the Shashin::getAlbumList() function
 
 == Installation ==
 
