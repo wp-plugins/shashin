@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.4.1
+Version: 2.4.2
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.4.2
  * @package Shashin
  * @subpackage Classes
  *
@@ -51,7 +51,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.4');
+define('SHASHIN_VERSION', '2.4.2');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -572,9 +572,9 @@ class Shashin {
             }
 
             // check that re-activation has been done
-            if ($shashin_options['version'] != SHASHIN_VERSION) {
-                $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
-            }
+            //if ($shashin_options['version'] != SHASHIN_VERSION) {
+            //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+            //}
 
             require(SHASHIN_DIR . '/display/admin-main.php');
         }
@@ -659,9 +659,9 @@ class Shashin {
         $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
 
         // check that re-activation has been done
-        if ($shashin_options['version'] != SHASHIN_VERSION) {
-            $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
-        }
+        //if ($shashin_options['version'] != SHASHIN_VERSION) {
+        //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+        //}
 
         // Get the markup and display
         require(SHASHIN_DIR . '/display/options-main.php');
@@ -702,10 +702,10 @@ class Shashin {
             }
 
             wp_enqueue_style('highslide_css', $highslide_css, false, '4.1.4');
-            wp_enqueue_script('highslide_js', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, '4.1.4');
-            wp_enqueue_script('swfobject_js', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, '2.1');
-            wp_enqueue_script('highslide_settings_js', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
-            wp_localize_script('highslide_settings_js', 'highslide_settings', array(
+            wp_enqueue_script('highslide', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, '4.1.4');
+            wp_enqueue_script('swfobject', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, '2.1');
+            wp_enqueue_script('highslide_settings', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
+            wp_localize_script('highslide_settings', 'highslide_settings', array(
                 'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics/',
                 'outline_type' => $shashin_options['highslide_outline_type'],
                 'dimming_opacity' => $shashin_options['highslide_dimming_opacity'],
@@ -936,6 +936,22 @@ class Shashin {
         array_walk($named, array(SHASHIN_PLUGIN_NAME, '_strtolower'));
         $album = new ShashinAlbum;
         return $album->getAlbumMarkup($named);
+    }
+
+    /**
+     * Wrapper for ShashinAlbum->getAlbumListMarkup()
+     *
+     * @static
+     * @access public
+     * @param string $album_key (required): Shashin album keys (not the Picasa album ID), or a column name to order by
+     * @param string $info_yn (optional): y or n to show the album location, pub date, and number of pictures.
+     * @uses ShashinAlbum::getAlbumThumbsMarkup()
+     * @return string xhtml to display album thumbnail
+     */
+    function getAlbumList($album_key, $info_yn = null, $force_picasa = true) {
+        $named = compact('album_key', 'info_yn', 'force_picasa');
+        array_walk($named, array(SHASHIN_PLUGIN_NAME, '_strtolower'));
+        return ShashinAlbum::getAlbumListMarkup($named);
     }
 
     /**

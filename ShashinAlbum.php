@@ -708,8 +708,8 @@ class ShashinAlbum {
             }
 
             $replace .= '<div class="shashin_album_list">' . "\n";
-            $replace .= '<div class="shashin_album_list_thumb">' . $album->_getAlbumThumbTag() . "</div>\n";
-            $replace .= '<div class="shashin_album_list_info"><span class="shashin_album_list_title">' . $album->_getAlbumLink() . $album->data['title'] . '</a></span><br />';
+            $replace .= '<div class="shashin_album_list_thumb">' . $album->_getAlbumThumbTag($match['force_picasa']) . "</div>\n";
+            $replace .= '<div class="shashin_album_list_info"><span class="shashin_album_list_title">' . $album->_getAlbumLink($match['force_picasa']) . $album->data['title'] . '</a></span><br />';
 
             // option to show album info
             if ($match['info_yn'] == 'y') {
