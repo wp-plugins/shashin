@@ -3,8 +3,8 @@ Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.1
-Tested up to: 2.7.1
-Stable tag: 2.4.1
+Tested up to: 2.8
+Stable tag: 2.4.2
 
 Shashin is a powerful WordPress plugin that lets you display Picasa photos, albums, and videos anywhere in your WordPress site.
 
@@ -40,13 +40,18 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 * Updated to the latest version of Highslide (4.1.4)
 * Includes Russian and Dutch translations
 
+** Bug fix releases**
+
+2.4.1: fixed version numbers applied to highslide.js and highslide.css when enqueued
+2.4.2: added back the Shashin::getAlbumList() function
+
 == Installation ==
 
 **Upgrade Instructions**
 
 1. Download the zip file, unzip it, and upload to your plugins directory, replacing your shashin folder.
 1. Deactivate and reactivate Shashin in your plugin panel.
-1. Sync all your albums (this is needed to get new camera EXIF data from Picasa).
+1. If you are upgrading from a version prior to 2.4, sync all your albums (this is needed to get new camera EXIF data from Picasa).
 1. Review the Shashin Settings menu, as there are several new options.
 1. If you use an image viewer other than the version of Highslide included with Shashin, you need to set it up and configure it yourself. The Shashin settings menu provides several options for image and link IDs, classes, titles, etc. in order to support a variety of image viewers.
 
@@ -60,4 +65,7 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 
 == Frequently Asked Questions ==
 
-Please go to [the Shashin page for detailed instructions on how to use Shashin](http://www.toppa.com/shashin-wordpress-plugin).
+Please go to [the Shashin page on my site](http://www.toppa.com/shashin-wordpress-plugin) for a Usage Guide and other information.
+
+For troubleshooting help, please [post a comment in my latest Shashin post](http://www.toppa.com/category/wordpress-and-web-programming/shashin/).
+
