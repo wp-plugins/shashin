@@ -183,7 +183,7 @@ In a post or page, use the simage tag:
 
 <ul>
 <li>photo_key: (required) the Photo Key listed for the image in the album's page in the Shashin "Tools" menu</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a> or the keyword "max"</li>
+<li>max_size: (required) the size you want, chosen from <a href="#shashin5">the list above</a> or the keyword "max"</li>
 <li>caption_yn: (optional, defaults to 'n') use 'y' or 'n' to indicate whether you want the caption to appear under the image (you can also use 'c' to have a "Click to enlarge" caption applied to every image)</li>
 <li>position: (optional) <a href="#shashin4.5">position options</a></li>
 <li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
@@ -196,7 +196,7 @@ This displays the photo with Shashin key 17, maximum possible size, show the cap
 
 <pre>&#91;simage=17,max,y,center&#93;</pre>
 
-Displays the video with Shashin key 22, size of 200 pixels, no caption, float left, do not clear margins, use photo with Shashin key 33 as the thumbnail:
+Displays the video with Shashin key 22, thumbnail size of 200 pixels, no caption, float left, do not clear margins, use photo with Shashin key 33 as the thumbnail:
 
 <pre>&#91;simage=22,200,n,left,none,33&#93;</pre>
 
@@ -216,7 +216,7 @@ In a post or page, use the &#91;salbumthumbs&#93; tag:
 
 <ul>
 <li>to_show: (required) see the examples below (you can provide album keys or a sort order)</li>
-<li>max_cols: (required) how many columns the table should have</li>
+<li>max_cols: (required) how many columns to use for the thumbnails (a number, or the keyword "max" to dynamically determine how many columns will fit in your theme's content area)</li>
 <li>location_yn: (optional, defaults to n) use y or n to indicate whether you want the location to appear under the title. A Google Maps icon will also be added</li>
 <li>pubdate_yn: (optional, defaults to n) use y or n to indicate whether you want the album's pubdate to appear under the title</li>
 <li>position: (optional) <a href="#shashin4.5">position options</a></li>
@@ -225,11 +225,13 @@ In a post or page, use the &#91;salbumthumbs&#93; tag:
 
 <h5>Tag examples</h5>
 
-For showing all albums in reverse order by publication date, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page. You can use "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order:
+Show all albums in the reverse of the picasa order, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page:
 
-<pre>&#91;salbumthumbs=pub_date desc,3,y,n,center&#93;</pre>
+<pre>&#91;salbumthumbs=picasa_order desc,3,y,n,center&#93;</pre>
 
-For showing albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left:
+You can use "picasa_order", "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order.
+
+Show albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left:
 
 <pre>&#91;salbumthumbs=2|24|33,1,n,y,left&#93;</pre>
 
@@ -241,9 +243,14 @@ For your sidebar, you can pick the Album Thumbnails widget, or if you're not usi
 
 <h5>Notes</h5>
 
-Album thumbnail sizes are fixed by Picasa at 160x160, so adjusting the size is not an option. Shashin automatically displays the album title below the thumbnail.
+<ul>
+<li>The tag settings control the layout of the album thumbnails. When you click a thumbnail, the page will reload and show the photos in that album (unless you picked Picasa in the Shashin settings menu for "expanded image display" - then it will link directly to Picasa). The layout of the album photos is controlled in the Shashin Settings menu.</li>
+<li>Album thumbnail sizes are fixed by Picasa at 160x160, so adjusting the size is not an option.</li>
+<li>Shashin automatically displays the album title below the thumbnail.</li>
+<li>Album thumbnails in your sidebar will always link to Picasa, regardless of your selections on the Shashin settings menu, as it's not practical to show all the album photos in the narrow space available in most sidebar designs.</li>
+</ul>
 
-If you click on an album thumbnail and you're using Highslide or your own image viewer, the page will reload, showing all the photos for that album. The display options for the photos are set on the Shashin "Settings" page. However, album thumbnails in your sidebar will always link to Picasa, as it's not practical to show all the album photos in the sidebar.
+<a href="#top">&uArr; top</a>
 
 <h4><a name="shashin7.5">Displaying thumbnails of your albums and their descriptions in a list layout - the &#91;salbumlist&#93; tag</a></h4>
 
@@ -272,27 +279,38 @@ There is no widget for &#91;salbumlist&#93;, but you can put it in your sidebar 
 
 <pre>&lt;?php echo Shashin::getAlbumList('to_show','info_yn'); ?&gt;</pre>
 
+<h5>Notes</h5>
+
+The notes for <a href="#shashin7">salbumthumbs</a> also apply to the salbumlist tag.
+
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin8">Displaying all the photos from a single album - the &#91;salbumphotos&#93; tag</a></strong>
+<h4><a name="shashin8">Displaying all the photos from a single album - the &#91;salbumphotos&#93; tag</a></h4>
 
-You can display all the photos from a specific album, without having to click an album thumbnail first. The title for the album will be shown above the photos:
+You can display all the photos from a specific album, without having to click an album thumbnail first. The title for the album is shown above the photos:
 
 <pre>&#91;salbumphotos=album_key,max_size,max_cols,caption_yn,description_yn,order_by,float,clear&#93;</pre>
 
-Example, with the photos in reverse order by title:
-<pre>&#91;salbumphotos=9,160,3,n,y,title desc&#93;</pre>
-
 <ul>
 <li>album_key: (required) the Album Key listed for an album on the Shashin admin page</li>
-<li>max_size: (required) the image size you want, chosen from <a href="#shashin4">the list above</a></li>
-<li>max_cols: (required) how many columns of thumbnails you want</li>
+<li>max_size: (required) the image size you want, chosen from <a href="#shashin5">the list above</a></li>
+<li>max_cols: (required) how many columns to use for the thumbnails (a number, or the keyword "max" to dynamically determine how many columns will fit in your theme's content area)</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
 <li>description_yn: (optional, defaults to n) use y or n to indicate whether you want to append the album description to the caption for the table</li>
-<li>order_by: (optional, defaults to "taken_timestamp") a field to order the photos by. Choices are: "title" (which is the filename), "taken_timestamp", and "uploaded_timestamp". Add " desc" for reverse ordering.</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
+<li>order_by: (optional) a field to order the photos by. Choices are: "picasa_order", "title" (which is the filename), "taken_timestamp", and "uploaded_timestamp". Add " desc" for reverse ordering.</li>
+<li>position: (optional) <a href="#shashin4.5">position options</a></li>
+<li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
 </ul>
+
+<h5>Tag example</h5>
+
+Album with album key 9, 160 pixels thumbnail size, maximum number of columns, no thumbnail captions, show the album description along with the album title, sort in reverse order by filename (title):
+
+<pre>&#91;salbumphotos=9,160,max,n,y,title desc&#93;</pre>
+
+<h5>Notes</h5>
+
+Since most themes have narrow sidebars, there is no widget for using salbumphotos in the sidebar.
 
 <a href="#top">&uArr; top</a>
 
@@ -310,7 +328,7 @@ For your sidebar, you can pick the Image Thumbnails widget, or use this code and
 
 <ul>
 <li>photo_key1|photo_key2|etc: (required) as many photo keys as you want, separated by the | character</li>
-<li>max_size: (required) the image size you want, chosen from <a href="#shashin4">the list above</a></li>
+<li>max_size: (required) the image size you want, chosen from <a href="#shashin5">the list above</a></li>
 <li>max_cols: (required) how many columns the table should have</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
 <li>float: (optional) a CSS float value</li>
@@ -335,7 +353,7 @@ Note that, if in the admin pages you change an album's "Include in Random" flag 
 
 <ul>
 <li>album_key: (required) either the word "any" or a list of album keys</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a></li>
+<li>max_size: (required) the size you want, chosen from <a href="#shashin5">the list above</a></li>
 <li>max_cols: (required) how many columns the table should have</li>
 <li>how_many: (required) how many random images to display in the table</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
@@ -360,7 +378,7 @@ For your sidebar you can pick the Newest Images widget, or use this code and sub
 
 <ul>
 <li>album_key: (required) either the word "any" or a list of album keys</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin4">the list above</a></li>
+<li>max_size: (required) the size you want, chosen from <a href="#shashin5">the list above</a></li>
 <li>max_cols: (required) how many columns the table should have</li>
 <li>how_many: (required) how many random images to display in the table</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
