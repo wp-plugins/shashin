@@ -54,16 +54,17 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
     <ul>
     <li><a href="#shashin4.5">Controlling the position of Shashin's thumbnails</a></li>
     <li><a href="#shashin5">Supported image sizes</a></li>
-    <li><a href="#shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></li>
-    <li><a href="#shashin7">Displaying thumbnails of your albums in table layout - the &#91;salbumthumbs&#93; tag and widget</li>
-    <li><a href="#shashin7.5">Displaying thumbnails of your albums and their descriptions in a list layout - the &#91;salbumlist&#93; tag</a></li>
-    <li><a href="#shashin8">Displaying all the photos from a single album - the &#91;salbumphotos&#93; tag</a></li>
+    <li><a href="#shashin6">Displaying a single photo - the &#91;simage&#93; tag and widget</a></li>
+    <li><a href="#shashin7">Displaying a table of album thumbnails - the &#91;salbumthumbs&#93; tag and widget</li>
+    <li><a href="#shashin7.5">Displaying a list of album thumbnails - the &#91;salbumlist&#93; tag</a></li>
+    <li><a href="#shashin8">Displaying a table of photos from a single album - the &#91;salbumphotos&#93; tag</a></li>
     <li><a href="#shashin9">Displaying a table of any photos you choose - the &#91;sthumbs&#93; tag and widget</a></li>
-    <li><a href="#shashin10">Displaying random photos - the &#91;srandom&#93; tag and widget</a></li>
-    <li><a href="#shashin11">Displaying your most recently uploaded photos - the &#91;snewest&#93; tag and widget</a></li>
+    <li><a href="#shashin10">Displaying a table of random photos - the &#91;srandom&#93; tag and widget</a></li>
+    <li><a href="#shashin11">Displaying a table of your newest photos - the &#91;snewest&#93; tag and widget</a></li>
     </ul>
 </li>
 <li><a href="#shashin12">The Shashin and Highslide stylesheets</a></li>
+<li><a href="#shashin12.5">Highslide's JavaScript settings</a></li>
 <li><a href="#shashin13">Known Issues</a></li>
 </ul>
 
@@ -99,7 +100,7 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
 <ol>
 <li><a href="http://wordpress.org/extend/plugins/shashin/">Download the Shashin zip file</a>, unzip it, and copy the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear under your "Tools" menu and under your "Settings" menu.</li>
 <li>If you are upgrading from a previous version, it's important to deactivate and then reactivate Shashin. This ensures that new settings will be configured correctly.</li>
-<li>Go to the "Settings" menu, review the default settings, and make whatever changes you like. If your Picasa server is outside the US, it is especially important that you change the server (e.g. to picasaweb.google.co.uk).</li>
+<li>Go to the "Settings" menu, review the default settings, and make whatever changes you like. If your Picasa server is outside the US, it is especially important that you change the server (e.g. to http://picasaweb.google.co.uk).</li>
 <li>Go to the "Tools" menu and follow the directions to add your first album!</li>
 </ol>
 
@@ -121,7 +122,7 @@ If you have an extremely large number of albums or photos, see the <a href="#sha
 
 <h4><a name="shashin3">Using Shashin with Highslide</a></h4>
 
-Shashin comes bundled with a specially configured version of Highslide, so you don't need to download Highslide separately. On the "Settings" page you can specify the maximum size for images displayed with Highslide. For any photos that you display in groups, the Highslide navigation controls will appear on the image display. For images displayed individually, no navigation controls will appear. Highslide is activated for use with Shashin by default, but you can turn it off on the "Settings" page if you don't wish to use it.
+Shashin comes bundled with a specially configured version of Highslide, so you don't need to download Highslide separately. After installing Shashin, you'll want to specify your desired settings for Highslide in the Shashin Settings menu. You also have the option of linking your photos directly to Picasa and not using Highslide, or using a different image viewer.
 
 Do not upgrade Highslide independently of Shashin, as that may cause it to stop working with Shashin. Note that <strong><a href="http://highslide.com/#licence">Highslide is free for non-commercial use only</a>.</strong>
 
@@ -134,7 +135,7 @@ Shashin provides settings that allow you to configure it for use image viewers o
 <ul>
 <li>If you choose to use an image viewer other than Highslide, you are responsible for installing it, configuring it, and understanding it yourself. I am happy to consider making adjustments to Shashin for supporting other viewers, but I can not help you with setting up Lightbox, Fancybox, Thickbox, etc.</li>
 <li>The Shashin Settings menu lets you control the "id", "class", and "title" attributes of Shashin's image tags and anchor tags. You will need to know how to structure the values for these attributes for your viewer.</li>
-<li>If you use a viewer that does not support Flash videos, your Picasa videos will not work. In that case you many want to install and configure a second viewer for videos, such as <a href="http://videobox-lb.sourceforge.net/">Videobox</a>.</li>
+<li>If you use a viewer that does not support Flash videos, your Picasa videos will not display correctly. In that case you may want to install and configure an additional viewer for videos, such as <a href="http://videobox-lb.sourceforge.net/">Videobox</a>.</li>
 </ul>
 
 <a href="#top">&uArr; top</a>
@@ -176,9 +177,10 @@ The Shashin tags also allow you to use the word "max" as an image size. In the S
 
 <a href="#top">&uArr; top</a>
 
-<h4><a name="shashin6">Displaying a single image - the &#91;simage&#93; tag and widget</a></h4>
+<h4><a name="shashin6">Displaying a single photo - the &#91;simage&#93; tag and widget</a></h4>
 
-In a post or page, use the simage tag:
+In a post or page, use the &#91;simage&#93; tag:
+
 <pre>&#91;simage=photo_key,max_size,caption_yn,position,clear,alt_thumb&#93;</pre>
 
 <ul>
@@ -208,7 +210,7 @@ You can pick the Shashin Single Image widget in your widgets menu, or if you're 
 
 <a href="#top">&uArr; top</a>
 
-<h4><a name="shashin7">Displaying thumbnails of your albums in a table layout - the &#91;salbumthumbs&#93; tag and widget</a></h4>
+<h4><a name="shashin7">Displaying a table of album thumbnails - the &#91;salbumthumbs&#93; tag and widget</a></h4>
 
 In a post or page, use the &#91;salbumthumbs&#93; tag:
 
@@ -216,7 +218,7 @@ In a post or page, use the &#91;salbumthumbs&#93; tag:
 
 <ul>
 <li>to_show: (required) see the examples below (you can provide album keys or a sort order)</li>
-<li>max_cols: (required) how many columns to use for the thumbnails (a number, or the keyword "max" to dynamically determine how many columns will fit in your theme's content area)</li>
+<li>max_cols: (required) the number of columns for the table, or the keyword "max"</li>
 <li>location_yn: (optional, defaults to n) use y or n to indicate whether you want the location to appear under the title. A Google Maps icon will also be added</li>
 <li>pubdate_yn: (optional, defaults to n) use y or n to indicate whether you want the album's pubdate to appear under the title</li>
 <li>position: (optional) <a href="#shashin4.5">position options</a></li>
@@ -241,6 +243,8 @@ For your sidebar, you can pick the Album Thumbnails widget, or if you're not usi
 
 <pre>&lt;?php echo Shashin::getAlbumThumbs('to_show',max_cols,'location_yn','pubdate_yn','position','clear'); ?&gt;</pre>
 
+The arguments are the same as in the tag examples above.
+
 <h5>Notes</h5>
 
 <ul>
@@ -252,9 +256,11 @@ For your sidebar, you can pick the Album Thumbnails widget, or if you're not usi
 
 <a href="#top">&uArr; top</a>
 
-<h4><a name="shashin7.5">Displaying thumbnails of your albums and their descriptions in a list layout - the &#91;salbumlist&#93; tag</a></h4>
+<h4><a name="shashin7.5">Displaying a list of album thumbnails - the &#91;salbumlist&#93; tag</a></h4>
 
 With the default layout, the album thumbnails are displayed in a two column layout, with the album titles and descriptions to the right of the thumbnails. You can adjust shashin_album_list* in shashin.css if you want a different layout.
+
+In a post or page, use the &#91;salbumlist&#93; tag:
 
 <pre>&#91;salbumlist=to_show,max_cols,info_yn&#93;</pre>
 
@@ -281,20 +287,20 @@ There is no widget for &#91;salbumlist&#93;, but you can put it in your sidebar 
 
 <h5>Notes</h5>
 
-The notes for <a href="#shashin7">salbumthumbs</a> also apply to the salbumlist tag.
+The notes for <a href="#shashin7">&#91;salbumthumbs&#93;</a> also apply to the salbumlist tag.
 
 <a href="#top">&uArr; top</a>
 
-<h4><a name="shashin8">Displaying all the photos from a single album - the &#91;salbumphotos&#93; tag</a></h4>
+<h4><a name="shashin8">Displaying a table of photos from a single album - the &#91;salbumphotos&#93; tag</a></h4>
 
 You can display all the photos from a specific album, without having to click an album thumbnail first. The title for the album is shown above the photos:
 
-<pre>&#91;salbumphotos=album_key,max_size,max_cols,caption_yn,description_yn,order_by,float,clear&#93;</pre>
+<pre>&#91;salbumphotos=album_key,max_size,max_cols,caption_yn,description_yn,order_by,position,clear&#93;</pre>
 
 <ul>
 <li>album_key: (required) the Album Key listed for an album on the Shashin admin page</li>
-<li>max_size: (required) the image size you want, chosen from <a href="#shashin5">the list above</a></li>
-<li>max_cols: (required) how many columns to use for the thumbnails (a number, or the keyword "max" to dynamically determine how many columns will fit in your theme's content area)</li>
+<li>max_size: (required) the image size, chosen from <a href="#shashin5">the list above</a>, or the keyword "max"</li>
+<li>max_cols: (required) the number of columns for the table, or the keyword "max"</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
 <li>description_yn: (optional, defaults to n) use y or n to indicate whether you want to append the album description to the caption for the table</li>
 <li>order_by: (optional) a field to order the photos by. Choices are: "picasa_order", "title" (which is the filename), "taken_timestamp", and "uploaded_timestamp". Add " desc" for reverse ordering.</li>
@@ -310,98 +316,129 @@ Album with album key 9, 160 pixels thumbnail size, maximum number of columns, no
 
 <h5>Notes</h5>
 
-Since most themes have narrow sidebars, there is no widget for using salbumphotos in the sidebar.
+Since most themes have sidebars that are too narrow to display tables of thumbnails, there is no salbumphotos widget.
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin9">Displaying a table of any photos you choose - the &#91;sthumbs&#93; tag and widget</a></strong>
+<h4><a name="shashin9">Displaying a table of any photos you choose - the &#91;sthumbs&#93; tag and widget</a></h4>
 
-In a post or page, use the sthumbs tag:
+In a post or page, use the &#91;sthumbs&#93; tag:
 
-<pre>&#91;sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear&#93;</pre>
-
-Example: <pre>&#91;sthumbs=5|202|115|84|33|189,160,3,n,none,both&#93;</pre>
-
-For your sidebar, you can pick the Image Thumbnails widget, or use this code and substitute the desired values:
-
-<pre>&lt;?php echo Shashin::getThumbs('photo_key1|photo_key2|etc',max_size,max_cols,'caption_yn','float','clear'); ?&gt;</pre>
+<pre>&#91;sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,position,clear&#93;</pre>
 
 <ul>
 <li>photo_key1|photo_key2|etc: (required) as many photo keys as you want, separated by the | character</li>
-<li>max_size: (required) the image size you want, chosen from <a href="#shashin5">the list above</a></li>
-<li>max_cols: (required) how many columns the table should have</li>
+<li>max_size: (required) the image size, chosen from <a href="#shashin5">the list above</a>, or the keyword "max"</li>
+<li>max_cols: (required) the number of columns for the table, or the keyword "max"</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
+<li>position: (optional) <a href="#shashin4.5">position options</a></li>
+<li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
 </ul>
+
+<h5>Tag examples</h5>
+
+Display photos with Shashin keys 5, 202, 115, 84, 33, and 189, size of 160 pixels for each image, display in 2 columns, no captions, float right (this is a 2x3 grid of pictures, floating to the right of the page's main content)
+
+<pre>&#91;sthumbs=5|202|115|84|33|189,160,2,n,right&#93;</pre>
+
+Display photos with Shashin keys 5, 202, 115, and 84, use the maximum possible size, 2 columns, show captions, centered (the size of the images depends on the width of your theme's content area)
+
+<pre>&#91;sthumbs=5|202|115|84,max,2,y,center&#93;</pre>
+
+<h5>Displaying in the sidebar</h5>
+
+You can pick the Image Thumbnails widget, or use this code and substitute the desired values:
+
+<pre>&lt;?php echo Shashin::getThumbs('photo_key1|photo_key2|etc',max_size,max_cols,'caption_yn','position','clear'); ?&gt;</pre>
+
+The arguments are the same as the tag examples above.
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin10">Displaying random photos - the &#91;srandom&#93; tag and widget</a></strong>
+<h4><a name="shashin10">Displaying a table of random photos - the &#91;srandom&#93; tag and widget</a></h4>
 
-In a post or page, use the srandom tag. Note that you can use the word "any" instead of listing album keys, if you want the random photos to come from any of your albums.
+In a post or page, use the &#91;srandom&#93; tag:
 
-<pre>&#91;srandom=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear&#93;</pre>
-
-Example: <pre>&#91;srandom=3|7|9,288,2,6,n,none,both&#93;</pre>
-
-For your sidebar, you can pick the Random Images widget, or use this code and substitute the desired values:
-
-<pre>&lt;?php echo Shashin::getRandom(album_key,max_size,max_cols,how_many,'caption_yn','float','clear'); ?&gt;</pre>
-
-Note that, if in the admin pages you change an album's "Include in Random" flag to "No," then its photos will not appear in random image displays. The same is true for individual images where you set the flag to "No."
+<pre>&#91;srandom=source,max_size,max_cols,how_many,caption_yn,position,clear&#93;</pre>
 
 <ul>
-<li>album_key: (required) either the word "any" or a list of album keys</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin5">the list above</a></li>
-<li>max_cols: (required) how many columns the table should have</li>
-<li>how_many: (required) how many random images to display in the table</li>
+<li>source: (required) either the word "any" or a list of album keys separated by the | character</li>
+<li>max_size: (required) the image size, chosen from <a href="#shashin5">the list above</a>, or the keyword "max"</li>
+<li>max_cols: (required) the number of columns for the table, or the keyword "max"</li>
+<li>how_many: (required) the number of random photos to display in the table</li>
 <li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
+<li>position: (optional) <a href="#shashin4.5">position options</a></li>
+<li>clear: (optional) <a href="#shashin4.5">margin clearing options</a></li>
 </ul>
 
-<a href="#top">&uArr; top</a>
+<h5>Tag examples</h5>
 
-<strong><a name="shashin11">Displaying your most recently uploaded photos - the &#91;snewest&#93; tag and widget</a></strong>
+Pick random photos from albums with Shashin keys 3, 7, and 9, size of 288 pixels for each image, display in 2 columns, 6 pictures total, no captions, float left (this will display a 2x3 grid of pictures, floating to the left of the main content)
 
-In a post or page, use the snewest tag. Note that you can use the word "any" instead of listing album keys, if you want to see the newest photos from across your albums.
+<pre>&#91;srandom=3|7|9,288,2,6,n,left&#93;</pre>
 
-<pre>&#91;snewest=album_key1|album_key2|etc,max_size,max_cols,how_many,caption_yn,float,clear&#93;</pre>
+Pick random photos from any album, size of 160 pixels for each image, create the maximum number of columns possible, 10 pictures total, show captions, centered (the number of columns depends on the width of your theme's content area)
 
-Example:
-<pre>&#91;snewest=any,288,2,6,n,none,both&#93;</pre>
+<pre>&#91;srandom=any,160,max,10,y,center&#93;</pre>
 
-For your sidebar you can pick the Newest Images widget, or use this code and substitute the desired values:
+<h5>Displaying in the sidebar</h5>
 
-<pre>&lt;?php echo Shashin::getNewest(album_key,max_size,max_cols,how_many,'caption_yn','float','clear'); ?&gt;</pre>
+You can pick the Random Images widget, or use this code and substitute the desired values:
 
-<ul>
-<li>album_key: (required) either the word "any" or a list of album keys</li>
-<li>max_size: (required) the size you want, chosen from <a href="#shashin5">the list above</a></li>
-<li>max_cols: (required) how many columns the table should have</li>
-<li>how_many: (required) how many random images to display in the table</li>
-<li>caption_yn: (optional, defaults to n) use y or n to indicate whether you want captions to appear under the images (you can also use "c" to have a "Click to enlarge" caption applied to every image)</li>
-<li>float: (optional) a CSS float value</li>
-<li>clear: (optional) a CSS clear value</li>
-</ul>
+<pre>&lt;?php echo Shashin::getRandom(album_key,max_size,max_cols,how_many,'caption_yn','position','clear'); ?&gt;</pre>
+
+The arguments are the same as the tag examples above.
+
+<h5>Notes</h5>
+
+If you change an album's "Include in Random" flag to "No" on the Shashin Tools page, then its photos will not appear in random image displays. The same is true for individual images where you set the flag to "No."
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin12">The Shashin and Highslide stylesheets</a></strong>
+<h4><a name="shashin11">Displaying a table of your newest photos - the &#91;snewest&#93; tag and widget</a></h4>
 
-The CSS for styling Shashin is in your plugin directory at shashin/display/shashin.css. If you want to customize, put a copy of it in your active theme folder, and edit it there (Shashin automatically looks for a copy of shashin.css ijn your active theme folder first). <strong>Important Note:</strong> if you change the padding for ".shashin_image img" or ".shashin_thumb img" you will need to go to the "Settings" page for Shashin and adjust the "Image div padding" and "Thumbnail div padding" accordingly.
+In a post or page, use the &#91;snewest&#93; tag:
 
-There's also a stylesheet for Highslide, at shashin/display/highslide.css. You can also put a customized version of it in your active theme directory. You can find <a href="http://vikjavev.no/highslide/doc.php">documentation on the Highslide CSS rules here</a>.
+<pre>&#91;snewest=source,max_size,max_cols,how_many,caption_yn,position,clear&#93;</pre>
+
+See the documentation and examples for <a href="#shashin10">the &#91;srandom&#93; tag</a> above. &#91;snewest&#93; works exactly the same way, but shows the newest photos instead of random photos.
+
+<h5>Displaying in the sidebar</h5>
+
+You can use the Newest Images widget, or use this code and substitute the desired values:
+
+<pre>&lt;?php echo Shashin::getNewest(album_key,max_size,max_cols,how_many,'caption_yn','position','clear'); ?&gt;</pre>
+
+<h5>Notes</h5>
+
+&#91;snewest&#93; uses the upload date of photos to determine which ones are newest.
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin13">Known Issues</a></strong>
+<h4><a name="shashin12">The Shashin and Highslide stylesheets</a></h4>
+
+The CSS for styling Shashin is in your plugin directory at shashin/display/shashin.css. If you want to customize it, copy it to your active theme folder, and edit it there. Shashin automatically looks for a copy of shashin.css in your active theme folder first. This way you won't lose your customizations the next time you upgrade Shashin.
+
+<strong>Important Note:</strong> if you change the padding for ".shashin_image img" or ".shashin_thumb img" you will need to go to the "Settings" page for Shashin and adjust the "Image div padding" and "Thumbnail div padding" accordingly.
+
+There's also a stylesheet for Highslide, at shashin/display/highslide.css. Like shashin.css, you can put a customized version of it in your active theme directory. You can find <a href="http://highslide.com/doc.php">documentation on the Highslide CSS rules here</a>.
+
+<a href="#top">&uArr; top</a>
+
+<h4><a name="shashin12.5">Highslide's JavaScript settings</a></h4>
+
+Highslide settings are managed in an "hs" JavaScript object. <a href="http://highslide.com/ref/">Its API is extensively documented at highslide.com</a>. With Shashin, the place to make adjustments to the Highslide settings is in the shashin/display/highslide_settings.js file.
+
+<a href="#top">&uArr; top</a>
+
+<h4><a name="shashin13">Known Issues</a></h4>
 
 <ul>
 <li>There are several WordPress plugins for Google Analytics, some or all of which conflict with Shashin. They overwrite Shashin's javascript "onclick" code in the Highslide links with their own Analytics tracking code, causing the Highslide links to not function properly. If you're using one of these plugins, see if it has an option where you can tell it to ignore links to certain domains. If so, tell it to not track links to "ggpht.com" (that's the Picasa domain where the images are served).</li>
-<li>If you start a Highslide slideshow and set it to run automatically, and there are videos in the slideshow, the videos will not play to the end. If each pictures is displayed for, say, 5 seconds, then  you will get only 5 seconds of a video before it moves on to the next picture or video. Currently Highsldie has no means for handling this situation.</li>
+<li>Shashin's "sync all" option may fail if you have hundreds of Picasa albums, or dozens of albums with several hundred photos per album. Your results will vary depending on the speed of the connection between your web server and your Picasa server, your server's memory and processor speed, etc. In Shashin 2.3.3 I re-wrote the syncing code to improve its performance, so if you had trouble with "sync all" in an earlier version, it may work better for you now. But if you have consistent trouble, you can try adding the following line of code after the initial comment block in Shashin.php: <pre>set_time_limit(120);</pre> Your server might not honor this setting, but if it does, then it will allow more time for Shashin to process all your albums' RSS feeds.</li>
+<li>If you start a Highslide slideshow and set it to run automatically, and there are videos in the slideshow, the videos will not play to the end. If each pictures is displayed for, say, 5 seconds, then  you will get only 5 seconds of a video before it moves on to the next picture or video. Currently Highslide has no means for handling this situation.</li>
 </ul>
+
 <a href="#top">&uArr; top</a>
 
 <h3><a name="shashinB">Q&amp;A About Shashin</a></h3>
