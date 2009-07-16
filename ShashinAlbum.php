@@ -104,7 +104,7 @@ class ShashinAlbum {
      * @param array $album_identifier (optional) a key-value pair (e.g. 'album_id' => 37)
      * @param array $album_data (optional) a complete array of album data
      * @return array 0: true on success, false on SQL error, null if album not found; 1: message; 2: true if SQL error
-     * @uses ToppaWPFunctions::sqlSelect
+     * @uses ToppaWPFunctions::sqlSelect()
      */
     function getAlbum($album_identifier = null, $album_data = null) {
         if (is_array($album_data)) {
@@ -225,7 +225,7 @@ class ShashinAlbum {
      * getAlbum() was successfully called first.
      *
      * @access public
-     * @uses ToppaWPFunctions::sqlDelete();
+     * @uses ToppaWPFunctions::sqlDelete()
      * @return boolean|array true on success; array on failure (first element is message, second element is db error flag)
      */
     function deleteAlbum() {
@@ -257,7 +257,7 @@ class ShashinAlbum {
      * @param integer $limit (optional) a max number of records to return (default: null)
      * @param boolean $include_deleted (optional) whether to include photos flagged as deleted (default: false)
      * @return array 0: true on success, false on failure, null if no records found; 1: message; 2: true if SQL error
-     * @uses ToppaWPFunctions::sqlSelect
+     * @uses ToppaWPFunctions::sqlSelect()
      */
     function getAlbumPhotos($order_by = 'photo_id', $limit = null, $include_deleted = false) {
         $conditions = array('album_id' => $this->data['album_id']);
@@ -305,8 +305,8 @@ class ShashinAlbum {
      * @uses ToppaWPFunctions::readFeed()
      * @uses ToppaWPFunctions::parseFeed()
      * @uses ShashinAlbum::getAlbumPhotos()
-     * @uses ToppaWPFunctions::update()
-     * @uses ToppaWPFunctions::insert()
+     * @uses ToppaWPFunctions::sqlUpdate()
+     * @uses ToppaWPFunctions::sqlInsert()
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
     function setAlbumPhotos() {
@@ -523,7 +523,7 @@ class ShashinAlbum {
      * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
      * @param string $other (optional) any additional conditions for the query (GROUP BY, etc.)
      * @return mixed passes along the return value of the $wpdb call in ToppaWPFunctions::sqlSelect
-     * @uses ToppaWPFunctions::sqlSelect
+     * @uses ToppaWPFunctions::sqlSelect()
      */
     function getAlbums($keywords = '*', $conditions = null, $other = null) {
         return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, $keywords, $conditions, $other, 'get_results');
@@ -536,7 +536,7 @@ class ShashinAlbum {
      * @access public
      * @param string $user_name (required) the Picasa user_name of the album's owner
      * @param array $local_data (optional) A hash of local album data (data not from the Picasa feed)
-     * @param boolean $add_only (optional) whether to sync existing albums when adding new albums (default: false)
+     * @param boolean $sync_only (optional) whether to sync existing albums when adding new albums (default: false)
      * @uses ToppaWPFunctions::readFeed()
      * @uses ToppaWPFunctions::parseFeed()
      * @uses ToppaWPFunctions::sqlUpdate()

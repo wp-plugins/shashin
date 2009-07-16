@@ -94,7 +94,7 @@ class Shashin {
      * @access public
      * @uses install
      * @uses uninstall
-     * @uses initAdminMenu
+     * @uses initAdminMenus
      * @uses parseContent
      * @uses getHeadTags
      */
@@ -336,7 +336,7 @@ class Shashin {
      * @uses ShashinAlbum::setAlbum()
      * @uses ShashinAlbum::setAlbumPhotos()
      * @uses ShashinAlbum::getAlbums()
-     * @uses ShashinAlbum::setAlbumLocalm()
+     * @uses ShashinAlbum::setAlbumLocal()
      * @uses ShashinAlbum::deleteAlbum()
      */
     function getAdminMenu() {
@@ -844,7 +844,7 @@ class Shashin {
             }
         }
 
-        $salbumphotos = "/\[salbumphotos=([\d\|]+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
+        $salbumphotos = "/\[salbumphotos=(\d+),(\d{2,4}|max),(\d+|max),?(\w?),?(\w?),?([\w ]{0,}),?(\w{0,6}),?(\w{0,5})\]/";
 
         if (preg_match_all($salbumphotos, $content, $matches, PREG_SET_ORDER) > 0) {
             foreach ($matches as $match) {
@@ -945,6 +945,7 @@ class Shashin {
      * @access public
      * @param string $album_key (required): Shashin album keys (not the Picasa album ID), or a column name to order by
      * @param string $info_yn (optional): y or n to show the album location, pub date, and number of pictures.
+     * @param boolean $force_picasa (optional): force the album link to point to Picasa (default: true)
      * @uses ShashinAlbum::getAlbumThumbsMarkup()
      * @return string xhtml to display album thumbnail
      */
@@ -1003,10 +1004,10 @@ class Shashin {
      *
      * @static
      * @access public
-     * @param string $album_keys (required): Shashin album keys (not the Picasa album ID), or a column name to order by
+     * @param string $album_key (required): Shashin album keys (not the Picasa album ID), or a column name to order by
      * @param int $max_cols (required): how many columns the table will have
-     * @param string $locationYN (optional): y or n to show the location of the image, with a link to Google Maps.
-     * @param string $pubDateYN (optional): y or n to show the pub date of the album
+     * @param string $location_yn (optional): y or n to show the location of the image, with a link to Google Maps.
+     * @param string $pubdate_yn (optional): y or n to show the pub date of the album
      * @param string $float (optional): a css float value (left, right, or none) (no default)
      * @param string $clear (optional): a css clear value (left, right, or both) (no default)
      * @param boolean $force_picasa (optional): force the album link to point to Picasa (default: true)

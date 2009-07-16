@@ -13,7 +13,7 @@
 hs.graphicsDir = highslide_settings.graphics_dir;
 hs.align = 'center';
 hs.transitions = ['expand', 'crossfade'];
-hs.outlineType = highslide_settings.outline_type;
+hs.outlineType = ((highslide_settings.outline_type == "none") ? null : highslide_settings.outline_type);
 hs.fadeInOut = true;
 hs.dimmingOpacity = highslide_settings.dimming_opacity-0;
 

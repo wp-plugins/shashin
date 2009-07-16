@@ -248,7 +248,7 @@
     <td><?php _e("Outline type:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><select name="shashin_options[highslide_outline_type]">
     <?php
-        $outline_types = array('beveled', 'glossy-dark', 'rounded-black', 'drop-shadow', 'outer-glow', 'rounded-white', 'null');
+        $outline_types = array('beveled', 'glossy-dark', 'rounded-black', 'drop-shadow', 'outer-glow', 'rounded-white', 'none');
         foreach ($outline_types as $type) {
             echo '<option value="' . $type . '"';
             if ($shashin_options['highslide_outline_type'] == $type) {

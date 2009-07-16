@@ -130,8 +130,8 @@ $edit_link = SHASHIN_ADMIN_URL
 
     <dt><?php _e("Display random images and videos", SHASHIN_L10N_NAME); ?></dt>
     <dd><?php _e("[srandom=source,max_size,max_cols,how_many,caption_yn,position,clear]", SHASHIN_L10N_NAME); ?></dd>
-    <dd><?php _e("Example: [srandom=3|7|9,288,2,6,n,left] Pick random photos from albums with Shashin keys 3, 7, and 9, size of 288 pixels for each image, display in 2 columns, 6 pictures, no captions, float left (this is a 2x3 grid of pictures, floating to the left of the main content)", SHASHIN_L10N_NAME); ?></dd>
-    <dd><?php _e("Example: [srandom=any,160,max,10,y,center] Pick random photos from any album, size of 160 pixels for each image, create the maximum number of columns possible, show captions, centered (the number of columns depends on the width of your theme's content area)", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [srandom=3|7|9,288,2,6,n,left] Pick random photos from albums with Shashin keys 3, 7, and 9, size of 288 pixels for each image, display in 2 columns, 6 pictures total, no captions, float left (this is a 2x3 grid of pictures, floating to the left of the main content)", SHASHIN_L10N_NAME); ?></dd>
+    <dd><?php _e("Example: [srandom=any,160,max,10,y,center] Pick random photos from any album, size of 160 pixels for each image, create the maximum number of columns possible, 10 pictures total, show captions, centered (the number of columns depends on the width of your theme's content area)", SHASHIN_L10N_NAME); ?></dd>
 
     <dt><?php _e("Display the newest images and videos", SHASHIN_L10N_NAME); ?></dt>
     <dd><?php _e("[snewest=source,max_size,max_cols,how_many,caption_yn,position,clear]", SHASHIN_L10N_NAME); ?></dd>

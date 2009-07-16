@@ -417,7 +417,7 @@ class ToppaWPFunctions {
      *
      * @static
      * @access public
-     * @param string $feedURL the feed to parse
+     * @param string $feed_url the feed to parse
      * @param boolean $cache whether or not to cache the feed
      * @return array the content of the feed
      */

@@ -362,7 +362,7 @@ class ShashinPhoto {
             $match['order_by'] = $shashin_options['album_photos_order'];
         }
 
-        $order = $match['order_by'] ? $match['order_by'] : 'taken_timestamp';
+        $order = $match['order_by'] ? $match['order_by'] : 'picasa_order';
         $conditions = " inner join " . SHASHIN_ALBUM_TABLE
             . " sa where sa.album_id = sp.album_id and sp.deleted = 'N' and sa.album_key = "
             . $match['album_key'];
