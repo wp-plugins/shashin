@@ -30,24 +30,9 @@
  * @subpackage Classes
  */
 
-define('SHASHIN_DIR', dirname(__FILE__));
-
-// get required libraries
-require_once(SHASHIN_DIR . '/ShashinAlbum.php');
-//require_once(SHASHIN_DIR . '/ShashinPhoto.php');
-//require_once(SHASHIN_DIR . '/ShashinWidget.php');
-
-if (!class_exists('ToppaWPFunctions')) {
-    require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
-}
-
-//if (!class_exists('ToppaXMLParser')) {
-//    require_once(SHASHIN_DIR . '/ToppaXMLParser.php');
-//}
-
 class Shashin {
     public $name = 'Shashin';
-    public $l10n_name = 'shashin';
+    public $l10n = 'shashin';
     public $version = '3.0';
     public $options;
     public $picasa_options;
@@ -74,6 +59,9 @@ class Shashin {
         $this->options = unserialize(get_option('shashin_options'));
         $this->album_table = $wpdb->prefix . 'shashin_album';
         $this->photo_table = $wpdb->prefix . 'shashin_photo';
+
+        // load localization
+        load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
     }
 
     /**
@@ -87,8 +75,7 @@ class Shashin {
      * @uses ToppaWPFunctions::createTable()
      */
     function install() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
-        $shashin_options_defaults = array(
+        $options_defaults = array(
             'div_padding' => 10,
             'thumb_padding' => 6,
             'image_display' => 'highslide',
@@ -106,41 +93,24 @@ class Shashin {
             'caption_exif' => 'n',
         );
 
-        // create/update tables
-        $album = new ShashinAlbum();
-
-        // the only way to handle errors during plugin activation is to force
-        // a fatal PHP error - stupid WordPress!
-        if (!ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_ALBUM_TABLE;
-            trigger_error('', E_USER_ERROR);
-        }
-
-        $photo = new ShashinPhoto();
-
-        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_PHOTO_TABLE;
-            trigger_error('', E_USER_ERROR);
-        }
-
         // flag whether to add or update Shashin options below
-        $add_options = empty($shashin_options);
+        $add_options = empty($this->options);
 
         // set Shashin options
-        $shashin_options['version'] = SHASHIN_VERSION;
+        $this->options['version'] = $this->version;
 
-        foreach ($shashin_options_defaults as $k=>$v) {
-            if (!$shashin_options[$k]) {
-                $shashin_options[$k] = $v;
+        foreach ($options_defaults as $k=>$v) {
+            if (!$this->options[$k]) {
+                $this->options[$k] = $v;
             }
         }
 
         if ($add_options === false) {
-            update_option('shashin_options', serialize($shashin_options));
+            update_option('shashin_options', serialize($this->options));
         }
 
         else {
-            add_option('shashin_options', serialize($shashin_options));
+            add_option('shashin_options', serialize($this->options));
         }
 
         // delete old-style Shashin options if necessary
@@ -165,6 +135,24 @@ class Shashin {
             delete_option('shashin_widget_newest');
             delete_option('shashin_widget_album_thumbs');
         }
+
+        // create/update tables
+        $album = new ShashinAlbum();
+
+        // the only way to handle errors during plugin activation is to force
+        // a fatal PHP error - stupid WordPress!
+        if (!ToppaWPFunctions::createTable($album, $this->album_table)) {
+            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", $this->l10n) . $this->album_table;
+            trigger_error('', E_USER_ERROR);
+        }
+/*
+        $photo = new ShashinPhoto();
+
+        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
+            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_PHOTO_TABLE;
+            trigger_error('', E_USER_ERROR);
+        }
+*/
     }
 
 
