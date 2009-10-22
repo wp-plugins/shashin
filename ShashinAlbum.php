@@ -21,7 +21,7 @@
  * @subpackage Classes
  */
 class ShashinAlbum {
-    public $ref_data = = array(
+    public $ref_data = array(
         'album_key' => array('col_params' => array('type' => 'int unsigned',
             'not_null' => true, 'primary_key' => true,
             'other' => 'AUTO_INCREMENT'), 'label' => 'Album Key'),
@@ -53,19 +53,14 @@ class ShashinAlbum {
             'length' => '1', 'other' => "default 'Y'"),
             'label' => 'Include in random photo display',
             'input_type' => 'radio',
-            'input_subgroup' => array('Y' => __('Yes', 'shashin'), 'N' => __('No', 'shashin'))),
+            'input_subgroup' => array('Y' => 'Yes', 'N' => 'No')),
         );
 
     public $data;
+    public $shashin;
 
-    /**
-     * The constructor sets $this->ref_data, which is used for creating the
-     * shashin_album table, for mapping Picasa RSS feed params to table
-     * field names, and for generating form input fields.
-     *
-     * @access public
-     */
-    function __construct() {
+    function __construct(&$shashin) {
+        $this->shashin = &$shashin;
     }
 }
 ?>

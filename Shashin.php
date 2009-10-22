@@ -32,7 +32,6 @@
 
 class Shashin {
     public $name = 'Shashin';
-    public $l10n = 'shashin';
     public $version = '3.0';
     public $options;
     public $picasa_options;
@@ -137,19 +136,15 @@ class Shashin {
         }
 
         // create/update tables
-        $album = new ShashinAlbum();
+        $album = new ShashinAlbum($this);
 
-        // the only way to handle errors during plugin activation is to force
-        // a fatal PHP error - stupid WordPress!
         if (!ToppaWPFunctions::createTable($album, $this->album_table)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", $this->l10n) . $this->album_table;
             trigger_error('', E_USER_ERROR);
         }
 /*
-        $photo = new ShashinPhoto();
+        $photo = new ShashinPhoto($this);
 
-        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
-            $_SESSION['shashin_activate_error'] = __("Failed to create or update table ", SHASHIN_L10N_NAME) . SHASHIN_PHOTO_TABLE;
+        if (!ToppaWPFunctions::createTable($photo, $this->photo_table)) {
             trigger_error('', E_USER_ERROR);
         }
 */

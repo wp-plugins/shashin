@@ -18,9 +18,7 @@ define('SHASHIN_DIR', dirname(__FILE__));
 register_activation_hook(__FILE__, 'shashin_activate');
 
 if ($_GET['action'] == 'error_scrape') {
-    $error = $_SESSION['shashin_activate_error'];
-    unset($_SESSION['shashin_activate_error']);
-    die($error);
+    die(__("Shashin failed to activate correctly. Shashin requires PHP 5.0 or higher, and mySQL 4.1 or higher. Please deactivate Shashin.", 'shashin'));
 }
 
 function shashin_activate() {
@@ -32,7 +30,6 @@ function shashin_activate() {
     $mysql_version = $wpdb->get_var("select version()");
 
     if (version_compare(phpversion(), "5.0", "<") || version_compare($mysql_version, "4.1", "<")) {
-        $_SESSION['shashin_activate_error'] = __("Sorry, Shashin requires PHP 5.0 or higher, and mySQL 4.1 or higher. Please deactivate Shashin.", 'shashin');
         trigger_error('', E_USER_ERROR);
     }
 
