@@ -50,7 +50,7 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     // get required libraries
     require_once(SHASHIN_DIR . "/Shashin.php");
     require_once(SHASHIN_DIR . '/ShashinAlbum.php');
-    //require_once(SHASHIN_DIR . '/ShashinPhoto.php');
+    require_once(SHASHIN_DIR . '/ShashinPhoto.php');
     //require_once(SHASHIN_DIR . '/ShashinWidget.php');
 
     if (!class_exists('ToppaWPFunctions')) {

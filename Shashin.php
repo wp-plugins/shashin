@@ -43,8 +43,7 @@ class Shashin {
     public $photo_table;
 
     /**
-     * Called automatically (after the end of the class) to register hooks and
-     * add the actions and filters.
+     * Get options, register hooks.
      *
      * @access public
      * @uses install
@@ -61,11 +60,13 @@ class Shashin {
 
         // load localization
         load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
+        // add Tools and Settings menus
+        add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
+
     }
 
     /**
-     * Updates Shashin options and creates the Shashin tables if they don't
-     * already exist.
+     * Updates Shashin options and create/update the Shashin tables
      *
      * @static
      * @access public
@@ -82,7 +83,7 @@ class Shashin {
             'video_width' => 640,
             'video_height' => 480,
             'album_photos_cols' => 3,
-            'album_photos_order' => 'natural_order',
+            'album_photos_order' => 'picasa_order',
             'album_photos_captions' => 'n',
             'album_photos_description' => 'n',
             'scheduled_update' => 'n',
@@ -141,16 +142,30 @@ class Shashin {
         if (!ToppaWPFunctions::createTable($album, $this->album_table)) {
             trigger_error('', E_USER_ERROR);
         }
-/*
+
         $photo = new ShashinPhoto($this);
 
         if (!ToppaWPFunctions::createTable($photo, $this->photo_table)) {
             trigger_error('', E_USER_ERROR);
         }
-*/
     }
 
 
+    /**
+     * Adds the Shashin management and option pages.
+     *
+     * @static
+     * @access public
+     * @uses getAdminMenu()
+     * @uses getOptionsMenu()
+     */
+    function initAdminMenus() {
+        //add_options_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getOptionsMenu'));
+        add_management_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getAdminMenu'));
+        //if (strpos($_SERVER['REQUEST_URI'], __FILE__) !== false) {
+        //    add_action("admin_print_styles", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
+        //}
+    }
 }
 
 ?>
