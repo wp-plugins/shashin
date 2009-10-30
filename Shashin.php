@@ -160,11 +160,111 @@ class Shashin {
      * @uses getOptionsMenu()
      */
     function initAdminMenus() {
-        //add_options_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getOptionsMenu'));
-        add_management_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getAdminMenu'));
+        add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getOptionsMenu'));
+        //add_management_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getAdminMenu'));
         //if (strpos($_SERVER['REQUEST_URI'], __FILE__) !== false) {
         //    add_action("admin_print_styles", array(SHASHIN_PLUGIN_NAME, 'getAdminHeadTags'));
         //}
+    }
+
+    function getOptionsMenu() {
+        // can't use $this->options as the options may have changed during the session
+        $options = unserialize(get_option('shashin_options'));
+
+        // Start the cache
+        ob_start();
+
+        switch ($_REQUEST['shashin_action']) {
+        case 'uninstall':
+            // make doubly sure they want to uninstall
+            if ($_REQUEST['shashin_uninstall'] == 'y') {
+                try {
+                    $message = $this->uninstall();
+                }
+
+                catch (Exception $e) {
+                    $message = $e->getMessage();
+                    $db_error = true;
+                }
+            }
+
+            else {
+                $message = __("You must check the 'Uninstall Shashin' checkbox to confirm you want to uninstall Shashin", 'shashin');
+            }
+
+            break;
+        case 'update_options':
+            // make sure the Picasa URL looks valid
+            $pieces = explode("/", trim($_REQUEST['shashin_options']['picasa_server']));
+
+            if ($pieces[0] != "http:" || !strlen($pieces[2]) || strlen($pieces[3])) {
+                $message = __("Invalid URL for Picasa Server", SHASHIN_L10N_NAME);
+            }
+
+            // save the options
+            else {
+                array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_htmlentities'));
+                array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_trim'));
+
+                // remove scheduled updates if scheduling is turned off
+                if ($_REQUEST['shashin_options']['scheduled_update'] == 'n') {
+                    Shashin::unscheduleUpdate();
+                }
+
+                // deal with y/n checkbox inputs (better abstraction for this would be nice...)
+                $checkboxes = array('other_link_title', 'other_image_title');
+
+                foreach ($checkboxes as $checkbox) {
+                    if (!$_REQUEST['shashin_options'][$checkbox]) {
+                        $_REQUEST['shashin_options'][$checkbox] = 'n';
+                    }
+                }
+
+                // determine the largest Picasa size for single images
+                $shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
+
+                $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
+                update_option('shashin_options', serialize($shashin_options));
+                $message = __("Shashin settings saved.", SHASHIN_L10N_NAME);
+            }
+            break;
+        }
+
+        $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
+        $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
+
+        // check that re-activation has been done
+        //if ($shashin_options['version'] != SHASHIN_VERSION) {
+        //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+        //}
+
+        // Get the markup and display
+        require(SHASHIN_DIR . '/display/options-main.php');
+        $options_form = ob_get_contents();
+        ob_end_clean();
+        echo $options_form;
+    }
+
+    /**
+     * Deletes the Shashin tables and Shashin option setttings. This is
+     * irrevocable!
+     *
+     * @access public
+     * @return boolean true: uninstall successful; false: uninstall failed
+     */
+    function uninstall() {
+        global $wpdb;
+        $sql = "drop table if exists " . $this->photo_table . ", " . $this->album_table . ";";
+
+        if ($wpdb->query($sql) === false) {
+            throw new Exception(__("Uninstall of Shashin failed.", 'shashin'));
+        }
+
+        else {
+            delete_option('shashin_options');
+        }
+
+        return __("Shashin has been uninstalled. You can now deactivate Shashin on your plugins management page.", 'shashin');
     }
 }
 

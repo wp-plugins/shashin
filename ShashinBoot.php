@@ -34,7 +34,7 @@ function shashin_activate() {
     }
 
     else {
-        require_once(dirname(__FILE__) . "/Shashin.php");
+        require_once(SHASHIN_DIR . '/Shashin.php');
         $shashin = new Shashin();
         $shashin->install();
     }
@@ -48,7 +48,7 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     if (!defined('WP_PLUGIN_DIR')) define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
 
     // get required libraries
-    require_once(SHASHIN_DIR . "/Shashin.php");
+    require_once(SHASHIN_DIR . '/Shashin.php');
     require_once(SHASHIN_DIR . '/ShashinAlbum.php');
     require_once(SHASHIN_DIR . '/ShashinPhoto.php');
     //require_once(SHASHIN_DIR . '/ShashinWidget.php');
@@ -56,10 +56,6 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     if (!class_exists('ToppaWPFunctions')) {
         require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
     }
-
-    //if (!class_exists('ToppaXMLParser')) {
-    //    require_once(SHASHIN_DIR . '/ToppaXMLParser.php');
-    //}
 
     $shashin = new Shashin();
 }
