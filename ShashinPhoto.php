@@ -51,7 +51,7 @@ class ShashinPhoto {
             'length' => '1', 'other' => "default 'Y'"),
             'label' => 'Include in random photo display',
             'input_type' => 'radio',
-            'input_subgroup' => array('Y' => 'Yes', 'N' => 'No')),
+            'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
         'deleted' => array('col_params' => array('type' => 'char',
             'length' => '1', 'other' => "default 'N'"), 'label' => 'Deleted'),
         'enclosure_url' => array('col_params' => array('type' => 'text',

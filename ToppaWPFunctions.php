@@ -73,5 +73,83 @@ class ToppaWPFunctions {
         require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
         return dbDelta($sql, true);
     }
+
+    /**
+     * Generates and echoes xhtml for form inputs.
+     *
+     * @static
+     * @access public
+     * @param string $input_name (required) the name to use for the input field
+     * @param array $ref_data (required) contains data about how the input field should be set up
+     * @param string $input_value (optional) a value to apply to the input
+     */
+    function displayInput($input_name, $ref_data, $input_value = null) {
+        $input_id = str_replace("[", "_", $input_name);
+        $input_id = str_replace("]", "", $input_id);
+
+        switch ($ref_data['input_type']) {
+        case 'text':
+            echo '<input type="text" name="' . $input_name
+                . '" id="' . $input_id
+                . '" value="' . htmlspecialchars($input_value)
+                . '" size="' . $ref_data['input_size'] . '"';
+
+            if (strlen($ref_data['col_params']['length'])) {
+                echo ' maxlength="' . $ref_data['col_params']['length'] . '"';
+            }
+
+            echo " />\n";
+            break;
+
+        case 'radio':
+            foreach ($ref_data['input_subgroup'] as $value=>$label) {
+                echo '<input type="radio" name="' . $input_name
+                    . '" id="' . $input_id . "_" . htmlspecialchars($value)
+                    . '" value="' . htmlspecialchars($value) . '"';
+
+                if ($input_value == $value) {
+                    echo ' checked="checked"';
+                }
+
+                echo ' /> ' . $label . "\n";
+            }
+            break;
+
+        case 'select':
+            echo '<select name="' . $input_name . '" id="' . $input_id . '">' . "\n";
+
+            foreach ($ref_data['input_subgroup'] as $value=>$label) {
+                echo '<option value="' . htmlspecialchars($value) . '"';
+
+                if ($input_value == $value) {
+                    echo ' selected="selected"';
+                }
+
+                echo '>' . $label . "</option>\n";
+            }
+
+            echo "</select>\n";
+            break;
+
+        case 'textarea':
+            echo '<textarea name="' . $input_name . '" id="' . $input_id
+                . '" cols="' . $ref_data['input_cols']
+                . '" rows="' . $ref_data['input_rows'] . '">'
+                . htmlspecialchars($input_value) . '</textarea>';
+            break;
+
+        case 'checkbox':
+            echo '<input type="checkbox" name="' . $input_name
+                    . '" id = "' . $input_id
+                    . '" value="' . htmlspecialchars($value) . '"';
+
+            if ($input_value == $value) {
+                echo ' checked="checked"';
+            }
+
+            echo ' /> ' . $label . "\n";
+            break;
+        }
+    }
 }
 ?>

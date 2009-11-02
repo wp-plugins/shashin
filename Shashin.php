@@ -33,6 +33,7 @@
 class Shashin {
     public $name = 'Shashin';
     public $version = '3.0';
+    public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin';
     public $options;
     public $picasa_options;
     public $twitpic_options;
@@ -61,8 +62,7 @@ class Shashin {
         // load localization
         load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
         // add Tools and Settings menus
-        add_action('admin_menu', array(SHASHIN_PLUGIN_NAME, 'initAdminMenus'));
-
+        add_action('admin_menu', array($this, 'initAdminMenus'));
     }
 
     /**
@@ -198,17 +198,17 @@ class Shashin {
             $pieces = explode("/", trim($_REQUEST['shashin_options']['picasa_server']));
 
             if ($pieces[0] != "http:" || !strlen($pieces[2]) || strlen($pieces[3])) {
-                $message = __("Invalid URL for Picasa Server", SHASHIN_L10N_NAME);
+                $message = __("Invalid URL for Picasa Server", 'shashin');
             }
 
             // save the options
             else {
-                array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_htmlentities'));
-                array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_trim'));
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', '_htmlentities'));
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', '_trim'));
 
                 // remove scheduled updates if scheduling is turned off
                 if ($_REQUEST['shashin_options']['scheduled_update'] == 'n') {
-                    Shashin::unscheduleUpdate();
+                    wp_clear_scheduled_hook('shashin_scheduled_update_hook');
                 }
 
                 // deal with y/n checkbox inputs (better abstraction for this would be nice...)
@@ -225,18 +225,10 @@ class Shashin {
 
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
                 update_option('shashin_options', serialize($shashin_options));
-                $message = __("Shashin settings saved.", SHASHIN_L10N_NAME);
+                $message = __("Shashin settings saved.", 'shashin');
             }
             break;
         }
-
-        $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
-        $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
-
-        // check that re-activation has been done
-        //if ($shashin_options['version'] != SHASHIN_VERSION) {
-        //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
-        //}
 
         // Get the markup and display
         require(SHASHIN_DIR . '/display/options-main.php');

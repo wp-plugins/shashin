@@ -13,6 +13,8 @@ Author URI: http://www.toppa.com
 // xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
 define('SHASHIN_DIR', dirname(__FILE__));
+define('SHASHIN_YES', __('Yes', 'shashin'));
+define('SHASHIN_NO', __('No', 'shashin'));
 
 // based on http://nerdlife.net/wordpress-plugin-installation-hackery/
 register_activation_hook(__FILE__, 'shashin_activate');
