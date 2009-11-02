@@ -33,8 +33,8 @@
 
     <form  method="post">
     <input type="hidden" name="shashin_action" value="update_options">
-    <div style="visibility:visible" id="main_settings">
-        <h3><a onclick="Main Settings</h3>
+    <div style="visibility:visible;" id="main_settings">
+        <h3><a href="#" onclick="shashin_toggle_visibility('main_settings');">Main Settings</a></h3>
         <table class="form-table">
         <tr style="vertical-align: top;">
         <td><?php _e("Sync all albums daily:", 'shashin'); ?></td>

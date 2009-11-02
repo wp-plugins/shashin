@@ -12,10 +12,6 @@ Author URI: http://www.toppa.com
 // find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
 // xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
 
-define('SHASHIN_DIR', dirname(__FILE__));
-define('SHASHIN_YES', __('Yes', 'shashin'));
-define('SHASHIN_NO', __('No', 'shashin'));
-
 // based on http://nerdlife.net/wordpress-plugin-installation-hackery/
 register_activation_hook(__FILE__, 'shashin_activate');
 
@@ -27,7 +23,7 @@ function shashin_activate() {
     global $wpdb;
 
     // load localization
-    load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
+    load_plugin_textdomain('shashin', false, basename(dirname(__FILE__)) . '/languages/');
 
     $mysql_version = $wpdb->get_var("select version()");
 
@@ -36,7 +32,7 @@ function shashin_activate() {
     }
 
     else {
-        require_once(SHASHIN_DIR . '/Shashin.php');
+        require_once(dirname(__FILE__) . '/Shashin.php');
         $shashin = new Shashin();
         $shashin->install();
     }
@@ -48,6 +44,12 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
     if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins');
     if (!defined('WP_PLUGIN_DIR')) define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+
+    define('SHASHIN_DIR', dirname(__FILE__));
+    define('SHASHIN_BASE', basename(__FILE__));
+    define('SHASHIN_DISPLAY_URL', WP_PLUGIN_URL . '/' . basename(SHASHIN_DIR) . '/display');
+    define('SHASHIN_YES', __('Yes', 'shashin'));
+    define('SHASHIN_NO', __('No', 'shashin'));
 
     // get required libraries
     require_once(SHASHIN_DIR . '/Shashin.php');
