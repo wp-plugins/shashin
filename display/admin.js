@@ -5,13 +5,16 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 3.0
  */
 
-function shashin_toggle_visibility(id) {
-   var e = document.getElementById(id);
-   if(e.style.display == 'block')
-      e.style.display = 'none';
-   else
-      e.style.display = 'block';
-}
+var $j = jQuery.noConflict();
+
+$j(document).ready(function() {
+    $j('a#shashin_main_toggle').click(function() {
+        $j('#shashin_main').toggle(400);
+        return false;
+    });
+});
+
+

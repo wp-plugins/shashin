@@ -28,3 +28,13 @@
     margin-left: 15px;
     margin-bottom: 5px;
 }
+
+.shashin_toggle {
+    text-decoration: none;
+}
+
+.shashin_toggle img {
+    padding-right: 2px;
+    padding-bottom: 2px;
+}
+

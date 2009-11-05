@@ -103,15 +103,16 @@ class ToppaWPFunctions {
 
         case 'radio':
             foreach ($ref_data['input_subgroup'] as $value=>$label) {
+                $id = $input_id . "_" . htmlspecialchars($value);
                 echo '<input type="radio" name="' . $input_name
-                    . '" id="' . $input_id . "_" . htmlspecialchars($value)
+                    . '" id="' . $id
                     . '" value="' . htmlspecialchars($value) . '"';
 
                 if ($input_value == $value) {
                     echo ' checked="checked"';
                 }
 
-                echo ' /> ' . $label . "\n";
+                echo ' /> <label for="' . $id . '">' . $label . "</label>\n";
             }
             break;
 
