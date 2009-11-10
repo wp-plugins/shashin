@@ -33,8 +33,8 @@
 
     <form  method="post">
     <input type="hidden" name="shashin_action" value="update_options">
-    <h3><a href="#" id="shashin_main_toggle" class="shashin_toggle"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" />Main Settings</a></h3>
-    <div id="shashin_main">
+    <h3><a href="#" id="shashin_main" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
+    <div id="shashin_main_section">
         <table class="form-table">
         <tr style="vertical-align: top;">
         <th><?php _e("Sync all albums daily", 'shashin'); ?>:</th>
@@ -67,25 +67,25 @@
         </tr>
 
         <tr style="vertical-align: top;">
-        <td><label for="shashin_options_div_padding"><?php _e("Image div padding:", 'shashin'); ?></label></td>
+        <th><label for="shashin_options_div_padding"><?php _e("Image div padding:", 'shashin'); ?></label></th>
         <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
             'shashin_options[div_padding]',
             array('input_type' => 'text', 'input_size' => 30),
             $this->options['div_padding']); ?></td>
-        <td><span class="description"><?php _e("Make this 2x the '.shashin_image img' padding value in shashin.css", 'shashin'); ?></span></td>
+        <td><span class="description"><?php _e("The padding (in pixels) around single images. It must be 2x the '.shashin_image img' padding value in shashin.css", 'shashin'); ?></span></td>
         </tr>
 
         <tr style="vertical-align: top;">
-        <td><label for="shashin_options_thumb_padding"><?php _e("Thumbnail div padding:", 'shashin'); ?></label></td>
+        <th><label for="shashin_options_thumb_padding"><?php _e("Thumbnail div padding:", 'shashin'); ?></label></th>
         <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
             'shashin_options[thumb_padding]',
             array('input_type' => 'text', 'input_size' => 30),
             $this->options['thumb_padding']); ?></td>
-        <td><span class="description"><?php _e("Make this 2x the '.shashin_thumb img' padding value in shashin.css", 'shashin'); ?></span></td>
+        <td><span class="description"><?php _e("The padding (in pixels) around images in tables of thumbnails. It must be 2x the '.shashin_thumb img' padding value in shashin.css", 'shashin'); ?></span></td>
         </tr>
 
         <tr style="vertical-align: top;">
-        <td><label for="shashin_options_theme_max_size"><?php _e("Maximum image width for your theme:", 'shashin'); ?></label></td>
+        <th><label for="shashin_options_theme_max_size"><?php _e("Maximum image width for your theme:", 'shashin'); ?></label></th>
         <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
             'shashin_options[theme_max_size]',
             array('input_type' => 'text', 'input_size' => 30),
@@ -94,31 +94,26 @@
         </tr>
 
         <tr style="vertical-align: top;">
-        <td><label for="shashin_options_image_display"><?php _e("Expanded image display:", 'shashin'); ?></label></td>
-        <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
+        <th><label for="shashin_options_image_display"><?php _e("Expanded image display:", 'shashin'); ?></label></th>
+        <td style="white-space: nowrap;"><?php
+            $same_window_option = __("At Picasa, in same browser window", 'shashin');
+            $new_window_option = __("At Picasa, in a new browser window", 'shashin');
+            $highslide_option =  __("Use Highslide", 'shashin');
+            $lightbox_option =  __("Use prettyPhoto (jQuery Lightbox)", 'shashin');
+            $other_option = __("Use Other Viewer", 'shashin');
+            $none_option = __("Do not make thumbnails clickable", 'shashin');
+            ToppaWPFunctions::displayInput(
                 'shashin_options[image_display]',
                 array('input_type' => 'radio',
-                'input_subgroup' => array('date' => $date_option, 'all' => $all_option, 'none' => $none_option)),
-                $this->options['image_display']); ?>
-
-
-            <input type="radio" name="shashin_options[image_display]" value="same_window"<?php
-                if ($shashin_options['image_display'] == 'same_window') echo ' checked="checked"'; ?> />
-                <?php _e("At Picasa, in same browser window", 'shashin'); ?><br />
-            <input type="radio" name="shashin_options[image_display]" value="new_window"<?php
-                if ($shashin_options['image_display'] == 'new_window') echo ' checked="checked"'; ?> />
-                <?php _e("At Picasa, in a new browser window", 'shashin'); ?><br />
-            <input type="radio" name="shashin_options[image_display]" value="highslide"<?php
-                if ($shashin_options['image_display'] == 'highslide') echo ' checked="checked"'; ?> />
-                <?php _e("Use Highslide", 'shashin'); ?><br />
-            <input type="radio" name="shashin_options[image_display]" value="other"<?php
-                if ($shashin_options['image_display'] == 'other') echo ' checked="checked"'; ?> />
-                <?php _e("Use Other Viewer (e.g. Lightbox)", 'shashin'); ?><br />
-            <input type="radio" name="shashin_options[image_display]" value="none"<?php
-                if ($shashin_options['image_display'] == 'none') echo ' checked="checked"'; ?> />
-                <?php _e("Do not make thumbnails clickable", 'shashin'); ?>
-                </td>
-        <td><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works "out of the box." <strong>If you select "Use Other Viewer," you are responsible for implementing your own image viewer.</strong> See "Highslide Settings" and "Other Viewer Settings" below.', 'shashin'); ?></td>
+                'input_subgroup' => array(
+                    'same_window' => $same_window_option,
+                    'new_window' => $new_window_option,
+                    'highslide' => $highslide_option,
+                    'lightbox' => $lightbox_option,
+                    'other' => $other_option,
+                    'none' => $none_option)),
+                $this->options['image_display'], "<br />"); ?></td>
+        <td><span class="description"><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide and prettyPhoto are included with Shashin and work "out of the box." <strong>If you select "Use Other Viewer," you are responsible for implementing your own image viewer.</strong> See "Viewer Settings" below.', 'shashin'); ?></span></td>
         </tr>
 
 

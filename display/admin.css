@@ -29,11 +29,11 @@
     margin-bottom: 5px;
 }
 
-.shashin_toggle {
+.shashin_option_heading {
     text-decoration: none;
 }
 
-.shashin_toggle img {
+.shashin_option_heading img {
     padding-right: 2px;
     padding-bottom: 2px;
 }

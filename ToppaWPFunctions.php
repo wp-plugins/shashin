@@ -82,8 +82,9 @@ class ToppaWPFunctions {
      * @param string $input_name (required) the name to use for the input field
      * @param array $ref_data (required) contains data about how the input field should be set up
      * @param string $input_value (optional) a value to apply to the input
+     * @param string $delimiter (optional) separator between radio buttons and checkboxes
      */
-    function displayInput($input_name, $ref_data, $input_value = null) {
+    function displayInput($input_name, $ref_data, $input_value = null, $delimiter = null) {
         $input_id = str_replace("[", "_", $input_name);
         $input_id = str_replace("]", "", $input_id);
 
@@ -112,7 +113,8 @@ class ToppaWPFunctions {
                     echo ' checked="checked"';
                 }
 
-                echo ' /> <label for="' . $id . '">' . $label . "</label>\n";
+                echo ' /> <label for="' . $id . '">' . $label . "</label>"
+                    . $delimiter . "\n";
             }
             break;
 
