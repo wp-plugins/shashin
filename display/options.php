@@ -26,19 +26,20 @@
 
     <h2><?php echo __("Shashin Settings", 'shashin'); ?></h2>
 
+    <p><?php _e("Fill out the Main Settings section. Then for the other sections that are relevant to how you will use Shashin, click their headings to expand them, and fill them out.", 'shashin'); ?></p>
+
     <?php if (strlen($message)) {
         require (SHASHIN_DIR . '/display/include-message.php');
     } ?>
 
-
     <form  method="post">
     <input type="hidden" name="shashin_action" value="update_options">
-    <h3><a href="#" id="shashin_main" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
+    <h3><a href="#/" id="shashin_main" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
     <div id="shashin_main_section">
         <table class="form-table">
         <tr style="vertical-align: top;">
         <th><?php _e("Sync all albums daily", 'shashin'); ?>:</th>
-        <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[scheduled_update]',
             array('input_type' => 'radio',
                 'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO)),
@@ -49,7 +50,7 @@
         <tr style="vertical-align: top;">
         <th><?php _e("Add to photo caption", 'shashin'); ?>:</th>
         <td style="white-space: nowrap;"><?php _e("Album Title", 'shashin'); ?>:
-            <?php ToppaWPFunctions::displayInput(
+            <?php echo ToppaWPFunctions::displayInput(
                 'shashin_options[prefix_captions]',
                 array('input_type' => 'radio',
                 'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO)),
@@ -58,7 +59,7 @@
             <?php $date_option = __("Date only", 'shashin');
                 $all_option = __("All", 'shashin');
                 $none_option = __("None", 'shashin');
-                ToppaWPFunctions::displayInput(
+                echo ToppaWPFunctions::displayInput(
                 'shashin_options[caption_exif]',
                 array('input_type' => 'radio',
                 'input_subgroup' => array('date' => $date_option, 'all' => $all_option, 'none' => $none_option)),
@@ -67,8 +68,8 @@
         </tr>
 
         <tr style="vertical-align: top;">
-        <th><label for="shashin_options_div_padding"><?php _e("Image div padding:", 'shashin'); ?></label></th>
-        <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
+        <th><label for="shashin_options_div_padding"><?php _e("Single image padding", 'shashin'); ?>:</label></th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[div_padding]',
             array('input_type' => 'text', 'input_size' => 30),
             $this->options['div_padding']); ?></td>
@@ -76,8 +77,8 @@
         </tr>
 
         <tr style="vertical-align: top;">
-        <th><label for="shashin_options_thumb_padding"><?php _e("Thumbnail div padding:", 'shashin'); ?></label></th>
-        <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
+        <th><label for="shashin_options_thumb_padding"><?php _e("Thumbnail padding", 'shashin'); ?>:</label></th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[thumb_padding]',
             array('input_type' => 'text', 'input_size' => 30),
             $this->options['thumb_padding']); ?></td>
@@ -86,36 +87,84 @@
 
         <tr style="vertical-align: top;">
         <th><label for="shashin_options_theme_max_size"><?php _e("Maximum image width for your theme:", 'shashin'); ?></label></th>
-        <td style="white-space: nowrap;"><?php ToppaWPFunctions::displayInput(
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[theme_max_size]',
             array('input_type' => 'text', 'input_size' => 30),
             $this->options['theme_max_size']); ?></td>
-        <td><span class="description"><?php _e("The width of your theme's content area in pixels, minus any padding. If you use the word 'max' for the size in your Shashin tags, Shashin will use the closest, smaller supported Picasa size for the images. You can use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", 'shashin'); ?></span></td>
+        <td><span class="description"><?php _e("The width of your theme's content area in pixels, minus any padding. If you use the word 'max' for the size in your Shashin tags, Shashin will use the closest, smaller available size for the images. You can use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image.", 'shashin'); ?></span></td>
         </tr>
 
         <tr style="vertical-align: top;">
-        <th><label for="shashin_options_image_display"><?php _e("Expanded image display:", 'shashin'); ?></label></th>
+        <th><label for="shashin_options_image_display"><?php _e("Expanded image display", 'shashin'); ?>:</label></th>
         <td style="white-space: nowrap;"><?php
-            $same_window_option = __("At Picasa, in same browser window", 'shashin');
-            $new_window_option = __("At Picasa, in a new browser window", 'shashin');
-            $highslide_option =  __("Use Highslide", 'shashin');
-            $lightbox_option =  __("Use prettyPhoto (jQuery Lightbox)", 'shashin');
-            $other_option = __("Use Other Viewer", 'shashin');
+            $same_window_option = __("Show at photo site, in same browser window", 'shashin');
+            $new_window_option = __("Show at photo site, in a new browser window", 'shashin');
+            $highslide_option =  __("Show in Highslide", 'shashin');
+            $lightbox_option =  __("Show in prettyPhoto (jQuery Lightbox)", 'shashin');
+            $other_option = __("Show in other viewer", 'shashin');
             $none_option = __("Do not make thumbnails clickable", 'shashin');
-            ToppaWPFunctions::displayInput(
+            echo ToppaWPFunctions::displayInput(
                 'shashin_options[image_display]',
                 array('input_type' => 'radio',
-                'input_subgroup' => array(
-                    'same_window' => $same_window_option,
-                    'new_window' => $new_window_option,
-                    'highslide' => $highslide_option,
-                    'lightbox' => $lightbox_option,
-                    'other' => $other_option,
-                    'none' => $none_option)),
+                    'input_subgroup' => array(
+                        'same_window' => $same_window_option,
+                        'new_window' => $new_window_option,
+                        'highslide' => $highslide_option,
+                        'lightbox' => $lightbox_option,
+                        'other' => $other_option,
+                        'none' => $none_option)),
                 $this->options['image_display'], "<br />"); ?></td>
-        <td><span class="description"><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide and prettyPhoto are included with Shashin and work "out of the box." <strong>If you select "Use Other Viewer," you are responsible for implementing your own image viewer.</strong> See "Viewer Settings" below.', 'shashin'); ?></span></td>
+        <td><span class="description"><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide and prettyPhoto are included with Shashin and work "out of the box." <strong>If you select "Show in other viewer," you are responsible for implementing your own image viewer.</strong> See "Other Viewer Settings" below.', 'shashin'); ?></span></td>
+        </tr>
+        </table>
+    </div>
+
+    <h3><a href="#" id="shashin_picasa" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_picasa_button" />Picasa Settings</a></h3>
+    <div id="shashin_picasa_section" style="display: none;">
+        <table class="form-table">
+        <tr style="vertical-align: top;">
+        <th><label for="shashin_options_picasa_max"><?php _e("Expanded image size", 'shashin'); ?>:</label></th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[picasa_max]',
+            array('input_type' => 'select',
+                'input_subgroup' => $this->picasa_sizes,
+                'input_value' => $this->options['picasa_max'])); ?></td>
+        <td><span class="description"><?php _e("The size for expanded display of photos.", 'shashin'); ?></span></td>
+        </tr>
+        </table>
+    </div>
+
+    <h3><a href="#" id="shashin_highslide" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_highslide_button" />Highslide Settings</a></h3>
+    <div id="shashin_highslide_section" style="display: none;">
+        <table class="form-table">
+        <tr style="vertical-align: top;">
+        <th><?php _e("Autoplay slideshows", 'shashin'); ?>:</th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[highslide_autoplay]',
+            array('input_type' => 'radio',
+                'input_subgroup' => array('true' => SHASHIN_YES, 'false' => SHASHIN_NO)),
+            $this->options['highslide_autoplay']); ?>
+        <td><span class="description"><?php _e("If someone clicks an image in a slideshow group, this determines whether the slideshow plays automatically.", 'shashin'); ?></span></td>
         </tr>
 
+        <tr style="vertical-align: top;">
+        <th><label for="shashin_options_highslide_interval"><?php _e("Slideshow image display time", 'shashin'); ?>:</label></th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[highslide_interval]',
+            array('input_type' => 'text', 'input_size' => 30),
+            $this->options['theme_max_size']); ?></td>
+        <td><span class="description"><?php _e("How long each image is displayed in a slideshow (in milliseconds)", 'shashin'); ?></span></td>
+        </tr>
+
+        <tr style="vertical-align: top;">
+        <th><?php _e("Repeat slideshow", 'shashin'); ?>:</th>
+        <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[highslide_repeat]',
+            array('input_type' => 'radio',
+                'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO)),
+            $this->options['highslide_repeat']); ?></td>
+        <td><span class="description"><?php _e("Whether to start over from the first image after a slideshow displays the last image.", 'shashin'); ?></span></td>
+        </tr>
 
         </table>
     </div>

@@ -90,69 +90,71 @@ class ToppaWPFunctions {
 
         switch ($ref_data['input_type']) {
         case 'text':
-            echo '<input type="text" name="' . $input_name
+            $field = '<input type="text" name="' . $input_name
                 . '" id="' . $input_id
                 . '" value="' . htmlspecialchars($input_value)
                 . '" size="' . $ref_data['input_size'] . '"';
 
             if (strlen($ref_data['col_params']['length'])) {
-                echo ' maxlength="' . $ref_data['col_params']['length'] . '"';
+                $field .= ' maxlength="' . $ref_data['col_params']['length'] . '"';
             }
 
-            echo " />\n";
+            $field .=  " />\n";
             break;
 
         case 'radio':
             foreach ($ref_data['input_subgroup'] as $value=>$label) {
                 $id = $input_id . "_" . htmlspecialchars($value);
-                echo '<input type="radio" name="' . $input_name
+                $field .=  '<input type="radio" name="' . $input_name
                     . '" id="' . $id
                     . '" value="' . htmlspecialchars($value) . '"';
 
                 if ($input_value == $value) {
-                    echo ' checked="checked"';
+                    $field .=  ' checked="checked"';
                 }
 
-                echo ' /> <label for="' . $id . '">' . $label . "</label>"
+                $field .=  ' /> <label for="' . $id . '">' . $label . "</label>"
                     . $delimiter . "\n";
             }
             break;
 
         case 'select':
-            echo '<select name="' . $input_name . '" id="' . $input_id . '">' . "\n";
+            $field =  '<select name="' . $input_name . '" id="' . $input_id . '">' . "\n";
 
             foreach ($ref_data['input_subgroup'] as $value=>$label) {
-                echo '<option value="' . htmlspecialchars($value) . '"';
+                $field .=  '<option value="' . htmlspecialchars($value) . '"';
 
                 if ($input_value == $value) {
-                    echo ' selected="selected"';
+                    $field .=  ' selected="selected"';
                 }
 
-                echo '>' . $label . "</option>\n";
+                $field .=  '>' . $label . "</option>\n";
             }
 
-            echo "</select>\n";
+            $field .=  "</select>\n";
             break;
 
         case 'textarea':
-            echo '<textarea name="' . $input_name . '" id="' . $input_id
+            $field =  '<textarea name="' . $input_name . '" id="' . $input_id
                 . '" cols="' . $ref_data['input_cols']
                 . '" rows="' . $ref_data['input_rows'] . '">'
                 . htmlspecialchars($input_value) . '</textarea>';
             break;
 
         case 'checkbox':
-            echo '<input type="checkbox" name="' . $input_name
+            $field =  '<input type="checkbox" name="' . $input_name
                     . '" id = "' . $input_id
                     . '" value="' . htmlspecialchars($value) . '"';
 
             if ($input_value == $value) {
-                echo ' checked="checked"';
+                $field .=  ' checked="checked"';
             }
 
-            echo ' /> ' . $label . "\n";
+            $field .=  ' /> ' . $label . "\n";
             break;
         }
+
+        return $field;
     }
 }
 ?>

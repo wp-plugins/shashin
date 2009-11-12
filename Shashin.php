@@ -35,14 +35,9 @@ class Shashin {
     public $version = '3.0';
     public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin';
     public $options;
-    public $picasa_options;
-    public $twitpic_options;
-    public $highslide_options;
-    public $lightbox_options;
-    public $other_viewer_options;
     public $album_table;
     public $photo_table;
-
+    public $picasa_sizes = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
     /**
      * Get options, register hooks.
      *
@@ -91,6 +86,9 @@ class Shashin {
             'theme_max_single' => 576,
             'photos_per_page' => null,
             'caption_exif' => 'none',
+            'picasa_max' => 640,
+            'highslide_autoplay' => 'false',
+            'highslide_interval' => 5000,
         );
 
         // flag whether to add or update Shashin options below
