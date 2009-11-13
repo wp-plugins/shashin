@@ -71,24 +71,25 @@ class Shashin {
      */
     function install() {
         $options_defaults = array(
+            'scheduled_update' => 'n',
+            'prefix_captions' => 'n',
+            'caption_exif' => 'none',
             'div_padding' => 10,
             'thumb_padding' => 6,
-            'image_display' => 'highslide',
-            'prefix_captions' => 'n',
-            'video_width' => 640,
-            'video_height' => 480,
-            'album_photos_cols' => 3,
-            'album_photos_order' => 'picasa_order',
-            'album_photos_captions' => 'n',
-            'album_photos_description' => 'n',
-            'scheduled_update' => 'n',
             'theme_max_size' => 600,
-            'theme_max_single' => 576,
-            'photos_per_page' => null,
-            'caption_exif' => 'none',
+            'image_display' => 'highslide',
             'picasa_max' => 640,
             'highslide_autoplay' => 'false',
             'highslide_interval' => 5000,
+            'highslide_repeat' => '1',
+            'highslide_video_width' => 640,
+            'highslide_video_height' => 480,
+            'highslide_outline_type' => 'rounded-white',
+            'highslide_v_position' => 'top',
+            'highslide_h_position' => 'center',
+            'highslide_dimming_opacity' => 0.75,
+            'highslide_hide_controller' => '1',
+
         );
 
         // flag whether to add or update Shashin options below

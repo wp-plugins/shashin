@@ -142,16 +142,24 @@ class ToppaWPFunctions {
             break;
 
         case 'checkbox':
-            $field =  '<input type="checkbox" name="' . $input_name
-                    . '" id = "' . $input_id
+            foreach ($ref_data['input_subgroup'] as $value=>$label) {
+                $id = $input_id . "_" . htmlspecialchars($value);
+                $field .=  '<input type="checkbox" name="' . $input_name
+                    . '" id="' . $id
                     . '" value="' . htmlspecialchars($value) . '"';
 
-            if ($input_value == $value) {
-                $field .=  ' checked="checked"';
-            }
+                if ($input_value == $value) {
+                    $field .=  ' checked="checked"';
+                }
 
-            $field .=  ' /> ' . $label . "\n";
-            break;
+                $field .=  ' />';
+
+                if ($label) {
+                    $field .= '<label for="' . $id . '">' . $label . "</label>";
+                }
+
+                $field .= $delimiter . "\n";
+            }
         }
 
         return $field;
