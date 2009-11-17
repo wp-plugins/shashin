@@ -164,5 +164,29 @@ class ToppaWPFunctions {
 
         return $field;
     }
+
+    /**
+     * array_walk callback method for htmlentities()
+     *
+     * @static
+     * @access private
+     * @param string $string (required): the string to update
+     * @param mixed $key (ignored): the array key of the string (not needed but passed automatically by array_walk)
+     */
+    function htmlentities(&$string, $key) {
+        $string = htmlentities($string, ENT_COMPAT, 'UTF-8');
+    }
+
+    /**
+     * array_walk callback method for trim()
+     *
+     * @static
+     * @access private
+     * @param string $string (required): the string to update
+     * @param mixed $key (ignored): the array key of the string (not needed but passed automatically by array_walk)
+     */
+    function trim(&$string, $key) {
+        $string = trim($string);
+    }
 }
 ?>

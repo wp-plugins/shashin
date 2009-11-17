@@ -31,13 +31,19 @@
  */
 
 class Shashin {
-    public $name = 'Shashin';
-    public $version = '3.0';
-    public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin';
     public $options;
     public $album_table;
     public $photo_table;
+    public $name = 'Shashin';
+    public $version = '3.0';
+    public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin/';
     public $picasa_sizes = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
+    public $picasa_crop = array(32, 48, 64, 160);
+    public $flickr_sizes = array(75, 100, 240, 500, 1024);
+    public $flickr_crop = array(75);
+    public $twitpic_sizes = array(75, 150, 600);
+    public $twitpic_crop = array(75, 150);
+
     /**
      * Get options, register hooks.
      *
@@ -79,6 +85,9 @@ class Shashin {
             'theme_max_size' => 600,
             'image_display' => 'highslide',
             'picasa_max' => 640,
+            'picasa_theme_max_single' => 576,
+            'flickr_theme_max_single' => 500,
+            'twitpic_theme_max_single' => 600,
             'highslide_autoplay' => 'false',
             'highslide_interval' => 5000,
             'highslide_repeat' => '1',
@@ -193,17 +202,9 @@ class Shashin {
 
             break;
         case 'update_options':
-            // make sure the Picasa URL looks valid
-            $pieces = explode("/", trim($_REQUEST['shashin_options']['picasa_server']));
-
-            if ($pieces[0] != "http:" || !strlen($pieces[2]) || strlen($pieces[3])) {
-                $message = __("Invalid URL for Picasa Server", 'shashin');
-            }
-
-            // save the options
-            else {
-                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', '_htmlentities'));
-                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', '_trim'));
+            try {
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'htmlentities'));
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'trim'));
 
                 // remove scheduled updates if scheduling is turned off
                 if ($_REQUEST['shashin_options']['scheduled_update'] == 'n') {
@@ -219,12 +220,17 @@ class Shashin {
                     }
                 }
 
-                // determine the largest Picasa size for single images
-                $shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
-
-                $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
-                update_option('shashin_options', serialize($shashin_options));
+                // determine the largest theme supported sizes for single images
+                $this->options['picasa_theme_max_single'] = ShashinPhoto::setMaxThemeSize($_REQUEST['shashin_options']['theme_max_size'], 1, $this->picasa_sizes);
+                $this->options['flickr_theme_max_single'] = ShashinPhoto::setMaxThemeSize($_REQUEST['shashin_options']['theme_max_size'], 1, $this->flickr_sizes);
+                $this->options['twitpic_theme_max_single'] = ShashinPhoto::setMaxThemeSize($_REQUEST['shashin_options']['theme_max_size'], 1, $this->twitpic_sizes);
+                $this->options = array_merge($this->options, $_REQUEST['shashin_options']);
+                update_option('shashin_options', serialize($this->options));
                 $message = __("Shashin settings saved.", 'shashin');
+            }
+
+            catch (Exception $e) {
+                $message = $e->getMessage();
             }
             break;
         }

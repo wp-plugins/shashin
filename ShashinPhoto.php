@@ -81,6 +81,40 @@ class ShashinPhoto {
     function __construct(&$shashin) {
         $this->shashin = &$shashin;
     }
-}
 
+    /**
+     * Finds the maximum possible Picasa image size for a given number
+     * of thumbnail columns. Assumes 10px of padding/margin per image.
+     *
+     * NOTE: The calculation will be incorrect for pictures with a
+     * portrait orientation
+     *
+     * @static
+     * @access public
+     * @param int $theme_max The content width of the theme, minus padding
+     * @param int $cols The number of columns of thumbnails
+     * @throws Exception invalid arguments
+     * @return int The largest possible allowed Picasa size
+     */
+    public static function setMaxThemeSize($theme_max, $cols, $sizes) {
+        if (!is_numeric($theme_max) || !is_numeric($cols) || !is_array($sizes)) {
+            throw new Exception(__(__CLASS__ . '::' . __METHOD__ . ' called with invalid arguments', 'shashin'));
+        }
+
+        $max_size = $theme_max / $cols;
+        $max_size -= 10; // guess for padding/margins per image
+
+        // figure out which allowed size is closest, but not larger
+        // $sizes is ordered from smallest to largest
+        for($i=0; $i<count($sizes); $i++) {
+            // stop on the first size that's bigger and go back one
+            if ($max_size < $sizes[$i]) {
+                $theme_max = $sizes[$i-1];
+                break;
+            }
+        }
+
+        return $theme_max;
+    }
+}
 ?>

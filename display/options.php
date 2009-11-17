@@ -127,8 +127,8 @@
         <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[picasa_max]',
             array('input_type' => 'select',
-                'input_subgroup' => $this->picasa_sizes,
-                'input_value' => $this->options['picasa_max'])); ?></td>
+                'input_subgroup' => array_combine($this->picasa_sizes, $this->picasa_sizes)),
+            $this->options['picasa_max']); ?></td>
         <td><span class="description"><?php _e("The size for expanded display of Picasa photos.", 'shashin'); ?></span></td>
         </tr>
         </table>
@@ -161,7 +161,7 @@
         <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
             'shashin_options[highslide_repeat]',
             array('input_type' => 'radio',
-                'input_subgroup' => array('y' => SHASHIN_YES, 'n' => SHASHIN_NO)),
+                'input_subgroup' => array('1' => SHASHIN_YES, '0' => SHASHIN_NO)),
             $this->options['highslide_repeat']); ?></td>
         <td><span class="description"><?php _e("Whether to start over from the first image after a slideshow displays the last image.", 'shashin'); ?></span></td>
         </tr>
@@ -184,31 +184,31 @@
         <tr style="vertical-align: top;">
         <th><label for="shashin_options_highslide_outline_type"><?php _e("Outline type:", 'shashin'); ?></label></td>
         <td style="white-space: nowrap;"><?php
-            $outline_types = array('beveled', 'glossy-dark', 'rounded-black', 'drop-shadow', 'outer-glow', 'rounded-white', 'none');
+            $outline_types = array('beveled' => 'Beveled', 'glossy-dark' => 'Glossy Dark', 'rounded-black' => 'Rounded Black', 'drop-shadow' => 'Drop Shadow', 'outer-glow' => 'Outer Glow', 'rounded-white' => 'Rounded White', 'none' => 'None');
             echo ToppaWPFunctions::displayInput(
                 'shashin_options[highslide_outline_type]',
                 array('input_type' => 'select',
-                    'input_subgroup' => $outline_types,
-                    'input_value' => $this->options['highslide_outline_type'])); ?></td>
+                    'input_subgroup' => $outline_types),
+                $this->options['highslide_outline_type']); ?></td>
         <td><span class="description"><?php _e("The graphic outline applied to expanded images. Select 'none' for no outline.", 'shashin'); ?></span></td>
         </tr>
 
         <tr style="vertical-align: top;">
         <th><label for="shashin_options_highslide_v_position"><?php _e("Controller Position:", 'shashin'); ?></label></th>
         <td style="white-space: nowrap;"><?php
-            $v_positions = array('top', 'middle', 'bottom');
+            $v_positions = array('top' => 'Top', 'middle' => 'Middle', 'bottom' => 'Bottom');
             echo ToppaWPFunctions::displayInput(
                 'shashin_options[highslide_v_position]',
                 array('input_type' => 'select',
-                    'input_subgroup' => $v_positions,
-                    'input_value' => $this->options['highslide_v_position']));
+                    'input_subgroup' => $v_positions),
+                $this->options['highslide_v_position']);
 
-            $h_positions = array('left', 'center', 'right');
+            $h_positions = array('left' => 'Left', 'center' => 'Center', 'right' => 'Right');
             echo ToppaWPFunctions::displayInput(
                 'shashin_options[highslide_h_position]',
                 array('input_type' => 'select',
-                    'input_subgroup' => $h_positions,
-                    'input_value' => $this->options['highslide_h_position'])); ?></td>
+                    'input_subgroup' => $h_positions),
+                $this->options['highslide_h_position']); ?></td>
         <td><span class="description"><?php _e("Where to position the slideshow control bar.", 'shashin'); ?></span></td>
         </tr>
 
@@ -237,8 +237,6 @@
     </form>
 
     <div style="border: thin solid; padding: 5px;">
-
-
         <form method="post">
         <input type="hidden" name="shashin_action" value="uninstall">
         <table class="form-table">
@@ -257,5 +255,4 @@
         <p class="submit"><input class="button-secondary" type="submit" name="save" value="<?php _e("Uninstall Shashin", 'shashin'); ?>" onclick="return confirm('<?php _e("Are you sure you want to uninstall Shashin?", 'shashin'); ?>');" /></p>
         </form>
     </div>
-
 </div>
