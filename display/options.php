@@ -1,6 +1,6 @@
 <?php
 /**
- * Set options for Shashin.
+ * Manage settings for Shashin.
  *
  * This file is part of Shashin. Please see the Shashin.php file for
  * copyright and license information.
@@ -9,6 +9,7 @@
  * @version 3.0
  * @package Shashin
  * @subpackage AdminPanels
+ * @uses ToppaWPFunctions::displayInput()
  */
 
 ?>
@@ -33,6 +34,7 @@
     } ?>
 
     <form method="post">
+    <?php wp_nonce_field('shashin_nonce', 'shashin_nonce'); ?>
     <input type="hidden" name="shashin_action" value="update_options">
     <h3><a href="#/" id="shashin_main" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
     <div id="shashin_main_section">

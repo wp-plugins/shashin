@@ -1,6 +1,6 @@
 <?php
 /**
- * Shashin is a WordPress plugin for integrating Picasa and Twitpic photos in WordPress.
+ * Shashin is a WordPress plugin for displaying Picasa, Flickr, and Twitpic photos in WordPress.
  *
  * @author Michael Toppa
  * @version 3.0
@@ -156,6 +156,8 @@ class Shashin {
         if (!ToppaWPFunctions::createTable($photo, $this->photo_table)) {
             trigger_error('', E_USER_ERROR);
         }
+
+        return true;
     }
 
 
@@ -168,14 +170,16 @@ class Shashin {
      * @uses getOptionsMenu()
      */
     function initAdminMenus() {
-        add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getOptionsMenu'));
-        //add_management_page('Shashin', 'Shashin', 6, __FILE__, array($this, 'getAdminMenu'));
-        //if (strpos($_SERVER['REQUEST_URI'], SHASHIN_BASE) !== false) {
-            add_action("admin_print_styles", array($this, 'getAdminHeadTags'));
-        //}
+        $options_page = add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getOptionsMenu'));
+        add_action("admin_print_styles-$options_page", array($this, 'getAdminHeadTags'));
+        add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($this, 'getAdminMenu'));
     }
 
     function getOptionsMenu() {
+        if ($_REQUEST['shashin_action'] && !check_admin_referer('shashin_nonce', 'shashin_nonce')) {
+            return false;
+        }
+
         // can't use $this->options as the options may have changed during the session
         $options = unserialize(get_option('shashin_options'));
 
@@ -240,17 +244,287 @@ class Shashin {
         $options_form = ob_get_contents();
         ob_end_clean();
         echo $options_form;
+        return true;
     }
 
     /**
-     * Gets the Shashin Admin CSS file, for inclusion on the widget management
-     * page and the Shashin admin pages.
+     * Performs the requested admin action, based on the value of
+     * $_REQUEST['shashin_action'] values.
+     *
+     * @static
+     * @access public
+     * @uses ShashinAlbum::ShashinAlbum()
+     * @uses ShashinAlbum::getAlbum()
+     * @uses ShashinAlbum::getAlbumPhotos()
+     * @uses ShashinPhoto::ShashinPhoto()
+     * @uses ShashinPhoto::getPhoto()
+     * @uses ShashinPhoto::setPhotoLocal()
+     * @uses ShashinAlbum::setAlbum()
+     * @uses ShashinAlbum::setAlbumPhotos()
+     * @uses ShashinAlbum::getAlbums()
+     * @uses ShashinAlbum::setAlbumLocal()
+     * @uses ShashinAlbum::deleteAlbum()
+     */
+    function getAdminMenu() {
+        if ($_REQUEST['shashin_action'] && !check_admin_referer('shashin_nonce', 'shashin_nonce')) {
+            return false;
+        }
+
+        switch ($_REQUEST['shashin_action']) {
+        // show selected album for editing
+        case 'edit_album_photos':
+            if (is_numeric($_REQUEST['album_id'])) {
+                $album = new ShashinAlbum();
+                list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
+
+                if ($result === true) {
+                    $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'picasa_order';
+                    list($result, $message, $db_error) = $album->getAlbumPhotos($order_by);
+                    unset($message); // no need to display a message in this case.
+                }
+            }
+
+            $display = 'admin-edit';
+            break;
+        // save updated local photo data
+        case 'update_album_photos':
+            if (is_numeric($_REQUEST['album_id'])) {
+                $album = new ShashinAlbum();
+                list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
+
+                if ($result === true) {
+                    list($result, $message, $db_error) = $album->getAlbumPhotos();
+                    unset($message); // no need to display a message in this case.
+
+                    // compare new values to old to see which records need updating
+                    // (better than running a bunch of unneeded updates)
+                    foreach ($album->data['photos'] as $photos_data) {
+                        foreach($_REQUEST['include_in_random'] as $k=>$v) {
+                            if ($photos_data['photo_id'] == $k && $photos_data['include_in_random'] != $v) {
+                                $photo = new ShashinPhoto();
+                                list($result, $message, $db_error) = $photo->getPhoto(null, $photos_data);
+
+                                if ($result !== true) {
+                                    break;
+                                }
+
+                                list($result, $message, $db_error) = $photo->setPhotoLocal(array('include_in_random' => $v));
+
+                                if ($result !== true) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if ($db_error === true) {
+                            break;
+                        }
+                    }
+
+                    if ($db_error !== true) {
+                        $message = __("Updates saved.", SHASHIN_L10N_NAME);
+                    }
+                }
+            }
+
+            else {
+                $message = __("No valid album ID supplied", SHASHIN_L10N_NAME);
+            }
+
+            $display = 'tools';
+            break;
+        // add an album (or all of a user's albums)
+        case 'add_album':
+            $link_url = trim($_REQUEST['link_url']);
+
+            // remove any trailing # from the url - these often appear in Picasa
+            // album links, and they trip up the RSS feed
+            if (strpos($link_url, "#") == strlen($link_url) - 1) {
+                $link_url = substr($link_url, 0, -1);
+            }
+
+            $pieces = explode("/", $link_url);
+
+            // validate the URL
+            if ((($pieces[0] . "//" . $pieces[2]) != $shashin_options['picasa_server']) || !$pieces[3]) {
+                $message = __("That is not a valid URL for your Picasa server.", SHASHIN_L10N_NAME);
+            }
+
+            // if no validation errors, and we have a single album, add it
+            else if ($pieces[4]) {
+                $album = new ShashinAlbum();
+                list($result, $message, $db_error) = $album->setAlbum($pieces[3], array('name' => $pieces[4]), array('include_in_random' => $_REQUEST['include_in_random']));
+
+                if ($result === true) {
+                    list($result, $message, $db_error) = $album->setAlbumPhotos();
+
+                    // all is well
+                    if ($result === true) {
+                        $message = __("Album added.", SHASHIN_L10N_NAME);
+                        // clear user inputs so they're not displayed again
+                        unset($_REQUEST['include_in_random']);
+                        unset($_REQUEST['link_url']);
+                    }
+                }
+            }
+
+            // if no validation errors, and we're adding all albums
+            else {
+                list($result, $message, $db_error) = ShashinAlbum::setUserAlbums($pieces[3], array('include_in_random' => $_REQUEST['include_in_random']), false);
+
+                if ($result === true) {
+                    $message = __("Albums added.", SHASHIN_L10N_NAME);
+                }
+            }
+
+            $display = 'tools';
+            break;
+        // sync all albums
+        case 'sync_all':
+            $user = htmlentities($_REQUEST['users']);
+            list($result, $message, $db_error) = ShashinAlbum::setUserAlbums($user);
+
+            if ($result === true) {
+                $message = __("All albums synced for ", SHASHIN_L10N_NAME) . $user;
+            }
+
+            $display = 'tools';
+            break;
+        // update albums' include_in_random flag
+        case 'update_albums':
+            $all_albums = ShashinAlbum::getAlbums('*', null, "order by title");
+
+            if (is_array($all_albums)) {
+                foreach ($all_albums as $album_data) {
+                    $album = new ShashinAlbum();
+                    list($result, $message, $db_error) = $album->getAlbum(null, $album_data);
+
+                    if ($result !== true) {
+                        break;
+                    }
+
+                    foreach($_REQUEST['include_in_random'] as $k=>$v) {
+                        if ($album->data['album_id'] == $k && $album->data['include_in_random'] != $v) {
+                            list($result, $message, $db_error) = $album->setAlbumLocal(array('include_in_random' => $v));
+
+                            if ($result !== true) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($db_error === true) {
+                       break;
+                    }
+                }
+            }
+
+            else {
+                $message = __("Failed to retrieve album data.", SHASHIN_L10N_NAME);
+                $db_error = true;
+            }
+
+            if (!$db_error) {
+                $message = __("Updates saved.", SHASHIN_L10N_NAME);
+            }
+
+            $display = 'tools';
+            break;
+        // sync album and its photos
+        case 'sync_album':
+            $album = new ShashinAlbum();
+            list($result, $message, $db_error) = $album->setAlbum($_REQUEST['user'], array('album_id' => $_REQUEST['album_id']));
+
+            if ($result === true) {
+                list($result, $message, $db_error) = $album->setAlbumPhotos();
+
+                if ($result === true) {
+                    $message = __("Album synchronized.", SHASHIN_L10N_NAME);
+                }
+            }
+
+            $display = 'tools';
+            break;
+        // delete requested album
+        case 'delete_album':
+            $album = new ShashinAlbum();
+            list($result, $message, $db_error) = $album->getAlbum(array('album_id' => $_REQUEST['album_id']));
+
+            if ($result === true) {
+                list($result, $message, $db_error) = $album->deleteAlbum();
+
+                if ($result === true) {
+                    $message = __("Album deleted.");
+                }
+            }
+
+            $display = 'tools';
+            break;
+        // show summary of albums, and form to add a new one
+        default:
+            $display = 'tools';
+        }
+
+        // Start the cache
+        ob_start();
+
+        // decide which admin menu to show
+        if ($display == 'admin-edit') {
+               require(SHASHIN_DIR . '/display/admin-edit.php');
+        }
+
+        else {
+            //$users = ShashinAlbum::getUsers();
+            $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
+            //$all_albums = ShashinAlbum::getAlbums('*', null, "order by $order_by");
+
+            if (!is_array($users)) {
+                $message = __("Failed to retrieve user data.", SHASHIN_L10N_NAME);
+                $db_error = true;
+            }
+
+            elseif ($all_albums === false) {
+                $message = __("Failed to retrieve album data.", SHASHIN_L10N_NAME);
+                $db_error = true;
+            }
+
+            else {
+                $album = new ShashinAlbum(); // needed in tools, for ref_data
+                $user_names = array();
+
+                foreach ($users as $user) {
+                    $user_names[$user] = $user;
+                }
+
+                $sync_all = array('input_type' => 'select', 'input_subgroup' => $user_names);
+            }
+
+            // check that re-activation has been done
+            //if ($shashin_options['version'] != SHASHIN_VERSION) {
+            //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
+            //}
+
+            require(SHASHIN_DIR . '/display/tools.php');
+        }
+
+        // Get the markup and display
+        $adminMenuHTML = ob_get_contents();
+        ob_end_clean();
+        echo $adminMenuHTML;
+    }
+
+
+    /**
+     * Gets the Shashin Admin CSS and JS files, for inclusion on the
+     * widget management page and the Shashin admin pages.
      *
      * @access public
      */
     function getAdminHeadTags() {
         wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/admin.css', false, $this->version);
         wp_enqueue_script('shashin_admin_js', SHASHIN_DISPLAY_URL . '/admin.js', array('jquery'), $this->version);
+        wp_localize_script('shashin_admin_js', 'shashin_display', array('url' => SHASHIN_DISPLAY_URL));
+        return true;
     }
 
     /**
@@ -258,7 +532,8 @@ class Shashin {
      * irrevocable!
      *
      * @access public
-     * @return boolean true: uninstall successful; false: uninstall failed
+     * @return string Message that Shashin has been uninstalled
+     * @throws Exception Query to drop Shashin tables failed
      */
     function uninstall() {
         global $wpdb;
