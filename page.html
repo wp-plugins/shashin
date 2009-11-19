@@ -65,7 +65,7 @@ Shashin comes bundled with Highslide. Although I do not charge anything for usin
 </li>
 <li><a href="#shashin12">The Shashin and Highslide stylesheets</a></li>
 <li><a href="#shashin12.5">Highslide's JavaScript settings</a></li>
-<li><a href="#shashin13">Known Issues</a></li>
+<li><a href="#shashin12.7">Using the "max" keyword to dynamically set image sizes or the number of thumbnail columns</a></li><li><a href="#shashin13">Known Issues</a></li>
 </ul>
 
 <h3><a href="#shashinB">Q&amp;A About Shashin</a></h3>
@@ -173,7 +173,7 @@ Note that these sizes represent a "maximum dimension." This means if you pick 64
 
 Note that 32, 48, 64, and 160 are special sizes. Picasa will crop them to a square shape. This makes them good sizes for displaying tables of thumbnails.
 
-The Shashin tags also allow you to use the word "max" as an image size. In the Shashin Settings menu, if you provide the maximum width of your theme's content area, Shashin will use that to dynamically determine the largest image size it can use. It will even take into account the number of thumbnail columns. [p2p type="slug" value="shashin-24-beta-available" text="See this post on new features in Shashin 2.4 for more details"].
+The Shashin tags also allow you to use the word "max" as an image size. In the Shashin Settings menu, if you provide the maximum width of your theme's content area, Shashin will use that to dynamically determine the largest image size it can use. It will even take into account the number of thumbnail columns. <a href="#shashin12.7">See below for more information</a>.
 
 <a href="#top">&uArr; top</a>
 
@@ -229,9 +229,9 @@ In a post or page, use the &#91;salbumthumbs&#93; tag:
 
 Show all albums in the reverse of the picasa order, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page:
 
-<pre>&#91;salbumthumbs=picasa_order desc,3,y,n,center&#93;</pre>
+<pre>&#91;salbumthumbs=pub_date desc,3,y,n,center&#93;</pre>
 
-You can use "picasa_order", "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order.
+You can use "pub_date", "title", "location", or "last_updated" for the order. If you add " desc" then they will be put in reverse order.
 
 Show albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left:
 
@@ -271,9 +271,9 @@ In a post or page, use the &#91;salbumlist&#93; tag:
 
 <h5>Tag examples</h5>
 
-All albums in reverse order by publication date, with additional album information shown between the title and description (photo count, publication date, and location):
+All albums ordered by when they were last updated, with additional album information shown between the title and description (photo count, publication date, and location):
 
-<pre>&#91;salbumlist=pub_date desc,y&#93;</pre>
+<pre>&#91;salbumlist=last_updated,y&#93;</pre>
 
 Albums with Shashin keys 2, 24, and 33 only, no additional information shown:
 
@@ -431,23 +431,35 @@ Highslide settings are managed in an "hs" JavaScript object. <a href="http://hig
 
 <a href="#top">&uArr; top</a>
 
+<h4><a name="shashin12.7">Using the "max" keyword to dynamically set image sizes or the number of thumbnail columns</a></h4>
+
+<ul>
+<li><strong>Dynamic image sizing:</strong> If you indicate the width of your theme's content area in the Shashin settings menu, you can use the word "max" instead of specifying a Picasa image size in your Shashin tags. Shashin will then figure out which Picasa image size to use. This is very useful because it means you won't have to go back and edit all your tags if you change to a wider or narrower theme in the future. For example, if the width of your theme's content area is 610 pixels, and you use "max" with the simage tag for a single image, Shashin will pick 576 as the image size (the largest Picasa size that will fit in the available space). If you use "max" as the image size with sthumbs, srandom, or snewest, Shashin will do the math to determine the correct size for the thumbnails based on the number of columns you specified. Note that "max" doesn’t work well for photos with a portrait orientation, as the size will be applied to the height instead of the width.</li>
+<li><strong>Dynamically setting the number of thumbnail columns:</strong> You can also use "max" to indicate the number of columns with the sthumbs, srandom, and snewest tags. Shashin will figure out the number of columns based on the image size. For example, if you set the image size to 160, and your content width is 610, your thumbnails will be displayed in 3 columns.</li>
+</ul>
+
+You cannot use "max" for the image size and the number of columns at the same time. Shashin needs one to be a number so it can calculate the other.
+
+<a href="#top">&uArr; top</a>
+
 <h4><a name="shashin13">Known Issues</a></h4>
 
 <ul>
 <li>There are several WordPress plugins for Google Analytics, some or all of which conflict with Shashin. They overwrite Shashin's javascript "onclick" code in the Highslide links with their own Analytics tracking code, causing the Highslide links to not function properly. If you're using one of these plugins, see if it has an option where you can tell it to ignore links to certain domains. If so, tell it to not track links to "ggpht.com" (that's the Picasa domain where the images are served).</li>
 <li>Shashin's "sync all" option may fail if you have hundreds of Picasa albums, or dozens of albums with several hundred photos per album. Your results will vary depending on the speed of the connection between your web server and your Picasa server, your server's memory and processor speed, etc. In Shashin 2.3.3 I re-wrote the syncing code to improve its performance, so if you had trouble with "sync all" in an earlier version, it may work better for you now. But if you have consistent trouble, you can try adding the following line of code after the initial comment block in Shashin.php: <pre>set_time_limit(120);</pre> Your server might not honor this setting, but if it does, then it will allow more time for Shashin to process all your albums' RSS feeds.</li>
-<li>If you start a Highslide slideshow and set it to run automatically, and there are videos in the slideshow, the videos will not play to the end. If each pictures is displayed for, say, 5 seconds, then  you will get only 5 seconds of a video before it moves on to the next picture or video. Currently Highslide has no means for handling this situation.</li>
+<li>If you start a Highslide slideshow and set it to run automatically, and there are videos in the slideshow, the videos will not play to the end. If each pictures is displayed for, say, 5 seconds, then  you will get only 5 seconds of a video before it moves on to the next picture or video. Currently Highsldie has no means for handling this situation.</li>
 </ul>
-
 <a href="#top">&uArr; top</a>
 
 <h3><a name="shashinB">Q&amp;A About Shashin</a></h3>
 
-<strong><a name="shashin14">Does Shashin support unlisted Picasa albums?</a></strong>
+<h4><a name="shashin14">Does Shashin support unlisted Picasa albums?</a></h4>
 
 Not at this time, but there is a workaround - see [p2p type="slug" value="workaround-for-using-unlisted-picasa-albums-in-shashin" text="this post on how to get unlisted albums to work in Shashin"].
 
-<strong><a name="shashin15">Why store all the album and photo metadata locally? Why not just read the Picasa RSS feed on the fly?</a></strong>
+<a href="#top">&uArr; top</a>
+
+<h4><a name="shashin15">Why store all the album and photo metadata locally? Why not just read the Picasa RSS feed on the fly?</a></h4>
 
 Three reasons:
 
@@ -459,13 +471,13 @@ Three reasons:
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin16">Are there other plugins for integrating Picasa with WordPress?</a></strong>
+<h4><a name="shashin16">Are there other plugins for integrating Picasa with WordPress?</a></h4>
 
 Yes, there are other good plugins for Picasa too. IMHO, Shashin is the most flexible and feature rich, but, as you can see from this page, there's a learning curve. If you don't need all of Shashin's features, then you may want to consider a more lightweight plugin - <a href="http://wordpress.org/extend/plugins/search.php?q=picasa">browse the Picasa plugins at wordpress.org</a>.
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin17">I'm a programmer and I want to tweak or re-use your code. Is that ok, and do you have documentation?</a></strong>
+<h4><a name="shashin17">I'm a programmer and I want to tweak or re-use your code. Is that ok, and do you have documentation?</a></h4>
 
 I've <a href="http://www.toppa.com/shashin_phpdoc">thoroughly documented the Shashin code in PHPDoc</a>. Shashin is released under GPL, so feel free to extend it. <a href="http://www.toppa.com/contact">I'd like to hear about any features you add</a>.
 
@@ -473,7 +485,7 @@ I've <a href="http://www.toppa.com/shashin_phpdoc">thoroughly documented the Sha
 
 <a href="#top">&uArr; top</a>
 
-<strong><a name="shashin18">What does "Shashin" mean?</a></strong>
+<h4><a name="shashin18">What does "Shashin" mean?</a></h4>
 
 I started working on this plugin while living in Tokyo. Shashin is the Japanese word for photograph, so it seemed fitting.
 
@@ -482,6 +494,8 @@ I started working on this plugin while living in Tokyo. Shashin is the Japanese 
 <h3><a name="shashinC">Change Log</a></h3>
 
 <ul>
+<li>2.4.2: Added back missing Shashin::getAlbumList() function</li>
+<li>2.4.1: corrected version numbers used with wp_enqueue_script calls</li>
 <li>2.4
     <ul>
     <li>Support for image viewers other than Highslide, such as Lightbox, Fancybox, etc.</li>

@@ -6,13 +6,15 @@ separate admin-related functions in separate class file, loaded only when needed
 custom captions (allow where y or n is put now)
 embed Picasa flash slideshow: http://picasa.google.com/support/bin/answer.py?answer=66969
 timeout when adding/updating a lot of albums - set_time_limit(120); for now
-brian hsu updates
 allow for "newest" album in random photo display
 separate albums by username in display
 unlisted album support
 use STYLSHEETPATH instead of TEMPLATEPATH? (a problem with child themes)
-
-
+download full-size photos from Picasa (if enabled for album)
+add checkbox to "sync all" indicating whether it should pull in new albums
+check for bug in getNewest, when new albums are added
+dashboard widget to sync all
+paginate album list
 
 translation contacts:
 
@@ -21,7 +23,7 @@ Dutch: theomuys@gmail.com (Theo)
 Russian: antipod@beerhead.ru (Max)
 Spanish: luison@gmail.com (Jose)
 Danish: wordpress@blogos.dk (Georg)
-
+Belorussian: mrilyuha@gmail.com (Michael Comfi)
 
 
 I have a lot planned for Shashin 2.5:
@@ -33,3 +35,31 @@ I have a lot planned for Shashin 2.5:
 <li>Custom captions</li>
 <li>Ability to group albums by Picasa username</li>
 </ul>
+
+$caption .= htmlspecialchars_decode($this-&gt;data['description']);
+
+Flickr image sizes:
+
+      s small square 75x75
+http://farm3.static.flickr.com/2722/4033919425_e5e9c5cf1d_s.jpg 75x75
+      t thumbnail, 100 on longest side
+http://farm3.static.flickr.com/2722/4033919425_e5e9c5cf1d_t.jpg 100x75
+      m small, 240 on longest side
+http://farm3.static.flickr.com/2722/4033919425_e5e9c5cf1d_m.jpg 240x180
+      [none] medium, 500 on longest side
+http://farm3.static.flickr.com/2722/4033919425_e5e9c5cf1d.jpg 500x375
+      b large, 1024 on longest side (only exists for very large original images that were resized during upload)
+http://farm3.static.flickr.com/2722/4033919425_e5e9c5cf1d_b.jpg 1024x768
+      o original image, either a jpg, gif or png, depending on source format
+http://farm3.static.flickr.com/2722/4033919425_ace8526c5a_o.jpg 3072x2304
+
+Twitpic images:
+
+We have an undocumented way to grab the 2 thumbnail sizes of an image. Ex: http://twitpic.com/show/mini/<img-id> just replace <img-id> with the twitpic photo id, also you can replace "mini" with "thumb" to get the larger thumbnail.</img-id></img-id>
+
+http://www.twitpic.com/show/mini/mt2bw 75x75
+http://www.twitpic.com/show/thumb/mt2bw 150x150
+http://www.twitpic.com/show/large/mt2bw 600x400
+
+
+*note: Twitpic Community Guidelines specify that if you use a Twitpic thumbnail in your app, the photo must link back to its original photo page or a link to the original photo page must be provided somewhere within context to the thumbnail
