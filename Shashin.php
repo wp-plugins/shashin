@@ -57,8 +57,6 @@ class Shashin {
     public function __construct() {
         global $wpdb;
         $this->options = unserialize(get_option('shashin_options'));
-        $this->album_table = $wpdb->prefix . 'shashin_album';
-        $this->photo_table = $wpdb->prefix . 'shashin_photo';
 
         // load localization
         load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
@@ -75,7 +73,7 @@ class Shashin {
      * @uses ShashinPhoto::ShashinPhoto()
      * @uses ToppaWPFunctions::createTable()
      */
-    function install() {
+    public function install() {
         $options_defaults = array(
             'scheduled_update' => 'n',
             'prefix_captions' => 'n',
@@ -147,13 +145,13 @@ class Shashin {
         // create/update tables
         $album = new ShashinAlbum($this);
 
-        if (!ToppaWPFunctions::createTable($album, $this->album_table)) {
+        if (!ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE)) {
             trigger_error('', E_USER_ERROR);
         }
 
         $photo = new ShashinPhoto($this);
 
-        if (!ToppaWPFunctions::createTable($photo, $this->photo_table)) {
+        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
             trigger_error('', E_USER_ERROR);
         }
 
@@ -169,13 +167,13 @@ class Shashin {
      * @uses getAdminMenu()
      * @uses getOptionsMenu()
      */
-    function initAdminMenus() {
-        $options_page = add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getOptionsMenu'));
+    public function initAdminMenus() {
+        $options_page = add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getSettingsMenu'));
         add_action("admin_print_styles-$options_page", array($this, 'getAdminHeadTags'));
-        add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($this, 'getAdminMenu'));
+        add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($this, 'getToolsMenu'));
     }
 
-    function getOptionsMenu() {
+    public function getSettingsMenu() {
         if ($_REQUEST['shashin_action'] && !check_admin_referer('shashin_nonce', 'shashin_nonce')) {
             return false;
         }
@@ -207,8 +205,8 @@ class Shashin {
             break;
         case 'update_options':
             try {
-                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'htmlentities'));
-                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'trim'));
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'awHtmlentities'));
+                array_walk($_REQUEST['shashin_options'], array('ToppaWPFunctions', 'awTrim'));
 
                 // remove scheduled updates if scheduling is turned off
                 if ($_REQUEST['shashin_options']['scheduled_update'] == 'n') {
@@ -240,7 +238,7 @@ class Shashin {
         }
 
         // Get the markup and display
-        require(SHASHIN_DIR . '/display/options.php');
+        require(SHASHIN_DIR . '/display/settings.php');
         $options_form = ob_get_contents();
         ob_end_clean();
         echo $options_form;
@@ -265,7 +263,7 @@ class Shashin {
      * @uses ShashinAlbum::setAlbumLocal()
      * @uses ShashinAlbum::deleteAlbum()
      */
-    function getAdminMenu() {
+    public function getToolsMenu() {
         if ($_REQUEST['shashin_action'] && !check_admin_referer('shashin_nonce', 'shashin_nonce')) {
             return false;
         }
@@ -460,7 +458,7 @@ class Shashin {
 
             $display = 'tools';
             break;
-        // show summary of albums, and form to add a new one
+        // default is to show summary of albums, and form to add a new one
         default:
             $display = 'tools';
         }
@@ -468,27 +466,16 @@ class Shashin {
         // Start the cache
         ob_start();
 
-        // decide which admin menu to show
+        // display the selected tools page
         if ($display == 'admin-edit') {
                require(SHASHIN_DIR . '/display/admin-edit.php');
         }
 
         else {
-            //$users = ShashinAlbum::getUsers();
-            $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
-            //$all_albums = ShashinAlbum::getAlbums('*', null, "order by $order_by");
-
-            if (!is_array($users)) {
-                $message = __("Failed to retrieve user data.", SHASHIN_L10N_NAME);
-                $db_error = true;
-            }
-
-            elseif ($all_albums === false) {
-                $message = __("Failed to retrieve album data.", SHASHIN_L10N_NAME);
-                $db_error = true;
-            }
-
-            else {
+            try {
+                $users = ShashinAlbum::getUsers();
+                $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
+                $all_albums = ShashinAlbum::getAlbums('*', null, "order by $order_by");
                 $album = new ShashinAlbum(); // needed in tools, for ref_data
                 $user_names = array();
 
@@ -497,6 +484,11 @@ class Shashin {
                 }
 
                 $sync_all = array('input_type' => 'select', 'input_subgroup' => $user_names);
+            }
+
+            catch (Exception $e) {
+                $message = $e->getMessage();
+                $db_error = true;
             }
 
             // check that re-activation has been done
@@ -520,7 +512,7 @@ class Shashin {
      *
      * @access public
      */
-    function getAdminHeadTags() {
+    public function getAdminHeadTags() {
         wp_enqueue_style('shashin_admin_css', SHASHIN_DISPLAY_URL . '/admin.css', false, $this->version);
         wp_enqueue_script('shashin_admin_js', SHASHIN_DISPLAY_URL . '/admin.js', array('jquery'), $this->version);
         wp_localize_script('shashin_admin_js', 'shashin_display', array('url' => SHASHIN_DISPLAY_URL));
@@ -535,7 +527,7 @@ class Shashin {
      * @return string Message that Shashin has been uninstalled
      * @throws Exception Query to drop Shashin tables failed
      */
-    function uninstall() {
+    public function uninstall() {
         global $wpdb;
         $sql = "drop table if exists " . $this->photo_table . ", " . $this->album_table . ";";
 

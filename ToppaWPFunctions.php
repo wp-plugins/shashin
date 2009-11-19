@@ -30,7 +30,7 @@ class ToppaWPFunctions {
      * @param string $table The name of the table to create
      * @return mixed passes along the return value of WordPress' dbDelta()
      */
-    function createTable(&$object, $table) {
+    public function createTable(&$object, $table) {
         $sql_end = "";
         $sql = "CREATE TABLE $table (\n";
         foreach ($object->ref_data as $k=>$v) {
@@ -75,6 +75,117 @@ class ToppaWPFunctions {
     }
 
     /**
+     * Creates and executes a SQL select statement based on passed-in
+     * parameters.
+     *
+     * If $conditions is an array, it will escape values. If it's a string, it
+     * must contain the WHERE keyword, and the values must be escaped before
+     * calling this function.
+     *
+     * @static
+     * @access public
+     * @param string $table the name of the table to query
+     * @param string|array $keywords the fields to return
+     * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
+     * @param string $other (optional) any additional conditions for the query (GROUP BY, etc.)
+     * @param string $type (optional) the WP type of select query to run (default: get_row)
+     * @param string $return (optional) how to format the return value (default: ARRAY_A)
+     * @return mixed passes along the return value of the $wpdb call
+     * @throws Exception invalid arguments or wuery error
+     */
+    public function sqlSelect($table, $keywords = null, $conditions = null, $other = null, $type = 'get_row', $return = ARRAY_A) {
+        global $wpdb;
+        $sql = "select ";
+
+        if (is_string($keywords)) {
+            $sql .= $keywords;
+        }
+
+        elseif (is_array($keywords)) {
+            $sql .= implode(", ", $keywords);
+        }
+
+        else {
+            throw new Exception(__("'keywords' argument must be a string or array", 'shashin'));
+        }
+
+        if (is_string($table)) {
+            $sql .= " from $table ";
+        }
+
+        else {
+            throw new Exception(__("'table' argument must be a string", 'shashin'));
+        }
+
+        if (is_array($conditions)) {
+            $sql .= "where ";
+            $sql .= ToppaWPFunctions::sqlPrepare($conditions);
+        }
+
+        elseif (is_string($conditions)) {
+            $sql .= $conditions;
+        }
+
+        if (is_string($other)) {
+            $sql .= " " . $other;
+        }
+
+        $sql .= ";";
+        //var_dump($sql);
+        //exit;
+
+        $result = false;
+
+        switch ($type) {
+        case "get_results":
+            $result = $wpdb->get_results($sql, $return);
+            break;
+        case "get_col":
+            $result = $wpdb->get_col($sql);
+            break;
+        case "get_var":
+            $result = $wpdb->get_var($sql);
+            break;
+        case "get_row":
+            $result = $wpdb->get_row($sql, $return);
+            break;
+        }
+
+        if ($result === false) {
+            throw new Exception("Select query error: ", 'shashin'));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Builds a properly formatted partial SQL clause of key-value pairs, with
+     * values escaped.
+     *
+     * @static
+     * @access private
+     * @param array $conditions key-value pairs to use in building the query string
+     * @param string $glue (optional) glue for concatenating the name-value pairs (default: " and ")
+     * @param boolean $values_only (optional) whether to include values only in the string (default: false)
+     * @return string a formatted partial SQL clause of key-value pairs
+     */
+    private function sqlPrepare($conditions, $glue = " and ", $values_only = false) {
+        global $wpdb;
+
+        foreach ($conditions as $k=>$v) {
+            if (!$values_only) {
+                $sql .= "$k = ";
+            }
+
+            $sql .= is_numeric($v) ? $v : ("'" . mysql_real_escape_string($v) . "'");
+            $sql .= $glue;
+        }
+
+        // remove the trailing glue
+        return substr($sql, 0, -(strlen($glue)));
+    }
+
+    /**
      * Generates and echoes xhtml for form inputs.
      *
      * @static
@@ -84,7 +195,7 @@ class ToppaWPFunctions {
      * @param string $input_value (optional) a value to apply to the input
      * @param string $delimiter (optional) separator between radio buttons and checkboxes
      */
-    function displayInput($input_name, $ref_data, $input_value = null, $delimiter = null) {
+    public function displayInput($input_name, $ref_data, $input_value = null, $delimiter = null) {
         $input_id = str_replace("[", "_", $input_name);
         $input_id = str_replace("]", "", $input_id);
 
@@ -173,7 +284,7 @@ class ToppaWPFunctions {
      * @param string $string (required): the string to update
      * @param mixed $key (ignored): the array key of the string (not needed but passed automatically by array_walk)
      */
-    function htmlentities(&$string, $key) {
+    public function awHtmlentities(&$string, $key) {
         $string = htmlentities($string, ENT_COMPAT, 'UTF-8');
     }
 
@@ -185,7 +296,7 @@ class ToppaWPFunctions {
      * @param string $string (required): the string to update
      * @param mixed $key (ignored): the array key of the string (not needed but passed automatically by array_walk)
      */
-    function trim(&$string, $key) {
+    public function awTrim(&$string, $key) {
         $string = trim($string);
     }
 }

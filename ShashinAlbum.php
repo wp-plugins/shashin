@@ -59,8 +59,27 @@ class ShashinAlbum {
     public $data;
     public $shashin;
 
-    function __construct(&$shashin) {
+    public function __construct(&$shashin) {
         $this->shashin = &$shashin;
+    }
+
+    /**
+     * Get all the user_names in the album table.
+     *
+     * @static
+     * @access public
+     * @uses ToppaWPFunctions::sqlSelect()
+     * @return mixed passes along the return value of the $wpdb call in ToppaWPFunctions::sqlSelect
+     * @throws Exception re-throws ToppaWPFunctions::sqlSelect Exceptions
+     */
+    public function getUsers() {
+        try {
+            return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, 'distinct user', null, 'order by user', 'get_col');
+        }
+
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
 ?>
