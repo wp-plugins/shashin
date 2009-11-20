@@ -152,7 +152,7 @@ class ToppaWPFunctions {
         }
 
         if ($result === false) {
-            throw new Exception("Select query error: ", 'shashin'));
+            throw new Exception(__("Select query error", 'shashin'));
         }
 
         return $result;

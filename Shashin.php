@@ -170,7 +170,9 @@ class Shashin {
     public function initAdminMenus() {
         $options_page = add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($this, 'getSettingsMenu'));
         add_action("admin_print_styles-$options_page", array($this, 'getAdminHeadTags'));
-        add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($this, 'getToolsMenu'));
+        $tools_page = add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($this, 'getToolsMenu'));
+        add_action("admin_print_styles-$tools_page", array($this, 'getAdminHeadTags'));
+        return true;
     }
 
     public function getSettingsMenu() {
@@ -235,6 +237,11 @@ class Shashin {
                 $message = $e->getMessage();
             }
             break;
+        }
+
+        // check that re-activation has been done
+        if ($this->version != $this->options['version']) {
+            $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu.", 'shashin');
         }
 
         // Get the markup and display
@@ -473,17 +480,11 @@ class Shashin {
 
         else {
             try {
+                // setup for Tools page display
                 $users = ShashinAlbum::getUsers();
                 $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
                 $all_albums = ShashinAlbum::getAlbums('*', null, "order by $order_by");
-                $album = new ShashinAlbum(); // needed in tools, for ref_data
-                $user_names = array();
-
-                foreach ($users as $user) {
-                    $user_names[$user] = $user;
-                }
-
-                $sync_all = array('input_type' => 'select', 'input_subgroup' => $user_names);
+                $album = new ShashinAlbum($this); // needed for ref data
             }
 
             catch (Exception $e) {
@@ -492,9 +493,9 @@ class Shashin {
             }
 
             // check that re-activation has been done
-            //if ($shashin_options['version'] != SHASHIN_VERSION) {
-            //    $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums.", SHASHIN_L10N_NAME);
-            //}
+            if ($this->version != $this->options['version']) {
+                $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu.", 'shashin');
+            }
 
             require(SHASHIN_DIR . '/display/tools.php');
         }

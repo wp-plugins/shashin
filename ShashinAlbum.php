@@ -70,16 +70,24 @@ class ShashinAlbum {
      * @access public
      * @uses ToppaWPFunctions::sqlSelect()
      * @return mixed passes along the return value of the $wpdb call in ToppaWPFunctions::sqlSelect
-     * @throws Exception re-throws ToppaWPFunctions::sqlSelect Exceptions
      */
-    public function getUsers() {
-        try {
-            return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, 'distinct user', null, 'order by user', 'get_col');
-        }
+    public static function getUsers() {
+        return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, 'distinct user', null, 'order by user', 'get_col');
+    }
 
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+    /**
+     * Retrieves data for multiple albums from the shashin_album table.
+     *
+     * @static
+     * @access public
+     * @param string|array $keywords the fields to return
+     * @param string|array $conditions (optional) array of key-values pairs, or a string containing its own WHERE clause
+     * @param string $other (optional) any additional conditions for the query (GROUP BY, etc.)
+     * @return mixed passes along the return value of the $wpdb call in ToppaWPFunctions::sqlSelect
+     * @uses ToppaWPFunctions::sqlSelect()
+     */
+    public static function getAlbums($keywords = '*', $conditions = null, $other = null) {
+        return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, $keywords, $conditions, $other, 'get_results');
     }
 }
 ?>
