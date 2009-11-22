@@ -32,10 +32,10 @@
 
 class Shashin {
     public $options;
-    public $album_table;
-    public $photo_table;
     public $name = 'Shashin';
     public $version = '3.0';
+    public $album_table;
+    public $photo_table;
     public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin/';
     public $picasa_sizes = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
     public $picasa_crop = array(32, 48, 64, 160);
@@ -57,6 +57,8 @@ class Shashin {
     public function __construct() {
         global $wpdb;
         $this->options = unserialize(get_option('shashin_options'));
+        $this->album_table = $wpdb->prefix . 'shashin_album';
+        $this->photo_table = $wpdb->prefix . 'shashin_photo';
 
         // load localization
         load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
@@ -145,13 +147,13 @@ class Shashin {
         // create/update tables
         $album = new ShashinAlbum($this);
 
-        if (!ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE)) {
+        if (!ToppaWPFunctions::createTable($album, $this->album_table)) {
             trigger_error('', E_USER_ERROR);
         }
 
         $photo = new ShashinPhoto($this);
 
-        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
+        if (!ToppaWPFunctions::createTable($photo, $this->photo_table)) {
             trigger_error('', E_USER_ERROR);
         }
 
@@ -246,9 +248,9 @@ class Shashin {
 
         // Get the markup and display
         require(SHASHIN_DIR . '/display/settings.php');
-        $options_form = ob_get_contents();
+        $settings_html = ob_get_contents();
         ob_end_clean();
-        echo $options_form;
+        echo $settings_html;
         return true;
     }
 
@@ -340,14 +342,26 @@ class Shashin {
             break;
         // add an album (or all of a user's albums)
         case 'add_album':
-            $link_url = trim($_REQUEST['link_url']);
+            $rss_url = trim($_REQUEST['rss_url']);
+            $include_in_random = htmlentities($_REQUEST['include_in_random']);
 
-            // remove any trailing # from the url - these often appear in Picasa
-            // album links, and they trip up the RSS feed
-            if (strpos($link_url, "#") == strlen($link_url) - 1) {
-                $link_url = substr($link_url, 0, -1);
+            try {
+                // handle feed for all of a Picasa user's albums
+                if (strpos($rss_url, 'kind=album') !== false) {
+                    ShashinAlbum::setUserAlbums($pieces[3], array('include_in_random' => $_REQUEST['include_in_random']), false);
+                }
+
+                // handle individual albums
+                else {
+                    $album = new ShashinAlbum($self, true);
+                    $album->setAlbum($rss_url, array('include_in_random' => $include_in_random));
+                }
             }
 
+            catch (Exception $e) {
+
+            }
+/*
             $pieces = explode("/", $link_url);
 
             // validate the URL
@@ -371,6 +385,7 @@ class Shashin {
                         unset($_REQUEST['link_url']);
                     }
                 }
+
             }
 
             // if no validation errors, and we're adding all albums
@@ -381,7 +396,7 @@ class Shashin {
                     $message = __("Albums added.", SHASHIN_L10N_NAME);
                 }
             }
-
+*/
             $display = 'tools';
             break;
         // sync all albums
@@ -481,9 +496,9 @@ class Shashin {
         else {
             try {
                 // setup for Tools page display
-                $users = ShashinAlbum::getUsers();
+                $users = ToppaWPFunctions::sqlSelect($this->album_table, 'distinct user', null, 'order by user', 'get_col');
                 $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
-                $all_albums = ShashinAlbum::getAlbums('*', null, "order by $order_by");
+                $all_albums = ToppaWPFunctions::sqlSelect($this->album_table, '*', null, "order by $order_by", 'get_results');
                 $album = new ShashinAlbum($this); // needed for ref data
             }
 
@@ -501,9 +516,9 @@ class Shashin {
         }
 
         // Get the markup and display
-        $adminMenuHTML = ob_get_contents();
+        $tools_html = ob_get_contents();
         ob_end_clean();
-        echo $adminMenuHTML;
+        echo $tools_html;
     }
 
 

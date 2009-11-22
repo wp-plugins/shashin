@@ -48,8 +48,6 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     define('SHASHIN_DIR', dirname(__FILE__));
     define('SHASHIN_BASE', basename(__FILE__));
     define('SHASHIN_DISPLAY_URL', WP_PLUGIN_URL . '/' . basename(SHASHIN_DIR) . '/display');
-    define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
-    define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
 
     // get required libraries
     require_once(SHASHIN_DIR . '/Shashin.php');

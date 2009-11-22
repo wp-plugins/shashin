@@ -169,13 +169,13 @@
     <h4>Supported Feed Types</h4>
 
     <dl class="shashin_examples">
-    <dt><?php _e("All the Picasa albums for a user - look for the 'RSS' link on the bottom right of a Picasa user's home page", 'shashin'); ?>:</dt>
+    <dt><?php _e("All the Picasa albums for a user - look for the 'RSS' link on the bottom right of a Picasa user's home page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://picasaweb.google.com/data/feed/base/user/michaeltoppa?alt=rss&amp;kind=album&amp;hl=en_US</dd>
-    <dt><?php _e("A single Picasa album - look for the 'RSS' link in the sidebar of an album's main page", 'shashin'); ?>:</dt>
+    <dt><?php _e("A single Picasa album - look for the 'RSS' link in the sidebar of an album's main page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://picasaweb.google.com/data/feed/base/user/michaeltoppa/albumid/5269449390714706417?alt=rss&amp;kind=photo&amp;hl=en_US</dd>
-    <dt><?php _e("A Flickr set - look for the 'Feed' link on the bottom left of a set's main page", 'shashin'); ?>:</dt>
+    <dt><?php _e("A Flickr set - look for the 'Feed' link on the bottom left of a set's main page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://api.flickr.com/services/feeds/photoset.gne?set=72157622514276629&amp;nsid=65384822@N00&amp;lang=en-us</dd>
-    <dt><?php _e("A Twitpic photostream - look for the RSS icon on the top right of a photostream page", 'shashin'); ?>:</dt>
+    <dt><?php _e("A Twitpic photostream - look for the RSS icon on the top right of a photostream page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://twitpic.com/photos/mtoppa/feed.rss</dd>
     </dl>
 
@@ -183,7 +183,7 @@
     <?php echo ToppaWPFunctions::displayInput('rss_url', array(
         'input_type' => 'text',
         'input_size' => 100)); ?><br />
-    <?php _e("Include photos in random photo display?", 'shashin'); ?>
+    <?php _e("Include album's photos in random photo displays?", 'shashin'); ?>
     <?php echo ToppaWPFunctions::displayInput('include_in_random', $album->ref_data['include_in_random'], ($_REQUEST['include_in_random'] ? $_REQUEST['include_in_random'] : "Y")) ?></p>
 
     <p><input class="button-primary" type="submit" name="submit" value="<?php _e("Add Albums", 'shashin'); ?>" /></p>
