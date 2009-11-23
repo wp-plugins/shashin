@@ -2,7 +2,7 @@
 /**
  * ShashinAdmin class file.
  *
- * This file is part of Shashin. Please see the Shashin.php file for
+ * This file is part of Shashin. Please see the Shashin.phl file for
  * copyright and license information.
  *
  * @author Michael Toppa
@@ -96,7 +96,7 @@ class ShashinAdmin {
         }
 
         // Get the markup and display
-        require(SHASHIN_DIR . '/display/settings.php');
+        require(SHASHIN_DIR . '/display/settings.inc');
         $settings_html = ob_get_contents();
         ob_end_clean();
         echo $settings_html;
@@ -339,7 +339,7 @@ class ShashinAdmin {
 
         // display the selected tools page
         if ($display == 'admin-edit') {
-               require(SHASHIN_DIR . '/display/admin-edit.php');
+               require(SHASHIN_DIR . '/display/admin-edit.inc');
         }
 
         else {
@@ -361,7 +361,7 @@ class ShashinAdmin {
                 $message = __("To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu.", 'shashin');
             }
 
-            require(SHASHIN_DIR . '/display/tools.php');
+            require(SHASHIN_DIR . '/display/tools.inc');
         }
 
         // Get the markup and display

@@ -75,7 +75,7 @@ class Shashin {
      * @uses getOptionsMenu()
      */
     public function initAdminMenus() {
-        require_once(SHASHIN_DIR . '/ShashinAdmin.php');
+        require_once(SHASHIN_DIR . '/ShashinAdmin.phl');
         $admin = new ShashinAdmin($this);
         $options_page = add_options_page('Shashin', 'Shashin', 'manage_options', 'ShashinBoot', array($admin, 'getSettingsMenu'));
         // from http://planetozh.com/blog/2008/04/how-to-load-javascript-with-your-wordpress-plugin/

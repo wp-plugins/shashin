@@ -2,7 +2,7 @@
 /**
  * Manage settings for Shashin.
  *
- * This file is part of Shashin. Please see the Shashin.php file for
+ * This file is part of Shashin. Please see the Shashin.phl file for
  * copyright and license information.
  *
  * @author Michael Toppa
@@ -30,7 +30,7 @@
     <p><?php _e("Fill out the Main Settings section. Then for the other sections that are relevant to how you will use Shashin, click their headings to expand them, and fill them out. If you are not sure which photo viewer to use, Highslide is recommended.", 'shashin'); ?></p>
 
     <?php if (strlen($message)) {
-        require (SHASHIN_DIR . '/display/include-message.php');
+        require (SHASHIN_DIR . '/display/message.inc');
     } ?>
 
     <form method="post">

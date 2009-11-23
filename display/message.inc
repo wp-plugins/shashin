@@ -2,7 +2,7 @@
 /**
  * Display informational or error message in the Shashin admin panels.
  *
- * This file is part of Shashin. Please see the Shashin.php file for
+ * This file is part of Shashin. Please see the Shashin.phl file for
  * copyright and license information.
  *
  * @author Michael Toppa

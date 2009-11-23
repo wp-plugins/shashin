@@ -28,8 +28,8 @@ function shashin_activate() {
     }
 
     else {
-        require_once($dir . '/Shashin.php');
-        require_once($dir . '/ShashinAdmin.php');
+        require_once($dir . '/Shashin.phl');
+        require_once($dir . '/ShashinAdmin.ph;');
         $shashin = new Shashin();
         $shashinAdmin = new ShashinAdmin($shashin);
         $shashinAdmin->install();
@@ -56,12 +56,12 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     define('SHASHIN_NO', __("No", 'shashin'));
 
     // get required libraries
-    require_once(SHASHIN_DIR . '/Shashin.php');
-    require_once(SHASHIN_DIR . '/ShashinAlbum.php');
-    require_once(SHASHIN_DIR . '/ShashinPhoto.php');
+    require_once(SHASHIN_DIR . '/Shashin.phl');
+    require_once(SHASHIN_DIR . '/ShashinAlbum.phl');
+    require_once(SHASHIN_DIR . '/ShashinPhoto.phl');
 
     if (!class_exists('ToppaWPFunctions')) {
-        require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
+        require_once(SHASHIN_DIR . '/ToppaWPFunctions.phl');
     }
 
     $shashin = new Shashin();

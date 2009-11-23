@@ -2,7 +2,7 @@
 /**
  * Manage photo albums.
  *
- * This file is part of Shashin. Please see the Shashin.php file for
+ * This file is part of Shashin. Please see the Shashin.phl file for
  * copyright and license information.
  *
  * @author Michael Toppa
@@ -27,7 +27,7 @@
     <h2><?php echo __("Manage Shashin Albums", 'shashin'); ?></h2>
 
     <?php if ($message) {
-        require (SHASHIN_DIR . '/display/include-message.php');
+        require (SHASHIN_DIR . '/display/message.inc');
     }
 
     echo "<h3>" . __("Your Albums", 'shashin') . "</h3>" . PHP_EOL;
