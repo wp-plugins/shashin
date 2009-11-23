@@ -20,7 +20,7 @@
         <input type="hidden" name="hosted_button_id" value="5378623">
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /><?php _e("Support Shashin", 'shashin'); ?> &raquo;
         <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="<?php _e("Support Shashin", 'shashin'); ?>" title="<?php _e("Support Shashin", 'shashin'); ?>" style="vertical-align: middle; padding-right: 20px;" />
-        <a href="<?php echo $this->faq_url; ?>" target="_blank"><?php _e("Shashin Help", 'shashin'); ?></a>
+        <a href="<?php echo $this->shashin->faq_url; ?>" target="_blank"><?php _e("Shashin Help", 'shashin'); ?></a>
         </form>
     </div>
 

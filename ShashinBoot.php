@@ -8,10 +8,6 @@ Version: 3.0
 Author URI: http://www.toppa.com
 */
 
-// note to self... for generating pot file...
-// find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
-// xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
-
 // based on http://nerdlife.net/wordpress-plugin-installation-hackery/
 register_activation_hook(__FILE__, 'shashin_activate');
 
@@ -21,9 +17,9 @@ if ($_GET['action'] == 'error_scrape') {
 
 function shashin_activate() {
     global $wpdb;
-
+    $dir = dirname(__FILE__);
     // load localization
-    load_plugin_textdomain('shashin', false, basename(dirname(__FILE__)) . '/languages/');
+    load_plugin_textdomain('shashin', false, basename($dir) . '/languages/');
 
     $mysql_version = $wpdb->get_var("select version()");
 
@@ -32,9 +28,11 @@ function shashin_activate() {
     }
 
     else {
-        require_once(dirname(__FILE__) . '/Shashin.php');
+        require_once($dir . '/Shashin.php');
+        require_once($dir . '/ShashinAdmin.php');
         $shashin = new Shashin();
-        $shashin->install();
+        $shashinAdmin = new ShashinAdmin($shashin);
+        $shashinAdmin->install();
     }
 }
 
@@ -49,11 +47,18 @@ if (version_compare(phpversion(), "5.0", ">=")) {
     define('SHASHIN_BASE', basename(__FILE__));
     define('SHASHIN_DISPLAY_URL', WP_PLUGIN_URL . '/' . basename(SHASHIN_DIR) . '/display');
 
+    // load localization
+    load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
+
+    // need to set these as constants, so they can be used in defining
+    // properties of classes (e.g ShashinPhoto->refData)
+    define('SHASHIN_YES', __("Yes", 'shashin'));
+    define('SHASHIN_NO', __("No", 'shashin'));
+
     // get required libraries
     require_once(SHASHIN_DIR . '/Shashin.php');
     require_once(SHASHIN_DIR . '/ShashinAlbum.php');
     require_once(SHASHIN_DIR . '/ShashinPhoto.php');
-    //require_once(SHASHIN_DIR . '/ShashinWidget.php');
 
     if (!class_exists('ToppaWPFunctions')) {
         require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
