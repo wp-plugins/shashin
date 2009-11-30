@@ -191,7 +191,9 @@ class ShashinAdmin {
             break;
         // add an album (or all of a user's albums)
         case 'add_album':
-            $rss_url = trim($_REQUEST['rss_url']);
+            // use strip_tags instead of htmlentities, since the URL will
+            // probably contain special chars that we shouldn't convert
+            $rss_url = trim(strip_tags($_REQUEST['rss_url']));
             $include_in_random = htmlentities($_REQUEST['include_in_random']);
 
             try {

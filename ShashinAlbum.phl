@@ -28,7 +28,7 @@ class ShashinAlbum {
         'album_id' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
             array('picasa_1' => 'gphoto', 'picasa_2' => 'id',
-            'flickr_1' => 'id', 'twitpic_1' => 'link')),
+            'flickr_1' => 'link', 'twitpic_1' => 'link')),
         'user' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
             array('picasa_1' => 'gphoto', 'picasa_2' => 'user')),
@@ -44,7 +44,7 @@ class ShashinAlbum {
             'twitpic_1' => 'title')),
         'description' => array('col_params' => array('type' => 'text'),
             'feed_params' => array('picasa_1' => 'description',
-            'flickr_1' => 'subtitle', 'twitpic_1' => 'description')),
+            'flickr_1' => 'description', 'twitpic_1' => 'description')),
         'location' => array('col_params' => array('type' => 'varchar',
             'length' => '255'), 'feed_params' => array('picasa_1' =>
             'media', 'picasa_2' => 'thumbnail',
@@ -95,15 +95,7 @@ class ShashinAlbum {
      * @uses ShashinAlbum::getAlbum()
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
-    function setAlbum($rss_url, $local_data = null) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
-
-        if (is_string($user_name)) {
-            // read the feed for the user
-            $feed_url = $shashin_options['picasa_server'] . SHASHIN_USER_RSS;
-            $feed_url = str_replace("USERNAME", $user_name, $feed_url);
-            $feed_content = ToppaWPFunctions::readFeed($feed_url);
-        }
+    function setAlbum($rss_url = null, $album_id = null, $local_data = null) {
 
         else {
             return array(false, __("ShashinAlbum::setAlbum - First argument to setAlbum is not a valid username.", SHASHIN_L10N_NAME));
