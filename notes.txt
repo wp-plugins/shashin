@@ -1,3 +1,7 @@
+// note to self... for generating pot file...
+// find -name "*.php"  ! -path "*.svn*" > /home/toppa/Scratch/shashin_files.txt
+// xgettext --from-code=utf-8 --keyword=__ --keyword=_e --output=/opt/lampp/htdocs/wordpress/wp-content/plugins/shashin/languages/shashin.pot --files-from=/home/toppa/Scratch/shashin_files.txt
+
 wish list:
 
 editor buttons
@@ -15,6 +19,10 @@ add checkbox to "sync all" indicating whether it should pull in new albums
 check for bug in getNewest, when new albums are added
 dashboard widget to sync all
 paginate album list
+$caption .= htmlspecialchars_decode($this-&gt;data['description']);
+for single random or newest images, don't put in a table
+provide a custom class option for every tag
+download link in caption for full-size image
 
 translation contacts:
 
@@ -36,7 +44,6 @@ I have a lot planned for Shashin 2.5:
 <li>Ability to group albums by Picasa username</li>
 </ul>
 
-$caption .= htmlspecialchars_decode($this-&gt;data['description']);
 
 Flickr image sizes:
 

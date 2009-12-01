@@ -2,7 +2,17 @@
 
 function xml2array($fname){
   $sxi = new SimpleXmlIterator($fname, null, true);
-  return sxiToArray($sxi);
+  $namespaces = $sxi->getNamespaces(true);
+
+  $result = array();
+  $results[] = sxiToArray($sxi);
+
+  foreach ($namespaces as $prefix => $ns) {
+    $sxi->registerXPathNamespace($prefix, $ns);
+    $result[] = sxiToArray($sxi);
+  }
+
+ return $result;
 }
 
 function sxiToArray($sxi){
@@ -11,26 +21,35 @@ function sxiToArray($sxi){
     if(!array_key_exists($sxi->key(), $a)){
       $a[$sxi->key()] = array();
     }
+
+    $va = array('values' => array());
+    $attrs = $sxi->{$sxi->key()}->attributes();
+        if (!empty($attrs)) {
+            $va['attrs'] = array();
+            foreach ($attrs as $k=>$v) {
+                $va['attrs'][$k] = strval($v);
+            }
+        }
+
     if($sxi->hasChildren()){
-      $a[$sxi->key()][] = sxiToArray($sxi->current());
+      $va['values'] = sxiToArray($sxi->current());
     }
     else{
-      $a[$sxi->key()][] = strval($sxi->current());
+        $va['values'] = strval($sxi->current());
     }
 
-    $temp = $sxi->{$sxi->key()}->attributes();
+      $a[$sxi->key()][] = $va;
 
-    if (!empty($temp)) {
-        foreach ($temp as $k=>$v) {
-            var_dump($k);
-            var_dump(strval($v));
-        }
-    }
   }
   return $a;
 }
 
+
 // Read cats.xml and print the results:
-$catArray = xml2array('picasa_album_feed.rss');
+//$feed = file_get_contents('flickr_feed.rss');
+//$feed = preg_replace("/(<|<\/)(\w*)(\W*)(\w*)(>|\/>)/", "$1${2}_$3$4$5", $feed);
+//var_dump($feed);
+//exit;
+$catArray = xml2array('flickr_feed.rss');
 print_r($catArray);
 ?>
