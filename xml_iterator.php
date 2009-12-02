@@ -1,18 +1,37 @@
 <?php
+/*
+$xml = simplexml_load_file('flickr_feed.rss');
+
+var_dump(xml2array_parse($xml));
+
+function xml2array_parse($xml){
+     while (list($parent, $child) = each($xml->children())) {
+         var_dump($parent);
+         var_dump($child);
+         $return["$parent"] = xml2array_parse($child)?xml2array_parse($child):"$child";
+     }
+     //return $return;
+ }
+$result = $sxi->xpath('//spec:name');
+foreach ($result as $k=>$v)
+{
+echo $v.'<br />';
+}
+*/
 
 function xml2array($fname){
   $sxi = new SimpleXmlIterator($fname, null, true);
   $namespaces = $sxi->getNamespaces(true);
 
-  $result = array();
+  $results = array();
   $results[] = sxiToArray($sxi);
 
   foreach ($namespaces as $prefix => $ns) {
     $sxi->registerXPathNamespace($prefix, $ns);
-    $result[] = sxiToArray($sxi);
+    $results[] = sxiToArray($sxi);
   }
 
- return $result;
+ return $results;
 }
 
 function sxiToArray($sxi){
@@ -44,12 +63,7 @@ function sxiToArray($sxi){
   return $a;
 }
 
-
-// Read cats.xml and print the results:
-//$feed = file_get_contents('flickr_feed.rss');
-//$feed = preg_replace("/(<|<\/)(\w*)(\W*)(\w*)(>|\/>)/", "$1${2}_$3$4$5", $feed);
-//var_dump($feed);
-//exit;
 $catArray = xml2array('flickr_feed.rss');
 print_r($catArray);
+
 ?>

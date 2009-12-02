@@ -29,5 +29,15 @@ function xmlToArray($xml,$ns=null){
 }
 
 $xml = new SimpleXmlIterator('flickr_feed.rss', null, true);
-$namespaces = $xml->getNamespaces(true);
-var_dump(xmlToArray($xml,$namespaces));
+//$namespaces = $xml->getNamespaces(true);
+//print_r(xmlToArray($xml,$namespaces));
+  //foreach ($namespaces as $prefix => $ns) {
+    $xml->registerXPathNamespace('media', "http://search.yahoo.com/mrss/");
+    $result = $xml->xpath("//media:content");
+    //var_dump($result);
+    //exit;
+      foreach($result[0]->attributes() as $k=>$v) {
+        echo $k . " -- " . $v . "\n";
+      }
+
+
