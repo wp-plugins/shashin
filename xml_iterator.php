@@ -1,4 +1,19 @@
 <?php
+$feed = file_get_contents('flickr_feed.rss');
+$xml = new SimpleXmlElement($feed);
+
+foreach ($xml->channel->item as $entry){
+echo $entry->title  . "\n";
+  echo $entry->guid . "\n";
+
+  //Use that namespace
+  $namespaces = $entry->getNameSpaces(true);
+  //Now we don't have the URL hard-coded
+  $media = $entry->children($namespaces['media']);
+  echo $media->title . "\n";
+  echo $media->content->attributes()->width . "\n";
+}
+
 /*
 $xml = simplexml_load_file('flickr_feed.rss');
 
@@ -17,7 +32,7 @@ foreach ($result as $k=>$v)
 {
 echo $v.'<br />';
 }
-*/
+
 
 function xml2array($fname){
   $sxi = new SimpleXmlIterator($fname, null, true);
@@ -65,5 +80,5 @@ function sxiToArray($sxi){
 
 $catArray = xml2array('flickr_feed.rss');
 print_r($catArray);
-
+*/
 ?>
