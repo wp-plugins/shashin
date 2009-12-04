@@ -27,43 +27,49 @@ class ShashinAlbum {
             'other' => 'AUTO_INCREMENT')),
         'album_id' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_1' => 'gphoto', 'picasa_2' => 'id',
-            'flickr_1' => 'link', 'twitpic_1' => 'link')),
+            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'id',
+            'flickr_tag' => 'link', 'twitpic_tag' => 'link')),
+        'rss_url' => array('col_params' => array('type' => 'varchar',
+            'length' => '255', 'not_null' => true), 'input_type' =>
+            'text', 'input_size' => 100),
         'user' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_1' => 'gphoto', 'picasa_2' => 'user')),
+            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'user')),
         'name' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_1' => 'gphoto', 'picasa_2' => 'name')),
+            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'name')),
         'link_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_1' => 'link', 'flickr_1' => 'id')),
+            array('picasa_tag' => 'link', 'flickr_tag' => 'link',
+            'twitpic_tag' => 'link')),
         'title' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_1' => 'title', 'flickr_1' => 'title',
-            'twitpic_1' => 'title')),
+            array('picasa_tag' => 'title', 'flickr_tag' => 'title',
+            'twitpic_tag' => 'title')),
         'description' => array('col_params' => array('type' => 'text'),
-            'feed_params' => array('picasa_1' => 'description',
-            'flickr_1' => 'description', 'twitpic_1' => 'description')),
+            'feed_params' => array('picasa_tag' => 'description',
+            'flickr_tag' => 'description', 'twitpic_tag' => 'description')),
         'location' => array('col_params' => array('type' => 'varchar',
-            'length' => '255'), 'feed_params' => array('picasa_1' =>
-            'media', 'picasa_2' => 'thumbnail',
-            'picasa_attrs' => 'url', )),
+            'length' => '255'), 'feed_params' => array('picasa_ns' =>
+            'gphoto', 'picasa_tag' => 'location')),
         'cover_photo_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255'), 'feed_params' => array(
-            'picasa_1' => 'media', 'picasa_2' => 'thumbnail',
-            'picasa_attrs' => 'url', 'flickr_1' => 'icon')),
+            'picasa_ns' => 'media', 'picasa_parent' => 'group',
+            'picasa_tag' => 'thumbnail', 'picasa_attrs' => 'url',
+            'flickr_parent' => 'image', 'flickr_tag' => 'url')),
         'last_updated' => array('col_params' => array(
             'type' => 'int unsigned')),
         'photo_count' => array('col_params' => array('type' => 'int unsigned',
             'not_null' => true), 'feed_params' => array(
-            'picasa_1' => 'gphoto', 'picasa_2' => 'numphotos')),
+            'picasa_ns' => 'gphoto', 'picasa_tag' => 'numphotos')),
         'pub_date' => array('col_params' => array('type' => 'int unsigned',
             'not_null' => true), 'feed_params' => array(
-            'picasa_1' => 'pubDate', 'flickr_1' => 'updated')),
+            'picasa_tag' => 'pubDate', 'flickr_tag' => 'pubDate',
+            'twitpic_tag' => 'pubDate')),
         'geo_pos' => array('col_params' => array('type' => 'varchar',
             'length' => '25'), 'feed_params' => array(
-            'picasa_1' => 'gml', 'picasa_2' => 'pos')),
+            'picasa_ns' => 'gml', 'picasa_parent' => 'Point',
+            'picasa_tag' => 'pos')),
         'include_in_random' => array('col_params' => array('type' => 'char',
             'length' => '1', 'other' => "default 'Y'"),
             'input_type' => 'radio',
@@ -87,7 +93,7 @@ class ShashinAlbum {
      * @access public
      * @param string $user_name The Picasa user_name of the album's owner
      * @param array $album_identifier A key-value pair (e.g. 'album_id' => 37)
-     * @param array $local_data (optional) A hash of local album data (data not from the Picasa feed)
+     * @param array $local_data (optional) A hash of local album data (data not from a feed)
      * @uses ToppaWPFunctions::readFeed()
      * @uses ToppaWPFunctions::parseFeed()
      * @uses ToppaWPFunctions::sqlUpdate()
@@ -95,40 +101,22 @@ class ShashinAlbum {
      * @uses ShashinAlbum::getAlbum()
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
-    function setAlbum($rss_url = null, $album_id = null, $local_data = null) {
+    function addAlbum($album_data) {
+        if (!is_array($album_data)) {
+            throw new Exception(__("album_data argument must be an array", 'shashin'));
+        }
 
+        // add an album
+        if (array_key_exists('rss_url', $album_data)) {
+            // return if trying to add an album that already exists
+
+        }
+
+        // throw exception if no rss_url
         else {
-            return array(false, __("ShashinAlbum::setAlbum - First argument to setAlbum is not a valid username.", SHASHIN_L10N_NAME));
+            throw new Exception(__("rss_url is required for adding an album", 'shashin'));
         }
 
-        if (is_array($album_identifier)) {
-            $key = key($album_identifier);
-            $value = current($album_identifier);
-            $album_data = ToppaWPFunctions::parseFeed($feed_content, $this->ref_data, $key, $value);
-
-            if (!$album_data) {
-                return array(false, __("ShashinAlbum::setAlbum - Failed to parse album feed.", SHASHIN_L10N_NAME));
-            }
-
-            $exists = $this->getAlbum($album_identifier);
-
-            if ($exists[0] === false) {
-                return $exists;
-            }
-
-            $album_data[$key] = $value;
-        }
-
-        else {
-            return array(false, __("ShashinAlbum::setAlbum - Second argument to setAlbum is not a valid album identifier.", SHASHIN_L10N_NAME));
-        }
-
-        // update local data
-        if (is_array($local_data)) {
-            foreach ($local_data as $k=>$v) {
-                $album_data[$k] = $v;
-            }
-        }
 
         // time-related updates
         $album_data['pub_date'] = strtotime($album_data['pub_date']);

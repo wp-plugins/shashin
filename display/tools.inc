@@ -158,27 +158,27 @@
     <?php wp_nonce_field('shashin_nonce', 'shashin_nonce'); ?>
     <input type="hidden" name="shashin_action" value="add_album" />
 
-    <p><?php _e("Shashin can display photos from public <em>Picasa albums</em>, <em>Flickr sets</em>, and <em>Twitpic photostreams</em> by importing their RSS feeds. Note that <em>Flickr photostreams</em> and <em>Flickr galleries</em> are not currently supported. Please enter an RSS URL below.", 'shashin'); ?></p>
+    <p><?php _e("Shashin can display photos from public <em>Picasa albums</em>, <em>Flickr photostreams</em>, <em>Flickr sets</em>, and <em>Twitpic photostreams</em> by importing their RSS feeds. Note that <em>Flickr galleries</em> are not currently supported. Please enter an RSS URL below.", 'shashin'); ?></p>
 
     <h4>Supported Feed Types</h4>
 
     <dl class="shashin_examples">
-    <dt><?php _e("All the Picasa albums for a user - look for the 'RSS' link on the bottom right of a Picasa user's home page", 'shashin'); ?></dt>
+    <dt><strong><?php _e("All the Picasa albums for a user", 'shashin'); ?>:</strong> <?php _e("Look for the 'RSS' link on the bottom right of the Picasa user's home page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://picasaweb.google.com/data/feed/base/user/michaeltoppa?alt=rss&amp;kind=album&amp;hl=en_US</dd>
-    <dt><?php _e("A single Picasa album - look for the 'RSS' link in the sidebar of an album's main page", 'shashin'); ?></dt>
+    <dt><strong><?php _e("A single Picasa album", 'shashin'); ?>:</strong> <?php _e("Look for the 'RSS' link in the sidebar of the album's main page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://picasaweb.google.com/data/feed/base/user/michaeltoppa/albumid/5269449390714706417?alt=rss&amp;kind=photo&amp;hl=en_US</dd>
-    <dt><?php _e("A Flickr set - look for the 'Feed' link on the bottom left of a set's main page", 'shashin'); ?></dt>
+    <dt><strong><?php _e("A Flickr set", 'shashin'); ?>:</strong> <?php _e("Look for the 'Feed' link on the bottom left of the set's main page.", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://api.flickr.com/services/feeds/photoset.gne?set=72157622514276629&amp;nsid=65384822@N00&amp;lang=en-us</dd>
-    <dt><?php _e("A Twitpic photostream - look for the RSS icon on the top right of a photostream page", 'shashin'); ?></dt>
+    <dt><strong><?php _e("A Flickr photostream", 'shashin'); ?>:</strong> <?php _e("Look for the 'Latest' link near the RSS icon on the bottom left of the photostream's main page.", 'shashin'); ?></dt>
+        <dd style="font-size: smaller;">Example: http://api.flickr.com/services/feeds/photos_public.gne?id=65384822@N00&amp;lang=en-us&amp;format=rss_200</dd>
+    <dt><strong><?php _e("A Twitpic photostream", 'shashin'); ?>:</strong> <?php _e("Look for the RSS icon on the top right of the photostream page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://twitpic.com/photos/mtoppa/feed.rss</dd>
     </dl>
 
     <p><strong><?php _e("RSS URL:", 'shashin'); ?></strong>
-    <?php echo ToppaWPFunctions::displayInput('rss_url', array(
-        'input_type' => 'text',
-        'input_size' => 100)); ?><br />
+    <?php echo ToppaWPFunctions::displayInput('rss_url', $album->ref_data['rss_url'])); ?><br />
     <?php _e("Include album's photos in random photo displays?", 'shashin'); ?>
-    <?php echo ToppaWPFunctions::displayInput('include_in_random', $album->ref_data['include_in_random'], ($_REQUEST['include_in_random'] ? $_REQUEST['include_in_random'] : "Y")) ?></p>
+    <?php echo ToppaWPFunctions::displayInput('include_in_random', $album->ref_data['include_in_random'], "Y")) ?></p>
 
     <p><input class="button-primary" type="submit" name="submit" value="<?php _e("Add Albums", 'shashin'); ?>" /></p>
     </form>

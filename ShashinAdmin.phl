@@ -205,7 +205,7 @@ class ShashinAdmin {
                 // handle individual albums
                 else {
                     $album = new ShashinAlbum($self, true);
-                    $album->setAlbum($rss_url, array('include_in_random' => $include_in_random));
+                    $album->addAlbum(array('rss_url' => $rss_url, 'include_in_random' => $include_in_random));
                 }
             }
 
