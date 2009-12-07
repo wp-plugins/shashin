@@ -25,10 +25,8 @@ class ShashinAlbum {
         'album_key' => array('col_params' => array('type' => 'int unsigned',
             'not_null' => true, 'primary_key' => true,
             'other' => 'AUTO_INCREMENT')),
-        'album_id' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'id',
-            'flickr_tag' => 'link', 'twitpic_tag' => 'link')),
+        'album_type' => array('col_params' => array('type' => 'char',
+            'length' => '1', 'not_null' => true)),
         'rss_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'input_type' =>
             'text', 'input_size' => 100),
@@ -80,7 +78,11 @@ class ShashinAlbum {
     public $shashin;
 
     public function __construct(&$shashin) {
-        $this->shashin = &$shashin;
+        if (!$shashin instanceof Shashin) {
+            throw new Exception(__("You must pass a Shashin object to ShashinAlbum", 'shashin'));
+        }
+
+        $this->shashin = $shashin;
     }
 
     /**
@@ -101,23 +103,41 @@ class ShashinAlbum {
      * @uses ShashinAlbum::getAlbum()
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
-    function addAlbum($album_data) {
+    public function addAlbum($album_data) {
         if (!is_array($album_data)) {
             throw new Exception(__("album_data argument must be an array", 'shashin'));
         }
 
-        // add an album
-        if (array_key_exists('rss_url', $album_data)) {
-            // return if trying to add an album that already exists
-
-        }
-
-        // throw exception if no rss_url
-        else {
+        if (!array_key_exists('rss_url', $album_data)) {
             throw new Exception(__("rss_url is required for adding an album", 'shashin'));
         }
 
+        if (ShashinAlbum::albumExists($this->shashin->album_table, null, $album_data['rss_url'])) {
+            throw new Exception(__("This album was previously added to Shashin. Please click it's 'sync' icon to update it.", 'shashin'));
+        }
 
+        switch ($album_data['rss_url']) {
+        case (strpos($album_data['rss_url'], 'picasaweb') !== false):
+            $album_data['album_type'] = 'p';
+            // replace 'base' feed with 'api' feed
+            $album_data['rss_url'] = str_replace('/base/', '/api/', $album_data['rss_url']);
+            break;
+        case (strpos($album_data['rss_url'], 'flickr') !== false):
+            $album_data['album_type'] = 'f';
+            // make sure RSS 2 feed arg is included
+            if (strpos($album_data['rss_url'], '&format=rss_2') === false) {
+                $album_data['rss_url'] .= '&format=rss_200';
+            }
+            break;
+        case (strpos($album_data['rss_url'], 'twitpic') !== false):
+            $album_data['album_type'] = 't';
+            break;
+        default:
+            throw new Exception(__("Invalid RSS feed URL", 'shashin'));
+        }
+
+
+/*
         // time-related updates
         $album_data['pub_date'] = strtotime($album_data['pub_date']);
         $album_data['last_updated'] = time();
@@ -139,8 +159,24 @@ class ShashinAlbum {
         // update the object data
         $this->data = $album_data;
 
-        return array(true, __("Album metadata synchronized", SHASHIN_L10N_NAME));
+        return array(true, __("Album metadata synchronized", SHASHIN_L10N_NAME)); */
     }
 
+    public static function albumExists($album_table, $album_key = null, $rss_url = null) {
+        if (!(is_string($album_table) && (is_numeric($album_key) || is_string($rss_url)))) {
+            throw new Exception(__("album_key or rss_url argument is required", 'shashin'));
+        }
+
+        if ($album_key) {
+            $where = array('album_key' => $album_key);
+
+        }
+
+        else {
+            $where = array('rss_url' => $rss_url);
+        }
+
+        return ToppaWPFunctions::sqlSelect($album_table, 'album_key', $where, null, 'get_var');
+    }
 }
 ?>

@@ -204,13 +204,14 @@ class ShashinAdmin {
 
                 // handle individual albums
                 else {
-                    $album = new ShashinAlbum($self, true);
+                    $album = new ShashinAlbum($this->shashin, true);
                     $album->addAlbum(array('rss_url' => $rss_url, 'include_in_random' => $include_in_random));
                 }
             }
 
             catch (Exception $e) {
-
+                $message = $e->getMessage();
+                $db_error = true;
             }
 /*
             $pieces = explode("/", $link_url);

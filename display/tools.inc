@@ -176,9 +176,9 @@
     </dl>
 
     <p><strong><?php _e("RSS URL:", 'shashin'); ?></strong>
-    <?php echo ToppaWPFunctions::displayInput('rss_url', $album->ref_data['rss_url'])); ?><br />
+    <?php echo ToppaWPFunctions::displayInput('rss_url', $album->ref_data['rss_url']); ?><br />
     <?php _e("Include album's photos in random photo displays?", 'shashin'); ?>
-    <?php echo ToppaWPFunctions::displayInput('include_in_random', $album->ref_data['include_in_random'], "Y")) ?></p>
+    <?php echo ToppaWPFunctions::displayInput('include_in_random', $album->ref_data['include_in_random'], "Y") ?></p>
 
     <p><input class="button-primary" type="submit" name="submit" value="<?php _e("Add Albums", 'shashin'); ?>" /></p>
     </form>
