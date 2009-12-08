@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
     $('#shashin_main').click(function () { return $.shashin_toggle('shashin_main'); });
     $('#shashin_picasa').click(function () { return $.shashin_toggle('shashin_picasa'); });
     $('#shashin_highslide').click(function () { return $.shashin_toggle('shashin_highslide'); });
-
+    $('#shashin_examples').click(function () { return $.shashin_toggle('shashin_examples'); });
 });
 
 

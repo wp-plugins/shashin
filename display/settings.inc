@@ -28,7 +28,7 @@
     <form method="post">
     <?php wp_nonce_field('shashin_nonce', 'shashin_nonce'); ?>
     <input type="hidden" name="shashin_action" value="update_options">
-    <h3><a href="#/" id="shashin_main" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
+    <h3><a href="#" id="shashin_main" class="shashin_admin_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/minus.gif" id="shashin_main_button" />Main Settings</a></h3>
     <div id="shashin_main_section">
         <table class="form-table">
         <tr style="vertical-align: top;">
@@ -113,7 +113,7 @@
         </table>
     </div>
 
-    <h3><a href="#" id="shashin_picasa" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_picasa_button" />Picasa Settings</a></h3>
+    <h3><a href="#" id="shashin_picasa" class="shashin_admin_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_picasa_button" />Picasa Settings</a></h3>
     <div id="shashin_picasa_section" style="display: none;">
         <table class="form-table">
         <tr style="vertical-align: top;">
@@ -128,7 +128,7 @@
         </table>
     </div>
 
-    <h3><a href="#" id="shashin_highslide" class="shashin_option_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_highslide_button" />Highslide Settings</a></h3>
+    <h3><a href="#" id="shashin_highslide" class="shashin_admin_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_highslide_button" />Highslide Settings</a></h3>
     <div id="shashin_highslide_section" style="display: none;">
         <table class="form-table">
         <tr style="vertical-align: top;">

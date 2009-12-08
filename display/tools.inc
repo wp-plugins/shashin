@@ -158,11 +158,10 @@
     <?php wp_nonce_field('shashin_nonce', 'shashin_nonce'); ?>
     <input type="hidden" name="shashin_action" value="add_album" />
 
-    <p><?php _e("Shashin can display photos from public <em>Picasa albums</em>, <em>Flickr photostreams</em>, <em>Flickr sets</em>, and <em>Twitpic photostreams</em> by importing their RSS feeds. Note that <em>Flickr galleries</em> are not currently supported. Please enter an RSS URL below.", 'shashin'); ?></p>
+    <p><?php _e("Shashin can display photos from <strong>public</strong> <em>Picasa albums</em>, <em>Flickr photostreams</em>, <em>Flickr sets</em>, and <em>Twitpic photostreams</em> by importing their RSS feeds. Please enter an RSS URL below.", 'shashin'); ?></p>
 
-    <h4>Supported Feed Types</h4>
-
-    <dl class="shashin_examples">
+    <h4><a href="#" id="shashin_examples" class="shashin_admin_heading"><img src="<?php echo SHASHIN_DISPLAY_URL; ?>/images/plus.gif" id="shashin_examples_button" />Examples</a></h4>
+    <dl id="shashin_examples_section" class="shashin_examples_list">
     <dt><strong><?php _e("All the Picasa albums for a user", 'shashin'); ?>:</strong> <?php _e("Look for the 'RSS' link on the bottom right of the Picasa user's home page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://picasaweb.google.com/data/feed/base/user/michaeltoppa?alt=rss&amp;kind=album&amp;hl=en_US</dd>
     <dt><strong><?php _e("A single Picasa album", 'shashin'); ?>:</strong> <?php _e("Look for the 'RSS' link in the sidebar of the album's main page", 'shashin'); ?></dt>
@@ -174,7 +173,6 @@
     <dt><strong><?php _e("A Twitpic photostream", 'shashin'); ?>:</strong> <?php _e("Look for the RSS icon on the top right of the photostream page", 'shashin'); ?></dt>
         <dd style="font-size: smaller;">Example: http://twitpic.com/photos/mtoppa/feed.rss</dd>
     </dl>
-
     <p><strong><?php _e("RSS URL:", 'shashin'); ?></strong>
     <?php echo ToppaWPFunctions::displayInput('rss_url', $album->ref_data['rss_url']); ?><br />
     <?php _e("Include album's photos in random photo displays?", 'shashin'); ?>

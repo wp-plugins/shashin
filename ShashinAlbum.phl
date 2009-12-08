@@ -22,7 +22,7 @@
  */
 class ShashinAlbum {
     public $ref_data = array(
-        'album_key' => array('col_params' => array('type' => 'int unsigned',
+        'album_key' => array('col_params' => array('type' => 'smallint unsigned',
             'not_null' => true, 'primary_key' => true,
             'other' => 'AUTO_INCREMENT')),
         'album_type' => array('col_params' => array('type' => 'char',
@@ -57,7 +57,7 @@ class ShashinAlbum {
             'flickr_parent' => 'image', 'flickr_tag' => 'url')),
         'last_updated' => array('col_params' => array(
             'type' => 'int unsigned')),
-        'photo_count' => array('col_params' => array('type' => 'int unsigned',
+        'photo_count' => array('col_params' => array('type' => 'smallint unsigned',
             'not_null' => true), 'feed_params' => array(
             'picasa_ns' => 'gphoto', 'picasa_tag' => 'numphotos')),
         'pub_date' => array('col_params' => array('type' => 'int unsigned',
@@ -128,6 +128,8 @@ class ShashinAlbum {
             if (strpos($album_data['rss_url'], '&format=rss_2') === false) {
                 $album_data['rss_url'] .= '&format=rss_200';
             }
+            // get the user id from the rss url
+            //preg_match("/\/photos\/([\w\@]+)\//", $album_);
             break;
         case (strpos($album_data['rss_url'], 'twitpic') !== false):
             $album_data['album_type'] = 't';
@@ -136,7 +138,8 @@ class ShashinAlbum {
             throw new Exception(__("Invalid RSS feed URL", 'shashin'));
         }
 
-
+        $feed_data = ToppaWPFunctions::parseFeed($album_data['rss_url'], $this->ref_data);
+        $album_data = array_merge($album_data, $feed_data);
 /*
         // time-related updates
         $album_data['pub_date'] = strtotime($album_data['pub_date']);

@@ -28,16 +28,20 @@
     margin-bottom: 5px;
 }
 
-.shashin_option_heading {
+.shashin_admin_heading {
     text-decoration: none;
 }
 
-.shashin_option_heading img {
+.shashin_admin_heading img {
     padding-right: 2px;
     padding-bottom: 2px;
 }
 
-.shashin_examples dd {
+.shashin_examples_list {
+    display: none;
+}
+
+.shashin_examples_list dd {
     margin-left: 15px;
     margin-bottom: 5px;
 }
