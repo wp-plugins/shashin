@@ -1,0 +1,158 @@
+<?php
+/**
+ * ShashinPhoto class file.
+ *
+ * This file is part of Shashin. Please see the Shashin.phl file for
+ * copyright and license information.
+ *
+ * @author Michael Toppa
+ * @version 3.0
+ * @package Shashin
+ * @subpackage Classes
+ */
+
+/**
+ * We'll use Snoopy to fetch the RSS feed - this is a safer bet across various
+ * server configurations than fopen
+ */
+require_once(ABSPATH . WPINC . '/class-snoopy.php');
+
+/**
+ * For manipulating and displaying Picasa photos in Shashin.
+ *
+ * @author Michael Toppa
+ * @package Shashin
+ * @subpackage Classes
+ */
+class ShashinParser {
+
+    /**
+     * The function is for parsing the Picasa RSS feed. It assumes an
+     * array of items, with keys that may have a : dividing the names
+     * of related items, and containing an array with a 'data' value
+     * and a possible 'attrs' array
+     *
+     * @static
+     * @access public
+     * @param array $feed_content should be supplied by the readFeed function
+     * @param array $ref_data maps your local data structure to the feed's structure; it can handle arrays nested two levels below $item
+     * @param string $match_field allows you to limit the results of the parse to a specific item
+     * @param string $match_value the value to look for in $match_field
+     * @param string $key allows you to use an item from the feed as the key for the returned array
+     * @return boolean|array the parsed contents of the feed, or false on failure
+     */
+    public static function parseFeed($album_data, $album_ref_data, $photo_ref_data) {
+        $snoopy = new Snoopy();
+        $snoopy->fetch($album_data['rss_url']);
+        $xml = new SimpleXmlElement($snoopy->results);
+        $namespaces = $xml->channel->getNameSpaces(true);
+        $type = $album_data['album_type'];
+
+        $xml_ns = $xml->channel->children($namespaces['georss']);
+        $xml_ns2 = $xml_ns->children($namespaces['gml']);
+        var_dump($xml_ns2->Point->pos);
+exit;
+        // album meta-data
+        foreach ($album_ref_data as $k=>$v) {
+            $ns = $v['feed_params'][$type.'_ns'];
+            $parent = $v['feed_params'][$type.'_parent'];
+            $tag = $v['feed_params'][$type.'_tag'];
+            $attr = $v['feed_params'][$type.'_attr'];
+
+            if ($v['feed_params'][$type.'_ns']) {
+                $xml_ns = $xml->channel->children($namespaces[$ns]);
+
+                if ($parent) {
+                    $album_data[$k] = strval($xml_ns->$parent->$tag);
+                }
+
+                else {
+                    $album_data[$k] = strval($xml_ns->$tag);
+                }
+            }
+
+            else {
+                $album_data[$k] = strval($xml->channel->$tag);
+            }
+        }
+        var_dump($album_data);
+        exit;
+        // photo data
+        //foreach ($xml->channel->item as $item) {
+
+        //}
+
+
+        $all_parsed = array();
+        $break = false;
+
+        # make sure there's something to parse
+        if (!$feed_content) {
+            return false;
+        }
+
+        foreach ($feed_content as $item) {
+            // if there's a match_field, that means we're parsing the user's feed
+            // for all albums, and we want to return just the matching album
+            if (strlen($match_field) && isset($ref_data[$match_field]['feed_param_2'])
+              && $item[$ref_data[$match_field]['feed_param_1'] . ":" . $ref_data[$match_field]['feed_param_2']]['data'] == $match_value) {
+                $break = true;
+            }
+
+            elseif (strlen($match_field) && $item[$ref_data[$match_field]['feed_param_1']]['data'] == $match_value) {
+                $break = true;
+            }
+
+            if ($key && $ref_data[$key]['feed_param_2']) {
+                $key_val = $item[$ref_data[$key]['feed_param_1'] . ":" . $ref_data[$key]['feed_param_2']]['data'];
+            }
+
+            elseif ($key) {
+                $key_val = $item[$ref_data[$key]['feed_param_1']]['data'];
+            }
+
+            $parsed = array();
+            foreach ($ref_data as $ref_k=>$ref_v) {
+                if ($ref_v['source'] == 'feed') {
+                    if (isset($ref_v['feed_param_2'])) {
+                        // if attrs is set, then we're looking for a particular value in the attrs array
+                        // otherwise assume we're getting a string from 'data'
+                        if (isset($ref_v['attrs'])) {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['attrs'][$ref_v['attrs']];
+                        }
+
+                        else {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['data'];
+                        }
+                    }
+
+                    else {
+                        if (isset($ref_v['attrs'])) {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['attrs'][$ref_v['attrs']];
+                        }
+
+                        else {
+                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['data'];
+                        }
+                    }
+                }
+            }
+
+            if ($break === true) {
+                return $parsed;
+            }
+
+            if ($key_val) {
+                $all_parsed[$key_val] = $parsed;
+
+            }
+
+            else {
+                $all_parsed[] = $parsed;
+            }
+        }
+
+        return $all_parsed;
+    }
+}
+?>
