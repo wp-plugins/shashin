@@ -34,8 +34,6 @@ class Shashin {
     public $options;
     public $name = 'Shashin';
     public $version = '3.0';
-    public $album_table;
-    public $photo_table;
     public $faq_url = 'http://www.toppa.com/shashin-wordpress-plugin/';
     public $picasa_sizes = array(32, 48, 64, 72, 144, 160, 200, 288, 320, 400, 512, 576, 640, 720, 800);
     public $picasa_crop = array(32, 48, 64, 160);
@@ -59,8 +57,6 @@ class Shashin {
     public function __construct() {
         global $wpdb;
         $this->options = unserialize(get_option('shashin_options'));
-        $this->album_table = $wpdb->prefix . 'shashin_album';
-        $this->photo_table = $wpdb->prefix . 'shashin_photo';
 
         // add Tools and Settings menus
         add_action('admin_menu', array($this, 'initAdminMenus'));

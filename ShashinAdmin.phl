@@ -23,7 +23,11 @@ class ShashinAdmin {
     public $shashin;
 
     function __construct(&$shashin) {
-        $this->shashin = &$shashin;
+        if (!$shashin instanceof Shashin) {
+            throw new Exception(__("You must pass a Shashin object", 'shashin'));
+        }
+
+        $this->shashin = $shashin;
     }
 
     public function getSettingsMenu() {
@@ -348,9 +352,9 @@ class ShashinAdmin {
         else {
             try {
                 // setup for Tools page display
-                $users = ToppaWPFunctions::sqlSelect($this->shashin->album_table, 'distinct user', null, 'order by user', 'get_col');
+                $users = ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, 'distinct user', null, 'order by user', 'get_col');
                 $order_by = $_REQUEST['shashin_orderby'] ? $_REQUEST['shashin_orderby'] : 'title';
-                $all_albums = ToppaWPFunctions::sqlSelect($this->shashin->album_table, '*', null, "order by $order_by", 'get_results');
+                $all_albums = ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, '*', null, "order by $order_by", 'get_results');
                 $album = new ShashinAlbum($this->shashin); // needed for ref data
             }
 
@@ -468,13 +472,13 @@ class ShashinAdmin {
         // create/update tables
         $album = new ShashinAlbum($this->shashin);
 
-        if (!ToppaWPFunctions::createTable($album, $this->shashin->album_table)) {
+        if (!ToppaWPFunctions::createTable($album, SHASHIN_ALBUM_TABLE)) {
             trigger_error('', E_USER_ERROR);
         }
 
         $photo = new ShashinPhoto($this->shashin);
 
-        if (!ToppaWPFunctions::createTable($photo, $this->shashin->photo_table)) {
+        if (!ToppaWPFunctions::createTable($photo, SHASHIN_PHOTO_TABLE)) {
             trigger_error('', E_USER_ERROR);
         }
 
@@ -491,7 +495,7 @@ class ShashinAdmin {
      */
     public function uninstall() {
         global $wpdb;
-        $sql = "drop table if exists " . $this->shashin->photo_table . ", " . $this->shashin->album_table . ";";
+        $sql = "drop table if exists " . SHASHIN_PHOTO_TABLE . ", " . SHASHIN_ALBUM_TABLE . ";";
 
         if ($wpdb->query($sql) === false) {
             throw new Exception(__("Uninstall of Shashin failed.", 'shashin'));

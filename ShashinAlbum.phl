@@ -25,8 +25,8 @@ class ShashinAlbum {
         'album_key' => array('col_params' => array('type' => 'smallint unsigned',
             'not_null' => true, 'primary_key' => true,
             'other' => 'AUTO_INCREMENT')),
-        'album_type' => array('col_params' => array('type' => 'char',
-            'length' => '1', 'not_null' => true)),
+        'album_type' => array('col_params' => array('type' => 'varchar',
+            'length' => '20', 'not_null' => true)),
         'rss_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'input_type' =>
             'text', 'input_size' => 100),
@@ -35,7 +35,7 @@ class ShashinAlbum {
             array('picasa_ns' => 'gphoto', 'picasa_tag' => 'user')),
         'name' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'name')),
+            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'nickname')),
         'link_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255', 'not_null' => true), 'feed_params' =>
             array('picasa_tag' => 'link', 'flickr_tag' => 'link',
@@ -52,8 +52,7 @@ class ShashinAlbum {
             'gphoto', 'picasa_tag' => 'location')),
         'cover_photo_url' => array('col_params' => array('type' => 'varchar',
             'length' => '255'), 'feed_params' => array(
-            'picasa_ns' => 'media', 'picasa_parent' => 'group',
-            'picasa_tag' => 'thumbnail', 'picasa_attrs' => 'url',
+            'picasa_parent' => 'image', 'picasa_tag' => 'url',
             'flickr_parent' => 'image', 'flickr_tag' => 'url')),
         'last_updated' => array('col_params' => array(
             'type' => 'int unsigned')),
@@ -62,8 +61,8 @@ class ShashinAlbum {
             'picasa_ns' => 'gphoto', 'picasa_tag' => 'numphotos')),
         'pub_date' => array('col_params' => array('type' => 'int unsigned',
             'not_null' => true), 'feed_params' => array(
-            'picasa_tag' => 'pubDate', 'flickr_tag' => 'pubDate',
-            'twitpic_tag' => 'pubDate')),
+            'picasa_ns' => 'gphoto', 'picasa_tag' => 'timestamp',
+            'flickr_tag' => 'pubDate', 'twitpic_tag' => 'pubDate')),
         'geo_pos' => array('col_params' => array('type' => 'varchar',
             'length' => '25'), 'feed_params' => array(
             'picasa_ns' => 'gml', 'picasa_parent' => 'Point',
@@ -71,7 +70,7 @@ class ShashinAlbum {
         'include_in_random' => array('col_params' => array('type' => 'char',
             'length' => '1', 'other' => "default 'Y'"),
             'input_type' => 'radio',
-            'input_subgroup' => array('Y' => 'Yes', 'N' => 'No')),
+            'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
         );
 
     public $data;
@@ -79,7 +78,7 @@ class ShashinAlbum {
 
     public function __construct(&$shashin) {
         if (!$shashin instanceof Shashin) {
-            throw new Exception(__("You must pass a Shashin object to ShashinAlbum", 'shashin'));
+            throw new Exception(__("You must pass a Shashin object", 'shashin'));
         }
 
         $this->shashin = $shashin;
@@ -104,6 +103,8 @@ class ShashinAlbum {
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
     public function addAlbum($album_data) {
+        require_once(SHASHIN_DIR . '/ShashinParser.phl');
+
         if (!is_array($album_data)) {
             throw new Exception(__("album_data argument must be an array", 'shashin'));
         }
@@ -112,18 +113,18 @@ class ShashinAlbum {
             throw new Exception(__("rss_url is required for adding an album", 'shashin'));
         }
 
-        if (ShashinAlbum::albumExists($this->shashin->album_table, null, $album_data['rss_url'])) {
-            throw new Exception(__("This album was previously added to Shashin. Please click it's 'sync' icon to update it.", 'shashin'));
+        if (ShashinAlbum::albumExists(null, $album_data['rss_url'])) {
+            throw new Exception(__("This album was previously added to Shashin. Please click its 'sync' icon to update it.", 'shashin'));
         }
 
         switch ($album_data['rss_url']) {
         case (strpos($album_data['rss_url'], 'picasaweb') !== false):
-            $album_data['album_type'] = 'p';
+            $album_data['album_type'] = 'picasa';
             // replace 'base' feed with 'api' feed
             $album_data['rss_url'] = str_replace('/base/', '/api/', $album_data['rss_url']);
             break;
         case (strpos($album_data['rss_url'], 'flickr') !== false):
-            $album_data['album_type'] = 'f';
+            $album_data['album_type'] = 'flickr';
             // make sure RSS 2 feed arg is included
             if (strpos($album_data['rss_url'], '&format=rss_2') === false) {
                 $album_data['rss_url'] .= '&format=rss_200';
@@ -132,13 +133,14 @@ class ShashinAlbum {
             //preg_match("/\/photos\/([\w\@]+)\//", $album_);
             break;
         case (strpos($album_data['rss_url'], 'twitpic') !== false):
-            $album_data['album_type'] = 't';
+            $album_data['album_type'] = 'twitpic';
             break;
         default:
             throw new Exception(__("Invalid RSS feed URL", 'shashin'));
         }
 
-        $feed_data = ToppaWPFunctions::parseFeed($album_data['rss_url'], $this->ref_data);
+        $photo = new ShashinPhoto($this->shashin);
+        $feed_data = ShashinParser::parseFeed($album_data, $this->ref_data, $photo->ref_data);
         $album_data = array_merge($album_data, $feed_data);
 /*
         // time-related updates
@@ -165,8 +167,8 @@ class ShashinAlbum {
         return array(true, __("Album metadata synchronized", SHASHIN_L10N_NAME)); */
     }
 
-    public static function albumExists($album_table, $album_key = null, $rss_url = null) {
-        if (!(is_string($album_table) && (is_numeric($album_key) || is_string($rss_url)))) {
+    public static function albumExists($album_key = null, $rss_url = null) {
+        if (!(is_numeric($album_key) || is_string($rss_url))) {
             throw new Exception(__("album_key or rss_url argument is required", 'shashin'));
         }
 
@@ -179,7 +181,7 @@ class ShashinAlbum {
             $where = array('rss_url' => $rss_url);
         }
 
-        return ToppaWPFunctions::sqlSelect($album_table, 'album_key', $where, null, 'get_var');
+        return ToppaWPFunctions::sqlSelect(SHASHIN_ALBUM_TABLE, 'album_key', $where, null, 'get_var');
     }
 }
 ?>

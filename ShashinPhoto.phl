@@ -79,7 +79,11 @@ class ShashinPhoto {
     public $shashin;
 
     function __construct(&$shashin) {
-        $this->shashin = &$shashin;
+        if (!$shashin instanceof Shashin) {
+            throw new Exception(__("You must pass a Shashin object", 'shashin'));
+        }
+
+        $this->shashin = $shashin;
     }
 
     /**
