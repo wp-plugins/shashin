@@ -46,113 +46,41 @@ class ShashinParser {
         $snoopy->fetch($album_data['rss_url']);
         $xml = new SimpleXmlElement($snoopy->results);
         $namespaces = $xml->channel->getNameSpaces(true);
-        $type = $album_data['album_type'];
 
         $xml_ns = $xml->channel->children($namespaces['georss']);
         $xml_ns2 = $xml_ns->children($namespaces['gml']);
-        var_dump($xml_ns2->Point->pos);
-exit;
+        var_dump($xml_ns);
+        exit;
+
         // album meta-data
         foreach ($album_ref_data as $k=>$v) {
-            $ns = $v['feed_params'][$type.'_ns'];
-            $parent = $v['feed_params'][$type.'_parent'];
-            $tag = $v['feed_params'][$type.'_tag'];
-            $attr = $v['feed_params'][$type.'_attr'];
-
-            if ($v['feed_params'][$type.'_ns']) {
-                $xml_ns = $xml->channel->children($namespaces[$ns]);
-
-                if ($parent) {
-                    $album_data[$k] = strval($xml_ns->$parent->$tag);
-                }
-
-                else {
-                    $album_data[$k] = strval($xml_ns->$tag);
-                }
-            }
-
-            else {
-                $album_data[$k] = strval($xml->channel->$tag);
-            }
+            $album_data[$k] = ShashinParser::getTagData($xml, $namespaces, $v['feed_params'], $album_data['type']);
         }
-        var_dump($album_data);
-        exit;
-        // photo data
-        //foreach ($xml->channel->item as $item) {
 
+        // photo data
+        $album_data['photos'] = array();
+        //foreach ($xml->channel->item as $item) {
         //}
 
+    }
 
-        $all_parsed = array();
-        $break = false;
+    public static function getTagData($xml, $namespaces, $params, $album_type, $tag_tree = null, $current_ns = null) {
 
-        # make sure there's something to parse
-        if (!$feed_content) {
-            return false;
-        }
+        // how to translate a tag_tree array into, e.g. $current_ns->Point->pos ??
 
-        foreach ($feed_content as $item) {
-            // if there's a match_field, that means we're parsing the user's feed
-            // for all albums, and we want to return just the matching album
-            if (strlen($match_field) && isset($ref_data[$match_field]['feed_param_2'])
-              && $item[$ref_data[$match_field]['feed_param_1'] . ":" . $ref_data[$match_field]['feed_param_2']]['data'] == $match_value) {
-                $break = true;
-            }
 
-            elseif (strlen($match_field) && $item[$ref_data[$match_field]['feed_param_1']]['data'] == $match_value) {
-                $break = true;
-            }
+        if ($params[$album_type.'_ns']) {
+            $count = count($params[$album_type.'_ns']);
+            $ns_name = array_shift($params[$album_type.'_ns']);
 
-            if ($key && $ref_data[$key]['feed_param_2']) {
-                $key_val = $item[$ref_data[$key]['feed_param_1'] . ":" . $ref_data[$key]['feed_param_2']]['data'];
-            }
-
-            elseif ($key) {
-                $key_val = $item[$ref_data[$key]['feed_param_1']]['data'];
-            }
-
-            $parsed = array();
-            foreach ($ref_data as $ref_k=>$ref_v) {
-                if ($ref_v['source'] == 'feed') {
-                    if (isset($ref_v['feed_param_2'])) {
-                        // if attrs is set, then we're looking for a particular value in the attrs array
-                        // otherwise assume we're getting a string from 'data'
-                        if (isset($ref_v['attrs'])) {
-                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['attrs'][$ref_v['attrs']];
-                        }
-
-                        else {
-                            $parsed[$ref_k] = $item[$ref_v['feed_param_1'] . ":" . $ref_v['feed_param_2']]['data'];
-                        }
-                    }
-
-                    else {
-                        if (isset($ref_v['attrs'])) {
-                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['attrs'][$ref_v['attrs']];
-                        }
-
-                        else {
-                            $parsed[$ref_k] = $item[$ref_v['feed_param_1']]['data'];
-                        }
-                    }
-                }
-            }
-
-            if ($break === true) {
-                return $parsed;
-            }
-
-            if ($key_val) {
-                $all_parsed[$key_val] = $parsed;
-
+            if ($current_ns) {
+                $current_ns = $current_ns->children($namespaces[$ns_name]);
             }
 
             else {
-                $all_parsed[] = $parsed;
+                $current_ns = $xml->channel->children($namespaces[$ns_name]);
             }
         }
-
-        return $all_parsed;
     }
 }
 ?>

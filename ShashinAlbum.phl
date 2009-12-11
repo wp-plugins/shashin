@@ -22,53 +22,110 @@
  */
 class ShashinAlbum {
     public $ref_data = array(
-        'album_key' => array('col_params' => array('type' => 'smallint unsigned',
-            'not_null' => true, 'primary_key' => true,
-            'other' => 'AUTO_INCREMENT')),
-        'album_type' => array('col_params' => array('type' => 'varchar',
-            'length' => '20', 'not_null' => true)),
-        'rss_url' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'input_type' =>
-            'text', 'input_size' => 100),
-        'user' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'user')),
-        'name' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_ns' => 'gphoto', 'picasa_tag' => 'nickname')),
-        'link_url' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_tag' => 'link', 'flickr_tag' => 'link',
-            'twitpic_tag' => 'link')),
-        'title' => array('col_params' => array('type' => 'varchar',
-            'length' => '255', 'not_null' => true), 'feed_params' =>
-            array('picasa_tag' => 'title', 'flickr_tag' => 'title',
-            'twitpic_tag' => 'title')),
-        'description' => array('col_params' => array('type' => 'text'),
-            'feed_params' => array('picasa_tag' => 'description',
-            'flickr_tag' => 'description', 'twitpic_tag' => 'description')),
-        'location' => array('col_params' => array('type' => 'varchar',
-            'length' => '255'), 'feed_params' => array('picasa_ns' =>
-            'gphoto', 'picasa_tag' => 'location')),
-        'cover_photo_url' => array('col_params' => array('type' => 'varchar',
-            'length' => '255'), 'feed_params' => array(
-            'picasa_parent' => 'image', 'picasa_tag' => 'url',
-            'flickr_parent' => 'image', 'flickr_tag' => 'url')),
-        'last_updated' => array('col_params' => array(
-            'type' => 'int unsigned')),
-        'photo_count' => array('col_params' => array('type' => 'smallint unsigned',
-            'not_null' => true), 'feed_params' => array(
-            'picasa_ns' => 'gphoto', 'picasa_tag' => 'numphotos')),
-        'pub_date' => array('col_params' => array('type' => 'int unsigned',
-            'not_null' => true), 'feed_params' => array(
-            'picasa_ns' => 'gphoto', 'picasa_tag' => 'timestamp',
-            'flickr_tag' => 'pubDate', 'twitpic_tag' => 'pubDate')),
-        'geo_pos' => array('col_params' => array('type' => 'varchar',
-            'length' => '25'), 'feed_params' => array(
-            'picasa_ns' => 'gml', 'picasa_parent' => 'Point',
-            'picasa_tag' => 'pos')),
-        'include_in_random' => array('col_params' => array('type' => 'char',
-            'length' => '1', 'other' => "default 'Y'"),
+        'album_key' => array(
+            'col_params' => array(
+                'type' => 'smallint unsigned',
+                'not_null' => true,
+                'primary_key' => true,
+                'other' => 'AUTO_INCREMENT')),
+        'album_type' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '20',
+                'not_null' => true)),
+        'rss_url' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255',
+                'not_null' => true),
+            'input_type' => 'text',
+            'input_size' => 100),
+        'user' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_ns' => array('gphoto'),
+                'picasa_tag' => array('user'))),
+        'name' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_ns' => array('gphoto'),
+                'picasa_tag' => array('nickname'))),
+        'link_url' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_tag' => array('link'),
+                'flickr_tag' => array('link'),
+                'twitpic_tag' => array('link'))),
+        'title' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_tag' => array('title'),
+                'flickr_tag' => array('title'),
+                'twitpic_tag' => array('title'))),
+        'description' => array(
+            'col_params' => array(
+                'type' => 'text'),
+            'feed_params' => array(
+                'picasa_tag' => array('description'),
+                'flickr_tag' => array('description'),
+                'twitpic_tag' => array('description'))),
+        'location' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255'),
+            'feed_params' => array(
+                'picasa_ns' => array('gphoto'),
+                'picasa_tag' => array('location'))),
+        'cover_photo_url' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '255'),
+            'feed_params' => array(
+                'picasa_tag' => array('image', 'url'),
+                'flickr_tag' => array('image', 'url'))),
+        'last_updated' => array(
+            'col_params' => array(
+                'type' => 'int unsigned')),
+        'photo_count' => array(
+            'col_params' => array(
+                'type' => 'smallint unsigned',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_ns' => array('gphoto'),
+                'picasa_tag' => array('numphotos'))),
+        'pub_date' => array(
+            'col_params' => array(
+                'type' => 'int unsigned',
+                'not_null' => true),
+            'feed_params' => array(
+                'picasa_ns' => array('gphoto'),
+                'picasa_tag' => array('timestamp'),
+                'flickr_tag' => array('pubDate'),
+                'twitpic_tag' => array('pubDate'))),
+        'geo_pos' => array(
+            'col_params' => array(
+                'type' => 'varchar',
+                'length' => '25'),
+            'feed_params' => array(
+                'picasa_ns' => array('georss', 'gml'),
+                'picasa_tag' => array('Point', 'pos'))),
+        'include_in_random' => array(
+            'col_params' => array(
+                'type' => 'char',
+                'length' => '1',
+                'other' => "default 'Y'"),
             'input_type' => 'radio',
             'input_subgroup' => array('Y' => SHASHIN_YES, 'N' => SHASHIN_NO)),
         );
