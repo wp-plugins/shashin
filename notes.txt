@@ -70,3 +70,8 @@ http://www.twitpic.com/show/large/mt2bw 600x400
 
 
 *note: Twitpic Community Guidelines specify that if you use a Twitpic thumbnail in your app, the photo must link back to its original photo page or a link to the original photo page must be provided somewhere within context to the thumbnail
+
+
+        $xml_ns = $xml->channel->children($namespaces['georss']);
+        $xml_ns2 = $xml_ns->children($namespaces['gml']);
+        var_dump($xml_ns2->Point->pos);
