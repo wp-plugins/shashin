@@ -119,8 +119,8 @@ class ShashinAlbum {
                 'type' => 'varchar',
                 'length' => '25'),
             'feed_params' => array(
-                'picasa_ns' => array('georss', 'gml'),
-                'picasa_tag' => array('Point', 'pos'))),
+                'picasa_ns' => array('georss', 'gml', 'gml'),
+                'picasa_tag' => array('where', 'Point', 'pos'))),
         'include_in_random' => array(
             'col_params' => array(
                 'type' => 'char',

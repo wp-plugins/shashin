@@ -47,30 +47,28 @@ class ShashinParser {
         $xml = new SimpleXmlElement($snoopy->results);
         $namespaces = $xml->channel->getNameSpaces(true);
 
-        $xml_ns = $xml->channel->children($namespaces['georss']);
-        $xml_ns2 = $xml_ns->children($namespaces['gml']);
-        var_dump($xml_ns);
-        exit;
-
         // album meta-data
         foreach ($album_ref_data as $k=>$v) {
-            $album_data[$k] = ShashinParser::getTagData($xml, $namespaces, $v['feed_params'], $album_data['type']);
+            if ($v['feed_params']) {
+                $album_data[$k] = ShashinParser::getTagData($xml, $namespaces, $v['feed_params'], $album_data['album_type']);
+            }
         }
+
+        var_dump($album_data);
+        exit;
 
         // photo data
         $album_data['photos'] = array();
         //foreach ($xml->channel->item as $item) {
         //}
-
     }
 
-    public static function getTagData($xml, $namespaces, $params, $album_type, $tag_tree = null, $current_ns = null) {
+    public static function getTagData(&$xml, &$namespaces, &$params, &$album_type, $current_ns = null, $tag_path = null) {
 
-        // how to translate a tag_tree array into, e.g. $current_ns->Point->pos ??
-
+        $count = count($params[$album_type.'_tag']);
+        $current_tag = array_shift($params[$album_type.'_tag']);
 
         if ($params[$album_type.'_ns']) {
-            $count = count($params[$album_type.'_ns']);
             $ns_name = array_shift($params[$album_type.'_ns']);
 
             if ($current_ns) {
@@ -80,7 +78,29 @@ class ShashinParser {
             else {
                 $current_ns = $xml->channel->children($namespaces[$ns_name]);
             }
+
+            if ($count > 1) {
+                ShashinParser::getTagData($xml, $namespaces, $params, $album_type, $current_ns, $current_tag);
+            }
+
+            return strval($current_ns->$current_tag);
         }
+
+        if ($tag_path) {
+            $tag_path .= '->' . $current_tag;
+        }
+
+        else {
+            $tag_path = '$xml->channel->' . $current_tag;
+        }
+
+        if ($count > 1) {
+            ShashinParser::getTagData($xml, $namespaces, $params, $album_type, null, $tag_path);
+        }
+
+// need to figure out why not returning image->url for album cover photo
+        eval("\$return=" . $tag_path . ";" );
+        return strval($return);
     }
 }
 ?>
