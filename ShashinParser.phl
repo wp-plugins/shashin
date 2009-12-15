@@ -46,11 +46,23 @@ class ShashinParser {
         $snoopy->fetch($album_data['rss_url']);
         $xml = new SimpleXmlElement($snoopy->results);
         $namespaces = $xml->channel->getNameSpaces(true);
+        $type_tag = $album_data['album_type'] . '_tag';
 
         // album meta-data
         foreach ($album_ref_data as $k=>$v) {
-            if ($v['feed_params']) {
-                $album_data[$k] = ShashinParser::getTagData($xml, $namespaces, $v['feed_params'], $album_data['album_type']);
+            if ($v['feed_params'][$type_tag]) {
+                $current_tag = $v['feed_params'][$type_tag];
+                switch (count($current_tag)) {
+                case 1:
+                    $album_data[$k] = strval($xml->channel->{$current_tag[0]});
+                    break;
+                case 2:
+                    $album_data[$k] = strval($xml->channel->{$current_tag[0]}->{$current_tag[1]});
+                    break;
+                case 3:
+                    $album_data[$k] = strval($xml->channel->{$current_tag[0]}->{$current_tag[1]}->{$current_tag[2]});
+                    break;
+                }
             }
         }
 
@@ -63,7 +75,7 @@ class ShashinParser {
         //}
     }
 
-    public static function getTagData(&$xml, &$namespaces, &$params, &$album_type, $current_ns = null, $tag_path = null) {
+    public static function getTagData($xml, $namespaces, $params, $album_type) {
 
         $count = count($params[$album_type.'_tag']);
         $current_tag = array_shift($params[$album_type.'_tag']);
