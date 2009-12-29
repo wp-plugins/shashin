@@ -426,7 +426,7 @@ class ShashinAlbum {
         $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_ALBUM_TABLE, $data, array('album_id' => $this->data['album_id']));
 
         if ($sql_result === false) {
-            return array(false, sprintf(__("ShashinAlbum::setAlbumLocal - Failed to update record for photo ID %d. SQL Error:", SHASHIN_L10N_NAME), $this->data['photo_id']), true);
+            return array(false, sprintf(__("ShashinAlbum::setAlbumLocal - Failed to update record for album ID %d. SQL Error:", SHASHIN_L10N_NAME), $this->data['album_id']), true);
         }
 
         return array(true, __("Album updated."));
