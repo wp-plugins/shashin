@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  * @package Shashin
  * @subpackage Classes
  */
@@ -317,6 +317,18 @@ class ShashinPhoto {
             return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve photo thumbnails.", SHASHIN_L10N_NAME) . '</span>';
         }
 
+        /* for future use
+        if ($match['alt_thumbs']) {
+            $alt_keys = explode(",", $match['alt_thumbs']);
+            $conditions = "where photo_key in ('" . implode("','", $alt_keys) . "') and deleted = 'N'";
+            $alt_photos = ShashinPhoto::getPhotos('*', $conditions);
+
+            if (!$alt_photos) {
+                return '<span class="shashin_error">' . __("Shashin Error: unable to retrieve photo thumbnails.", SHASHIN_L10N_NAME) . '</span>';
+            }
+        }
+        */
+
         // the data doesn't come back from the database in the order it was
         // requested, so re-order it.
         $ordered = array();
@@ -328,6 +340,20 @@ class ShashinPhoto {
             }
         }
 
+        /* for future use
+        if ($alt_photos) {
+            $alt_ordered = array();
+            foreach ($alt_keys as $key) {
+                foreach ($alt_photos as $photo) {
+                    if ($key == $photo['photo_key']) {
+                        $alt_ordered[] = $photo;
+                    }
+                }
+            }
+        }
+
+        return ShashinPhoto::_getTableMarkup($ordered, $match, null, $alt_ordered);
+        */
         return ShashinPhoto::_getTableMarkup($ordered, $match);
     }
 
@@ -388,7 +414,7 @@ class ShashinPhoto {
         $desc = "";
 
         if (!$salbumphotos) {
-            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">&laquo; ' . __("Return to album list", SHASHIN_L10N_NAME) . '</a></span>';
+            $desc .= '<span class="shashin_caption_return"><a href="' . get_permalink() . '">' . __("Return to album list", SHASHIN_L10N_NAME) . '</a></span>';
         }
 
         $desc .= '<span class="shashin_caption_title">' . $photo['album_title']  . '</span>';
@@ -409,19 +435,19 @@ class ShashinPhoto {
             $permalink = get_permalink();
             $glue = strpos($permalink, "?") ? "&amp;" : "?";
             $link =  $permalink . $glue . 'shashin_album_key=' . $match['album_key'];
-            $desc .= '<div class="shashin_nav">';
+            $desc .= '<span class="shashin_nav">';
 
             if ($shashin_page > 1) {
                 $link_back = $link . '&amp;shashin_page=' . ($shashin_page - 1);
-                $desc .= '<div class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; ' . __('Previous', SHASHIN_L10N_NAME) . '</a></div>';
+                $desc .= '<span class="shashin_nav_previous"><a href="' . $link_back . '">&laquo; ' . __('Previous', SHASHIN_L10N_NAME) . '</a></span>';
             }
 
             if ($shashin_page < $_SESSION['shashin_last_page_' . $match['album_key']]) {
                 $link_next = $link . '&amp;shashin_page=' . ($shashin_page + 1);
-                $desc .= '<div class="shashin_nav_next"><a href="' . $link_next . '">' . __('Next', SHASHIN_L10N_NAME) . ' &raquo;</a></div>';
+                $desc .= '<span class="shashin_nav_next"><a href="' . $link_next . '">' . __('Next', SHASHIN_L10N_NAME) . ' &raquo;</a></span>';
             }
 
-            $desc .= "</div>\n";
+            $desc .= "</span>\n";
         }
 
         return ShashinPhoto::_getTableMarkup($photos, $match, $desc);
@@ -478,7 +504,7 @@ class ShashinPhoto {
      * @uses ShashinPhoto::_getDivMarkup()
      * @return string xhtml markup for the table containing the photos
      */
-    function _getTableMarkup($photos, $match, $desc = null) {
+    function _getTableMarkup($photos, $match, $desc = null, $alt_thumbs = null) {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
 
         // counter for distinguishing groups of images on a page
@@ -534,6 +560,10 @@ class ShashinPhoto {
 
             if (!$result) {
                 return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
+            }
+
+            if ($alt_thumbs && ($alt_thumb[$i] != $photos[$i])) {
+                $match['alt_thumb'] = $alt_thumbs[$i];
             }
 
             $markup = $photo->_getDivMarkup($match, true, $_SESSION['shashin_group_counter'], true);
@@ -829,12 +859,14 @@ class ShashinPhoto {
         // add date and exif data to the highslide caption if requested
         // and data exists
         if ($shashin_options['caption_exif'] == 'all' && $this->data['taken_timestamp']) {
-            $caption .= '<span class="shashin_caption_exif">'
-                . date_i18n("d-M-Y H:i", $this->data['taken_timestamp'])
-                . " &ndash; " . $this->data['make'] . " " . $this->data['model']
-                . ", F " . $this->data['fstop'] . ", " . $this->data['focal_length']
-                . "mm, " . $this->data['exposure'] . " sec, ISO " . $this->data['iso']
-                . '</span>';
+            $caption .= '<span class="shashin_caption_exif">';
+            $caption .= $this->data['taken_timestamp'] ? date_i18n("d-M-Y H:i", $this->data['taken_timestamp'] . " &ndash; ") : '';
+            $caption .= $this->data['make'] ? ($this->data['make'] . " " . $this->data['model'] . ", ") : '';
+            $caption .= $this->data['fstop'] ? ($this->data['fstop'] . ", ") : '';
+            $caption .= $this->data['focal_length'] ? ($this->data['focal_length'] . "mm, ") : '';
+            $caption .= $this->data['exposure'] ? ($this->data['exposure'] . " sec, ") : '';
+            $caption .= $this->data['iso'] ? ("ISO " . $this->data['iso']) : '';
+            $caption .= '</span>';
         }
 
         if ($caption && $shashin_options['image_display'] == 'highslide' && !$admin) {

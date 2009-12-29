@@ -11,7 +11,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -24,7 +24,7 @@
         <input type="hidden" name="cmd" value="_s-xclick" />
         <input type="hidden" name="hosted_button_id" value="5378623" />
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /><?php _e("Support Shashin", SHASHIN_L10N_NAME); ?> &raquo;
-        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="<?php _e("Support Deko Boko", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
+        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
         <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin Help", SHASHIN_L10N_NAME); ?></a>
         </form>
     </div>

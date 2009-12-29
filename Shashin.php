@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.4.2
+Version: 2.5
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.4.2
+ * @version 2.5
  * @package Shashin
  * @subpackage Classes
  *
@@ -69,6 +69,7 @@ define('SHASHIN_PICASA_VIDEO_TYPES', serialize(array('MPG', 'AVI', 'ASF', 'WMV',
 require_once(SHASHIN_DIR . '/ShashinAlbum.php');
 require_once(SHASHIN_DIR . '/ShashinPhoto.php');
 require_once(SHASHIN_DIR . '/ShashinWidget.php');
+require_once(SHASHIN_DIR . '/browser/ShashinBrowser.php');
 
 if (!in_array('ToppaWPFunctions', get_declared_classes())) {
     require_once(SHASHIN_DIR . '/ToppaWPFunctions.php');
@@ -100,6 +101,7 @@ class Shashin {
      */
     function bootstrap() {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
+        $shashin_browser = new ShashinBrowser();
 
         // Add the activation and deactivation hooks
         register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
@@ -127,12 +129,14 @@ class Shashin {
         // can wrap it in a paragraph
         add_filter('the_content', array(SHASHIN_PLUGIN_NAME, 'parseContent'), 0);
 
-        // check whether we should update all albums daily
+        // check whether we should update all albums every 10 hours
+        // (Picasa video URLs expire every 11 hours)
         if ($shashin_options['scheduled_update'] == 'y') {
+            add_filter('cron_schedules', array(SHASHIN_PLUGIN_NAME, 'cron10Hours'));
             add_action('shashin_scheduled_update_hook', array(SHASHIN_PLUGIN_NAME, 'scheduledUpdate'));
 
             if (!wp_next_scheduled('shashin_scheduled_update_hook')) {
-                wp_schedule_event(time(), 'daily', 'shashin_scheduled_update_hook');
+                wp_schedule_event(time(), 'every10hours', 'shashin_scheduled_update_hook');
             }
         }
     }
@@ -270,7 +274,17 @@ class Shashin {
     }
 
     /**
-     * Updates all albums once per day.
+     * Adds a "every10hours" option to WP's cron array.
+     *
+     * @static
+     * @access public
+     */
+    function cron10Hours() {
+        return array('every10hours' => array('interval' => 36000, 'display' => 'Every 10 Hours'));
+    }
+
+    /**
+     * Updates all albums on a scheduled basis.
      *
      * @static
      * @access public

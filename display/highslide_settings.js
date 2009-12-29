@@ -5,7 +5,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  */
 
 // The "-0" and "!!" are for type casting, as all vars brought over

@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  * @package Shashin
  * @subpackage Classes
  */
@@ -382,6 +382,7 @@ class ShashinAlbum {
                   || $new_photo['uploaded_timestamp'] != $old_photos[$new_id]['uploaded_timestamp']
                   || $new_photo['width'] != $old_photos[$new_id]['width']
                   || $new_photo['height'] != $old_photos[$new_id]['height']
+                  || $new_photo['content_url'] != $old_photos[$new_id]['content_url']
                   || $new_photo['picasa_order'] != $old_photos[$new_id]['picasa_order']) {
                     $sql_result = ToppaWPFunctions::sqlUpdate(SHASHIN_PHOTO_TABLE, $new_photo, array('photo_id' => $new_id));
 
@@ -833,7 +834,7 @@ class ShashinAlbum {
         $replace .=  '">';
         $replace .= $this->_getAlbumThumbTag($match['force_picasa']);
         $replace .= '<span class="shashin_album_title">'
-            . $this->_getAlbumLink()
+            . $this->_getAlbumLink($match['force_picasa'])
             . $this->data['title']
             . "</a></span>";
 

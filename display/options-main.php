@@ -6,11 +6,10 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  * @package Shashin
  * @subpackage AdminPanels
  */
-
 ?>
 
 <div class="wrap">
@@ -19,7 +18,7 @@
         <input type="hidden" name="cmd" value="_s-xclick">
         <input type="hidden" name="hosted_button_id" value="5378623">
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /><?php _e("Support Shashin", SHASHIN_L10N_NAME); ?> &raquo;
-        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="<?php _e("Support Deko Boko", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
+        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" title="<?php _e("Support Shashin", SHASHIN_L10N_NAME); ?>" style="vertical-align: middle; padding-right: 20px;" />
         <a href="<?php echo SHASHIN_FAQ_URL; ?>" target="_blank"><?php _e("Shashin Help", SHASHIN_L10N_NAME); ?></a>
         </form>
     </div>
@@ -36,18 +35,18 @@
     <tr style="vertical-align: top;">
     <td nowrap="nowrap"><?php _e("Your Picasa server:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="text" name="shashin_options[picasa_server]" value="<?php echo $shashin_options['picasa_server']; ?>" size="30" /></td>
-    <td><?php _e("The base URL of your Picasa server. Be sure to include 'http://'", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("The base URL of your Picasa server. Be sure to include 'http://' - do not include your username", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">
-    <td><?php _e("Sync all albums daily:", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Sync all albums every 10 hours:", SHASHIN_L10N_NAME); ?></td>
     <td nowrap="nowrap"><input type="radio" name="shashin_options[scheduled_update]" value="y"<?php
         if ($shashin_options['scheduled_update'] == 'y') echo ' checked="checked"'; ?> />
         <?php _e("Yes", SHASHIN_L10N_NAME); ?>
         <input type="radio" name="shashin_options[scheduled_update]" value="n"<?php
         if ($shashin_options['scheduled_update'] == 'n') echo ' checked="checked"'; ?> />
         <?php _e("No", SHASHIN_L10N_NAME); ?></td>
-    <td><?php _e("This will make Shashin sync all your albums automatically on a daily basis. NOTE: This may fail if you have several hundered albums, and/or several hundred photos per album.", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("If you have any videos in your albums, choose 'Yes' - Picasa video URLs expire every 11 hours and need to be refreshed.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
     <tr style="vertical-align: top;">

@@ -3,7 +3,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.4
+ * @version 2.5
  */
 
 /* Applied to all individual photos */
@@ -91,7 +91,7 @@
 }
 
 .shashin_thumbs_table caption {
-    text-align: left;
+    text-align: center;
     margin: 5px;
 }
 
@@ -148,22 +148,23 @@
 }
 
 .shashin_caption_description {
+    display: block;
 }
 
 .shashin_caption_return {
     display: block;
-    font-weight: bold;
+    font-size: smaller;
 }
 
 .shashin_nav {
+    display: block;
 }
 
 .shashin_nav_previous {
-    float: left;
+    padding-right: 10px;
 }
 
 .shashin_nav_next {
-    float: right;
 }
 
 /* Applied to EXIF data in Highslide captions */
