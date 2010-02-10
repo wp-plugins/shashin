@@ -29,9 +29,9 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 
 **New in Shashin 2.6**
 
-* Added support for unlisted Picasa albums (finally!). You must have the [PHP curl extension](http://www.php.net/manual/en/book.curl.php) installed to use this feature. Most PHP installations include curl, but some hosting providing may need you to ask them to turn it on for you.
+* Added support for unlisted Picasa albums (finally!). You must have the [PHP curl extension](http://www.php.net/manual/en/book.curl.php) installed to use this feature. Most PHP installations include curl, but some hosting provers may need you to ask them to enable it for you.
 * Added ability to group albums by Picasa user accounts when using the [salbumthumbs] tag.
-* Bug fix: the EXIF support added in Shashin 2.4 caused an incompatibility with Windows servers that is now fixed. Many thanks to MC for letting me run tests on his Windows server.
+* Bug fix: the EXIF support added in Shashin 2.4 caused an error when syncing albums in the Windows version of mySQL. Many thanks to MC for letting me run tests on his Windows server.
 * Bug fix: Shashin's automatic album syncing was interfering with scheduled jobs from other plugins in some circumstances. This is fixed. Note that you also need WordPress 2.9.1, as this was related to a wp-cron bug in WordPress 2.9.
 
 
