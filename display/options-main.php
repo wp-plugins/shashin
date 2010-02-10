@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.5
+ * @version 2.6
  * @package Shashin
  * @subpackage AdminPanels
  */
@@ -104,6 +104,17 @@
     <td><?php _e('This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works "out of the box." <strong>If you select "Use Other Viewer," you are responsible for implementing your own image viewer.</strong> See "Highslide Settings" and "Other Viewer Settings" below.', SHASHIN_L10N_NAME); ?></td>
     </tr>
 
+    <tr style="vertical-align: top;">
+    <td><?php _e("Picasa Email:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="text" name="shashin_options[picasa_username]" value="<?php echo $shashin_options['picasa_username']; ?>" size="30" /></td>
+    <td rowspan="2"><?php _e("Enter your Picasa email address and password only if you have unlisted albums. Do not enter them if you do not have any unlisted albums. Note you must have the <a href='http://www.php.net/manual/en/book.curl.php'>curl</a> extension for PHP installed to access unlisted albums.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
+
+    <tr style="vertical-align: top;">
+    <td><?php _e("Picasa Password:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="password" name="shashin_options[picasa_password]" value="<?php echo $shashin_options['picasa_password']; ?>" size="30" /></td>
+    </tr>
+
     <tr>
     <td colspan="3"><strong><?php _e("Album Photos Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e("When using the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed on your site when an album thumbnail is clicked.", SHASHIN_L10N_NAME); ?></td>
     </tr>
@@ -185,6 +196,16 @@
     <td><?php _e("The album title will appear above the photos. You can choose whether to also display the album description, after the title.", SHASHIN_L10N_NAME); ?></td>
     </tr>
 
+    <tr style="vertical-align: top;">
+    <td><?php _e("Group albums by user:", SHASHIN_L10N_NAME); ?></td>
+    <td nowrap="nowrap"><input type="radio" name="shashin_options[group_by_user]" value="y"<?php
+        if ($shashin_options['group_by_user'] == 'y') echo ' checked="checked"'; ?> />
+        <?php _e("Yes", SHASHIN_L10N_NAME); ?>
+        <input type="radio" name="shashin_options[group_by_user]" value="n"<?php
+        if ($shashin_options['group_by_user'] == 'n') echo ' checked="checked"'; ?> />
+        <?php _e("No", SHASHIN_L10N_NAME); ?></td>
+    <td><?php _e("Use this only if you have albums from more than one Picasa user. This will also add a Username column on the Shashin Tools page.", SHASHIN_L10N_NAME); ?></td>
+    </tr>
 
     <tr>
     <td colspan="3"><strong><?php _e("Highslide Settings", SHASHIN_L10N_NAME); ?></strong><br /><?php _e('These settings apply only if you select "Use Highslide" above.', SHASHIN_L10N_NAME); ?></td>

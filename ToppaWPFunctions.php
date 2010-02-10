@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.5
+ * @version 2.6
  * @package Shashin
  * @subpackage Classes
  */
@@ -418,12 +418,24 @@ class ToppaWPFunctions {
      * @static
      * @access public
      * @param string $feed_url the feed to parse
-     * @param boolean $cache whether or not to cache the feed
+     * @param string $username needed only if authenticating
+     * @param string $password needed only if authenticating
      * @return array the content of the feed
      */
-    function readFeed($feed_url) {
+    function readFeed($feed_url, $username = null, $password = null) {
         $parser = new ToppaXMLParser();
-        return $parser->parse($feed_url);
+        $authCode = null;
+
+        if ($username && $password) {
+            $authCode = ToppaWPFunctions::googleAuthenticate($username, $password);
+
+            if ($authCode === false) {
+                return false;
+            }
+        }
+
+        $parser->fetch($feed_url, $authCode);
+        return $parser->parse();
     }
 
     /**
@@ -512,6 +524,57 @@ class ToppaWPFunctions {
         }
 
         return $all_parsed;
+    }
+
+    /**
+     * Get an authentication token for a Google service (defaults to
+     * Picasa). Puts the token in session variable and will re-use it as
+     * needed, instead of fetching a new token for every call.
+     *
+     * @static
+     * @access public
+     * @param string $username Google email account
+     * @param string $password Password for Google email account
+     * @param string $source name of the calling application
+     * @param string $service name of the Google service to call (defaults to Picasa)
+     * @return boolean|string An authentication token, or false on failure
+     */
+    function googleAuthenticate($username, $password, $source = 'shashin', $service = 'lh2') {
+        $session_token = $source . '_' . $service . '_auth_token';
+
+        if ($_SESSION[$session_token]) {
+            return $_SESSION[$session_token];
+        }
+
+        // get an authorization token
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.google.com/accounts/ClientLogin");
+        $post_fields = "accountType=" . urlencode('HOSTED_OR_GOOGLE')
+            . "&Email=" . urlencode($username)
+            . "&Passwd=" . urlencode($password)
+            . "&source=" . urlencode($source)
+            . "&service=" . urlencode($service);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        //curl_setopt($ch, CURLINFO_HEADER_OUT, true); // for debugging the request
+        //var_dump(curl_getinfo($ch,CURLINFO_HEADER_OUT)); //for debugging the request
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if (strpos($response, '200 OK') === false) {
+            return false;
+        }
+
+        // find the auth code
+        preg_match("/(Auth=)([\w|-]+)/", $response, $matches);
+
+        if (!$matches[2]) {
+            return false;
+        }
+
+        $_SESSION[$session_token] = $matches[2];
+        return $matches[2];
     }
 }
 

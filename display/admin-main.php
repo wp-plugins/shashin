@@ -11,7 +11,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.5
+ * @version 2.6
  * @package Shashin
  * @subpackage AdminPanels
  * @uses ToppaWPFunctions::displayInput()
@@ -45,6 +45,17 @@
         echo '<input type="hidden" name="shashin_action" value="update_albums" />' . "\n";
         echo '<table class="widefat">' . "\n";
         echo "<tr>\n";
+
+        if ($shashin_options['group_by_user'] == 'y') {
+            echo '<th class="manage-column"><a href="'
+                . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
+                . (($order_by == 'user') ? 'user%20desc' : 'user')
+                . '">' . __("User", SHASHIN_L10N_NAME)
+                . (($_GET['shashin_orderby'] == 'user desc') ? ' &uarr;' : '')
+                . (($_GET['shashin_orderby'] == 'user') ? ' &darr;' : '')
+                . "</a></th>\n";
+        }
+
         echo '<th class="manage-column"><a href="'
             . SHASHIN_ADMIN_URL . '&amp;shashin_orderby='
             . (($order_by == 'title') ? 'title%20desc' : 'title')
@@ -85,6 +96,11 @@
         foreach ($all_albums as $all_album) {
             echo(($i % 2 == 0) ? "<tr>\n" : "<tr class='alternate'>\n");
             $i++;
+
+            if ($shashin_options['group_by_user'] == 'y') {
+                echo '<td>' . $all_album['user'] . "</td>\n";
+            }
+
             echo '<td><a href="' . SHASHIN_ADMIN_URL
                 . '&amp;shashin_action=edit_album_photos&amp;album_id='
                 . $all_album['album_id'] . '">' . $all_album['title']
@@ -117,7 +133,7 @@
             echo '<td style="text-align: center;">'
                 . $all_album['photo_count'] . "</td>\n";
             echo '<td style="text-align: center;">' . date("d-M-y", $all_album['pub_date']) . "</td>\n";
-            echo '<td style="text-align: center;">' . date("d-M-y H:i", $all_album['last_updated']) . "</td>\n";
+            echo '<td style="text-align: center;">' . date("d-M-y H:i T", $all_album['last_updated']) . "</td>\n";
             echo "</tr>\n";
         } ?>
 
@@ -199,4 +215,3 @@
         <?php _e("for detailed instructions.", SHASHIN_L10N_NAME); ?></dt>
     </dl>
 </div>
-

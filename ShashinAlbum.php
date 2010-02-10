@@ -6,7 +6,7 @@
  * copyright and license information.
  *
  * @author Michael Toppa
- * @version 2.5
+ * @version 2.6
  * @package Shashin
  * @subpackage Classes
  */
@@ -160,7 +160,7 @@ class ShashinAlbum {
             // read the feed for the user
             $feed_url = $shashin_options['picasa_server'] . SHASHIN_USER_RSS;
             $feed_url = str_replace("USERNAME", $user_name, $feed_url);
-            $feed_content = ToppaWPFunctions::readFeed($feed_url);
+            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
         }
 
         else {
@@ -316,7 +316,7 @@ class ShashinAlbum {
         $feed_url = $shashin_options['picasa_server'] . SHASHIN_ALBUM_RSS;
         $feed_url = str_replace("USERNAME", $this->data['user'], $feed_url);
         $feed_url = str_replace("ALBUMID", $this->data['album_id'], $feed_url);
-        $feed_content = ToppaWPFunctions::readFeed($feed_url);
+        $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
         $photo = new ShashinPhoto();
         $new_photos = ToppaWPFunctions::parseFeed($feed_content, $photo->ref_data, null, null, 'photo_id');
 
@@ -370,6 +370,9 @@ class ShashinAlbum {
 
             // pubDate format: Mon, 17 Nov 2008 02:35:00 +0000 - convert to timestamp
             $new_photo['uploaded_timestamp'] = strtotime($new_photo['uploaded_timestamp']);
+
+            // round the focal length
+            $new_photo['focal_length'] = round($new_photo['focal_length'], 3);
 
             // track the order in picasa
             $new_photo['picasa_order'] = $picasa_order++;
@@ -554,7 +557,7 @@ class ShashinAlbum {
             // read the feed for the user
             $feed_url = $shashin_options['picasa_server'] . SHASHIN_USER_RSS;
             $feed_url = str_replace('USERNAME', $user_name, $feed_url);
-            $feed_content = ToppaWPFunctions::readFeed($feed_url);
+            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
             $album = new ShashinAlbum();
             $albums_data = ToppaWPFunctions::parseFeed($feed_content, $album->ref_data);
         }
@@ -777,8 +780,17 @@ class ShashinAlbum {
         }
 
         // an order by preference
+        // order by user first if that option is set
         else {
-            $other = "order by " . $match['album_key'];
+            $order_by = $match['album_key'];
+
+            $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+            if ($shashin_options['group_by_user'] == 'y') {
+                $order_by = "user, $order_by";
+            }
+
+            $other = "order by $order_by";
         }
 
         $albums = ShashinAlbum::getAlbums('*', $conditions, $other);
@@ -787,8 +799,8 @@ class ShashinAlbum {
             return false;
         }
 
-        // the data doesn't come back from the database in the order it was
-        // requested, so re-order it.
+        // when selecting by album key, the data doesn't come back from
+        // the database in the order it was requested, so re-order it.
         if ($album_keys) {
             $ordered = array();
             foreach ($album_keys as $key) {
@@ -872,13 +884,15 @@ class ShashinAlbum {
      * @access private
      * @param array $albums array of arrays containing album data
      * @param array $match see detailed list in Shashin::parseContent()
+     * @param string $replace for recursively budiling tables for multiple users (optional)
+     * @param integer $pickup when called recursively, where to pickup in the albums array (optional)
      * @uses ShashinAlbum::ShashinAlbum()
      * @uses ShashinAlbum::getAlbum()
      * @uses ShashinAlbum::_getDivMarkup()
      * @return string xhtml markup for the table containing the photos
      */
-    function _getTableMarkup($albums, $match) {
-        $replace = '<table class="shashin_album_thumbs_table"';
+    function _getTableMarkup($albums, $match, $replace = "", $pickup = 0) {
+        $replace .= '<table class="shashin_album_thumbs_table"';
 
         if ($match['float'] || $match['clear']) {
             $replace .= ' style="';
@@ -901,9 +915,19 @@ class ShashinAlbum {
         }
 
         $replace .= ">\n";
+
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        if ($shashin_options['group_by_user'] == 'y') {
+            $replace .= '<caption>'
+                . $albums[$pickup]['user']
+                . __("'s Photos", SHASHIN_L10N_NAME)
+                . "</caption>\n";
+        }
+
         $cell_count = 1;
 
-        for ($i = 0; $i < count($albums); $i++) {
+        for ($i = $pickup; $i < count($albums); $i++) {
             if ($cell_count == 1) {
                 $replace .= "<tr>\n";
             }
@@ -915,18 +939,35 @@ class ShashinAlbum {
                 return '<span class="shashin_error">' . __("Shashin Error:", SHASHIN_L10N_NAME) . ' ' . $message . '</span>';
             }
 
-
             $markup = $album->_getDivMarkup($match);
             $replace .= "<td>$markup</td>\n";
             $cell_count++;
 
-            if ($cell_count > $match['max_cols'] || $i == (count($albums) - 1)) {
+            if ($shashin_options['group_by_user'] == 'y') {
+                $pickup = $i + 1;
+            }
+
+            if (($shashin_options['group_by_user'] == 'y')
+              && ($albums[$i+1]['user'] != null)
+              && ($albums[$i]['user'] != $albums[$i+1]['user'])) {
+                $replace .= "</tr>\n";
+                break;
+            }
+
+            else if ($cell_count > $match['max_cols'] || $i == (count($albums) - 1)) {
                 $replace .= "</tr>\n";
                 $cell_count = 1;
             }
         }
 
         $replace .= "</table>\n";
+
+        if (($shashin_options['group_by_user'] == 'y')
+          && ($pickup != 0)
+          && ($pickup < (count($albums)))) {
+            $replace = ShashinAlbum::_getTableMarkup($albums, $match, $replace, $pickup);
+        }
+
         return $replace;
     }
 }

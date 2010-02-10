@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.5
+Version: 2.6
 Author URI: http://www.toppa.com
 */
 
@@ -12,7 +12,7 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.5
+ * @version 2.6
  * @package Shashin
  * @subpackage Classes
  *
@@ -131,7 +131,7 @@ class Shashin {
 
         // check whether we should update all albums every 10 hours
         // (Picasa video URLs expire every 11 hours)
-        if ($shashin_options['scheduled_update'] == 'y') {
+        if ($shashin_options['scheduled_update'] == 'y' && $_REQUEST['shashin_options']['scheduled_update'] != 'n') {
             add_filter('cron_schedules', array(SHASHIN_PLUGIN_NAME, 'cron10Hours'));
             add_action('shashin_scheduled_update_hook', array(SHASHIN_PLUGIN_NAME, 'scheduledUpdate'));
 
@@ -187,6 +187,9 @@ class Shashin {
             'theme_max_single' => 576,
             'photos_per_page' => null,
             'caption_exif' => 'n',
+            'picasa_username' => null,
+            'picasa_password' => null,
+            'group_by_user' => 'n',
         );
 
         // create/update tables
@@ -275,12 +278,13 @@ class Shashin {
 
     /**
      * Adds a "every10hours" option to WP's cron array.
-     *
+     * See http://codex.wordpress.org/Plugin_API/Filter_Reference/cron_schedules
      * @static
      * @access public
      */
-    function cron10Hours() {
-        return array('every10hours' => array('interval' => 36000, 'display' => 'Every 10 Hours'));
+    function cron10Hours($schedules) {
+        $schedules['every10hours'] = array('interval' => 36000, 'display' => __('Every 10 Hours'));
+        return $schedules;
     }
 
     /**
