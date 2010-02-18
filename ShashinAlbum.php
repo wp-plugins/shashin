@@ -371,8 +371,9 @@ class ShashinAlbum {
             // pubDate format: Mon, 17 Nov 2008 02:35:00 +0000 - convert to timestamp
             $new_photo['uploaded_timestamp'] = strtotime($new_photo['uploaded_timestamp']);
 
-            // round the focal length
-            $new_photo['focal_length'] = round($new_photo['focal_length'], 3);
+            // round the exposure
+            // (in Windows mySQL, insert fails if the data is too long for the field)
+            $new_photo['exposure'] = round($new_photo['exposure'], 3);
 
             // track the order in picasa
             $new_photo['picasa_order'] = $picasa_order++;
