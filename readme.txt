@@ -3,8 +3,8 @@ Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.9.1
-Tested up to: 2.9.1
-Stable tag: 2.6.1
+Tested up to: 2.9.2
+Stable tag: 2.6.2
 
 Shashin is a powerful WordPress plugin that lets you display Picasa photos, albums, and videos anywhere in your WordPress site.
 
@@ -65,11 +65,13 @@ For troubleshooting help, please [post a comment in my latest Shashin post](http
 
 == Changelog ==
 
+= 2.6.2 = Bug fix to unlisted album support for Google authentication servers outside the US
 = 2.6.1 = Bug fix to the EXIF data bug fix in 2.6 - actually works in Windows now!
 = 2.6 =
 * Added support for unlisted Picasa albums (finally!). You must have the [PHP curl extension](http://www.php.net/manual/en/book.curl.php) installed to use this feature. Most PHP installations include curl, but some hosting providing may need you to ask them to turn it on for you.
 * Added ability to group albums by Picasa user accounts when using the [salbumthumbs] tag.
-* Bug fix: the EXIF support added in Shashin 2.4 caused an incompatibility with Windows servers that is now fixed. Many thanks to MC for letting me run tests on his Windows server.* Bug fix: Shashin's automatic album syncing was interfering with scheduled jobs from other plugins in some circumstances. This is fixed. Note that you also need WordPress 2.9.1, as this was related to a wp-cron bug in WordPress 2.9.
+* Bug fix: the EXIF support added in Shashin 2.4 caused an incompatibility with Windows servers that is now fixed. Many thanks to MC for letting me run tests on his Windows server.
+* Bug fix: Shashin's automatic album syncing was interfering with scheduled jobs from other plugins in some circumstances. This is fixed. Note that you also need WordPress 2.9.1 or higher, as this was related to a wp-cron bug in WordPress 2.9.
 
 = 2.5 =
 * jQuery based WYSIWYG browser for adding Shashin photos to your posts

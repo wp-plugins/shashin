@@ -420,14 +420,17 @@ class ToppaWPFunctions {
      * @param string $feed_url the feed to parse
      * @param string $username needed only if authenticating
      * @param string $password needed only if authenticating
+     * @param string $source needed only if authenticating
+     * @param string $service needed only if authenticating
+     * @param string $server needed only if authenticating
      * @return array the content of the feed
      */
-    function readFeed($feed_url, $username = null, $password = null) {
+    function readFeed($feed_url, $username = null, $password = null, $source = null, $service = null, $server = null) {
         $parser = new ToppaXMLParser();
         $authCode = null;
 
         if ($username && $password) {
-            $authCode = ToppaWPFunctions::googleAuthenticate($username, $password);
+            $authCode = ToppaWPFunctions::googleAuthenticate($username, $password, $source, $service, $server);
 
             if ($authCode === false) {
                 return false;
@@ -536,10 +539,11 @@ class ToppaWPFunctions {
      * @param string $username Google email account
      * @param string $password Password for Google email account
      * @param string $source name of the calling application
-     * @param string $service name of the Google service to call (defaults to Picasa)
+     * @param string $service name of the Google service to call
+     * @param string $server the Google server to use (defaults to google.com)
      * @return boolean|string An authentication token, or false on failure
      */
-    function googleAuthenticate($username, $password, $source = 'shashin', $service = 'lh2') {
+    function googleAuthenticate($username, $password, $source, $service, $server = 'https://www.google.com') {
         $session_token = $source . '_' . $service . '_auth_token';
 
         if ($_SESSION[$session_token]) {
@@ -548,7 +552,7 @@ class ToppaWPFunctions {
 
         // get an authorization token
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://www.google.com/accounts/ClientLogin");
+        curl_setopt($ch, CURLOPT_URL, $server . "/accounts/ClientLogin");
         $post_fields = "accountType=" . urlencode('HOSTED_OR_GOOGLE')
             . "&Email=" . urlencode($username)
             . "&Passwd=" . urlencode($password)

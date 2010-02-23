@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.6.1
+Version: 2.6.2
 Author URI: http://www.toppa.com
 */
 
@@ -155,6 +155,7 @@ class Shashin {
         $shashin_options = unserialize(SHASHIN_OPTIONS);
         $shashin_options_defaults = array(
             'picasa_server' => 'http://picasaweb.google.com',
+            'picasa_auth_server' => 'https://www.google.com',
             'div_padding' => 10,
             'thumb_padding' => 6,
             'image_display' => 'highslide',
@@ -646,6 +647,7 @@ class Shashin {
 
             // save the options
             else {
+                $_REQUEST['shashin_options']['picasa_server'] = "http://" . $pieces[2];
                 array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_htmlentities'));
                 array_walk($_REQUEST['shashin_options'], array(SHASHIN_PLUGIN_NAME, '_trim'));
 
@@ -666,6 +668,9 @@ class Shashin {
                 // determine the largest Picasa size for single images
                 $shashin_options['theme_max_single'] = ShashinPhoto::_setMaxPicasaSize($_REQUEST['shashin_options']['theme_max_size'], 1);
 
+                // determine the authentication server
+                $more_pieces = explode(".", $pieces[2]);
+                $shashin_options['picasa_auth_server'] = 'https://www.google.' . $more_pieces[count($more_pieces)-1];
                 $shashin_options = array_merge($shashin_options, $_REQUEST['shashin_options']);
                 update_option('shashin_options', serialize($shashin_options));
                 $message = __("Shashin settings saved.", SHASHIN_L10N_NAME);

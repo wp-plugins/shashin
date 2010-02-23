@@ -160,7 +160,7 @@ class ShashinAlbum {
             // read the feed for the user
             $feed_url = $shashin_options['picasa_server'] . SHASHIN_USER_RSS;
             $feed_url = str_replace("USERNAME", $user_name, $feed_url);
-            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
+            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password'], 'shashin', 'lh2', $shashin_options['picasa_auth_server']);
         }
 
         else {
@@ -316,7 +316,7 @@ class ShashinAlbum {
         $feed_url = $shashin_options['picasa_server'] . SHASHIN_ALBUM_RSS;
         $feed_url = str_replace("USERNAME", $this->data['user'], $feed_url);
         $feed_url = str_replace("ALBUMID", $this->data['album_id'], $feed_url);
-        $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
+        $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password'], 'shashin', 'lh2', $shashin_options['picasa_auth_server']);
         $photo = new ShashinPhoto();
         $new_photos = ToppaWPFunctions::parseFeed($feed_content, $photo->ref_data, null, null, 'photo_id');
 
@@ -558,7 +558,7 @@ class ShashinAlbum {
             // read the feed for the user
             $feed_url = $shashin_options['picasa_server'] . SHASHIN_USER_RSS;
             $feed_url = str_replace('USERNAME', $user_name, $feed_url);
-            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password']);
+            $feed_content = ToppaWPFunctions::readFeed($feed_url, $shashin_options['picasa_username'], $shashin_options['picasa_password'], 'shashin', 'lh2', $shashin_options['picasa_auth_server']);
             $album = new ShashinAlbum();
             $albums_data = ToppaWPFunctions::parseFeed($feed_content, $album->ref_data);
         }
