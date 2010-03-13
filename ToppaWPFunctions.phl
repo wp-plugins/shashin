@@ -212,6 +212,19 @@ class ToppaWPFunctions {
 
             $field .=  " />\n";
             break;
+            
+        case 'password':
+            $field = '<input type="password" name="' . $input_name
+                . '" id="' . $input_id
+                . '" value="' . htmlspecialchars($input_value)
+                . '" size="' . $ref_data['input_size'] . '"';
+
+            if (strlen($ref_data['col_params']['length'])) {
+                $field .= ' maxlength="' . $ref_data['col_params']['length'] . '"';
+            }
+
+            $field .=  " />\n";
+            break;
 
         case 'radio':
             foreach ($ref_data['input_subgroup'] as $value=>$label) {

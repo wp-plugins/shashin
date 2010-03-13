@@ -411,6 +411,8 @@ class ShashinAdmin {
             'image_display' => 'highslide',
             'picasa_max' => 640,
             'picasa_theme_max_single' => 576,
+            'picasa_usernamme' => null,
+            'picasa_password' => null
             'flickr_theme_max_single' => 500,
             'twitpic_theme_max_single' => 600,
             'highslide_autoplay' => 'false',
@@ -423,7 +425,6 @@ class ShashinAdmin {
             'highslide_h_position' => 'center',
             'highslide_dimming_opacity' => 0.75,
             'highslide_hide_controller' => '1',
-
         );
 
         // flag whether to add or update Shashin options below

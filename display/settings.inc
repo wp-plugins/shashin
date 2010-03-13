@@ -125,6 +125,24 @@
             $this->shashin->options['picasa_max']); ?></td>
         <td><span class="description"><?php _e("The size for expanded display of Picasa photos.", 'shashin'); ?></span></td>
         </tr>
+        
+	    <tr style="vertical-align: top;">
+	    <th><label for="shashin_options_picasa_username"><?php _e("Picasa Email:", 'shashin'); ?></label></th>
+	    <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[picasa_username]',
+            array('input_type' => 'text', 'input_size' => 30,
+            $this->shashin->options['picasa_username']); ?></td>
+	    <td rowspan="2"><?php _e("Enter your Picasa email address and password only if you have unlisted albums. Do not enter them if you do not have any unlisted albums. Note you must have the <a href='http://www.php.net/manual/en/book.curl.php'>curl</a> extension for PHP installed to access unlisted albums.", 'shashin'); ?></td>
+	    </tr>
+	
+	    <tr style="vertical-align: top;">
+	    <td><label for="shashin_options_picasa_password"><?php _e("Picasa Password:", 'shashin'); ?></label></td>
+	    <td style="white-space: nowrap;"><?php echo ToppaWPFunctions::displayInput(
+            'shashin_options[picasa_password]',
+            array('input_type' => 'password', 'input_size' => 30,
+            $this->shashin->options['picasa_password']); ?></td>
+	    </tr>
+	        
         </table>
     </div>
 

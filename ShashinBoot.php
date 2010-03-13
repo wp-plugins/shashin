@@ -29,7 +29,7 @@ function shashin_activate() {
 
     else {
         require_once($dir . '/Shashin.phl');
-        require_once($dir . '/ShashinAdmin.ph;');
+        require_once($dir . '/ShashinAdmin.phl;');
         $shashin = new Shashin();
         $shashinAdmin = new ShashinAdmin($shashin);
         $shashinAdmin->install();

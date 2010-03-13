@@ -41,25 +41,24 @@ class Shashin {
     public $flickr_crop = array(75);
     public $twitpic_sizes = array(75, 150, 600);
     public $twitpic_crop = array(75, 150);
-    public $yes;
-    public $no;
 
     /**
      * Get options, register hooks.
      *
      * @access public
-     * @uses install
-     * @uses uninstall
      * @uses initAdminMenus
-     * @uses parseContent
      * @uses getHeadTags
      */
     public function __construct() {
         global $wpdb;
         $this->options = unserialize(get_option('shashin_options'));
+        load_plugin_textdomain('shashin', false, basename(SHASHIN_DIR) . '/languages/');
 
-        // add Tools and Settings menus
+        // add actions and hooks
         add_action('admin_menu', array($this, 'initAdminMenus'));
+        add_action('template_redirect', array($this, 'getHeadTags'));
+        register_deactivation_hook(__FILE__, array($this, 'unscheduleUpdate'));
+
     }
 
     /**
@@ -79,6 +78,60 @@ class Shashin {
         $tools_page = add_management_page('Shashin', 'Shashin', 'edit_posts', 'ShashinBoot', array($admin, 'getToolsMenu'));
         add_action("admin_print_styles-$tools_page", array($admin, 'getHeadTags'));
         return true;
+    }
+    
+    /**
+     * Removes the hook for scheduled album syncing.
+     *
+     * @access public
+     */
+    public function unscheduleUpdate() {
+        wp_clear_scheduled_hook('shashin_scheduled_update_hook');
+    }    
+
+    /**
+     * Gets the Shashin CSS file, and the optional Highslide CSS and
+     * JS, for inclusion in the document head. Will get a copy of shashin.css
+     * from your theme directory if you put a custom one there.
+     *
+     * @access public
+     */
+    public function getHeadTags() {
+        $shashin_options = unserialize(SHASHIN_OPTIONS);
+
+        if (file_exists(TEMPLATEPATH . '/shashin.css')) {
+            $shashin_css = get_bloginfo('template_directory') . '/shashin.css';
+        }
+
+        else {
+            $shashin_css = SHASHIN_DISPLAY_URL . '/shashin.css';
+        }
+
+        wp_enqueue_style('shashin_css', $shashin_css, false, SHASHIN_VERSION);
+
+        if ($shashin_options['image_display'] == 'highslide') {
+            if (file_exists(TEMPLATEPATH . '/highslide.css')) {
+                $highslide_css = get_bloginfo('template_directory') . '/highslide.css';
+            }
+
+            else {
+                $highslide_css = SHASHIN_DISPLAY_URL . '/highslide.css';
+            }
+
+            wp_enqueue_style('highslide_css', $highslide_css, false, '4.1.4');
+            wp_enqueue_script('highslide', SHASHIN_DISPLAY_URL . '/highslide/highslide.js', false, '4.1.4');
+            wp_enqueue_script('swfobject', SHASHIN_DISPLAY_URL . '/highslide/swfobject.js', false, '2.1');
+            wp_enqueue_script('highslide_settings', SHASHIN_DISPLAY_URL . '/highslide_settings.js', false, SHASHIN_VERSION);
+            wp_localize_script('highslide_settings', 'highslide_settings', array(
+                'graphics_dir' => SHASHIN_DISPLAY_URL . '/highslide/graphics/',
+                'outline_type' => $shashin_options['highslide_outline_type'],
+                'dimming_opacity' => $shashin_options['highslide_dimming_opacity'],
+                'interval' => $shashin_options['highslide_interval'],
+                'repeat' => $shashin_options['highslide_repeat'],
+                'position' => $shashin_options['highslide_v_position'] . ' ' . $shashin_options['highslide_h_position'],
+                'hide_controller' => $shashin_options['highslide_hide_controller']
+            ));
+        }
     }
 }
 
