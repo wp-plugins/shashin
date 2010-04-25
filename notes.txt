@@ -4,7 +4,6 @@
 
 wish list:
 
-editor buttons
 support for new highslide slideshow feature
 separate admin-related functions in separate class file, loaded only when needed
 custom captions (allow where y or n is put now)
@@ -12,8 +11,6 @@ embed Picasa flash slideshow: http://picasa.google.com/support/bin/answer.py?ans
 timeout when adding/updating a lot of albums - set_time_limit(120); for now
 allow for "newest" album in random photo display
 separate albums by username in display
-unlisted album support
-use STYLSHEETPATH instead of TEMPLATEPATH? (a problem with child themes)
 download full-size photos from Picasa (if enabled for album)
 add checkbox to "sync all" indicating whether it should pull in new albums
 check for bug in getNewest, when new albums are added
@@ -23,26 +20,17 @@ $caption .= htmlspecialchars_decode($this-&gt;data['description']);
 for single random or newest images, don't put in a table
 provide a custom class option for every tag
 download link in caption for full-size image
-
+"max" option not working with salbumthumbs tag
 translation contacts:
+pagination for album listing
 
 Russian: eduard.gabdullin@gmail.com (Eduard)
 Dutch: theomuys@gmail.com (Theo)
 Russian: antipod@beerhead.ru (Max)
-Spanish: luison@gmail.com (Jose)
+Spanish: joseluis@alsur.es (Jose)Jose Luis Moya
 Danish: wordpress@blogos.dk (Georg)
 Belorussian: mrilyuha@gmail.com (Michael Comfi)
 
-
-I have a lot planned for Shashin 2.5:
-
-<ul>
-<li>Buttons for both the HTML and Visual Editors!</li>
-<li>Easier to use <a href="http://codex.wordpress.org/Shortcode_API">shortcode</a> syntax for Shashin's tags</li>
-<li>A tag to support <a href="http://highslide.com/examples/gallery-thumbstrip-above.html">Highslide's new thumbstrip feature</a></li>
-<li>Custom captions</li>
-<li>Ability to group albums by Picasa username</li>
-</ul>
 
 
 Flickr image sizes:
