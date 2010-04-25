@@ -372,7 +372,7 @@ class ShashinPhoto {
      * @return string the xhtml markup to replace the sthumbs tag with
      */
     function getAlbumPhotosMarkup($match) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         // check to see if we're making a list of photos from salbumphotos
         // (which has max_size), or from salbumthumbs/salbumlist (which doesn't)
@@ -505,7 +505,7 @@ class ShashinPhoto {
      * @return string xhtml markup for the table containing the photos
      */
     function _getTableMarkup($photos, $match, $desc = null, $alt_thumbs = null) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         // counter for distinguishing groups of images on a page
         if (!$_SESSION['shashin_group_counter']) {
@@ -602,7 +602,7 @@ class ShashinPhoto {
      * @return boolean true: set dimension successfully; false: failed to set dimension
      */
     function _setDimensions($max) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
         $shashin_image_sizes = unserialize(SHASHIN_IMAGE_SIZES);
         $shashin_crop_sizes = unserialize(SHASHIN_CROP_SIZES);
 
@@ -656,7 +656,7 @@ class ShashinPhoto {
      * @return string the xhtml markup to display the image
      */
     function _getDivMarkup($match, $thumb = false, $group = null, $controller = false, $admin = false) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         // counter for assigning unique IDs to images
         if (!$_SESSION['shashin_id_counter']) {

@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating Picasa photos in WordPress.
 Author: Michael Toppa
-Version: 2.6.2
+Version: 2.6.3
 Author URI: http://www.toppa.com
 */
 
@@ -12,11 +12,11 @@ Author URI: http://www.toppa.com
  * Shashin is a WordPress plugin for integrating Picasa photos in WordPress.
  *
  * @author Michael Toppa
- * @version 2.6
+ * @version 2.6.3
  * @package Shashin
  * @subpackage Classes
  *
- * Copyright 2007-2009 Michael Toppa
+ * Copyright 2007-2010 Michael Toppa
  *
  * Shashin is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,14 @@ if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', ABSPATH . 'wp-content')
 if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins');
 if (!defined('WP_PLUGIN_DIR'))  define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
 
-define('SHASHIN_OPTIONS', get_option('shashin_options'));
+global $shashin_options;
+$shashin_options = get_option('shashin_options');
+
+// looks like WP 3 beta automatically unserializes; older versions don't
+if (!is_array($shashin_options)) {
+    $shashin_options = unserialize($shashin_options);
+}
+
 define('SHASHIN_PLUGIN_NAME', 'Shashin');
 define('SHASHIN_DISPLAY_NAME', 'Shashin');
 define('SHASHIN_L10N_NAME', 'shashin');
@@ -51,7 +58,7 @@ define('SHASHIN_FILE', basename(__FILE__));
 define('SHASHIN_DIR', dirname(__FILE__));
 define('SHASHIN_PATH', SHASHIN_DIR . '/' . SHASHIN_FILE);
 define('SHASHIN_ADMIN_URL', $_SERVER['PHP_SELF'] . "?page=" . basename(SHASHIN_DIR) . '/' . SHASHIN_FILE);
-define('SHASHIN_VERSION', '2.4.2');
+define('SHASHIN_VERSION', '2.6.3');
 define('SHASHIN_ALBUM_THUMB_SIZE', 160); // Picasa offers album thumbnails at only 160x160
 define('SHASHIN_ALBUM_TABLE', $wpdb->prefix . 'shashin_album');
 define('SHASHIN_PHOTO_TABLE', $wpdb->prefix . 'shashin_photo');
@@ -100,11 +107,12 @@ class Shashin {
      * @uses getHeadTags
      */
     function bootstrap() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
         $shashin_browser = new ShashinBrowser();
 
         // Add the activation and deactivation hooks
         register_activation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'install'));
+        register_uninstall_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'uninstall'));
         register_deactivation_hook(SHASHIN_PATH, array(SHASHIN_PLUGIN_NAME, 'unscheduleUpdate'));
 
         // For handling errors on install
@@ -152,7 +160,7 @@ class Shashin {
      * @uses ToppaWPFunctions::createTable()
      */
     function install() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
         $shashin_options_defaults = array(
             'picasa_server' => 'http://picasaweb.google.com',
             'picasa_auth_server' => 'https://www.google.com',
@@ -359,7 +367,7 @@ class Shashin {
      * @uses ShashinAlbum::deleteAlbum()
      */
     function getAdminMenu() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         switch ($_REQUEST['shashin_action']) {
         // show selected album for editing
@@ -612,8 +620,12 @@ class Shashin {
      * @access public
      */
     function getOptionsMenu() {
-        // can't use the SHASHIN_OPTIONS constant as the options may have changed
-        $shashin_options = unserialize(get_option('shashin_options'));
+        // can't use the shashin_options global as the options may have changed
+        $shashin_options = get_option('shashin_options');
+
+        if (!is_array($shashin_options)) {
+            $shashin_options = unserialize($shashin_options);
+        }
 
         // Start the cache
         ob_start();
@@ -703,10 +715,10 @@ class Shashin {
      * @access public
      */
     function getHeadTags() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
-        if (file_exists(TEMPLATEPATH . '/shashin.css')) {
-            $shashin_css = get_bloginfo('template_directory') . '/shashin.css';
+        if (file_exists(STYLESHEETPATH . '/shashin.css')) {
+            $shashin_css = get_bloginfo('stylesheet_directory') . '/shashin.css';
         }
 
         else {
@@ -716,8 +728,8 @@ class Shashin {
         wp_enqueue_style('shashin_css', $shashin_css, false, SHASHIN_VERSION);
 
         if ($shashin_options['image_display'] == 'highslide') {
-            if (file_exists(TEMPLATEPATH . '/highslide.css')) {
-                $highslide_css = get_bloginfo('template_directory') . '/highslide.css';
+            if (file_exists(STYLESHEETPATH . '/highslide.css')) {
+                $highslide_css = get_bloginfo('stylesheet_directory') . '/highslide.css';
             }
 
             else {

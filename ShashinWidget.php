@@ -37,32 +37,32 @@ class ShashinWidget {
      */
     function initWidgets() {
         function widgetSingle($args) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
             $photo = new ShashinPhoto();
             $widget = $photo->getPhotoMarkup($shashin_options['widget_single']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_single']['title'], $widget);
         }
 
         function widgetRandom($args) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
             $widget = ShashinPhoto::getRandomMarkup($shashin_options['widget_random']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_random']['title'], $widget);
         }
 
         function widgetThumbs($args) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
             $widget = ShashinPhoto::getThumbsMarkup($shashin_options['widget_thumbs']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_thumbs']['title'], $widget);
         }
 
         function widgetNewest($args) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
             $widget = ShashinPhoto::getNewestMarkup($shashin_options['widget_newest']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_newest']['title'], $widget);
         }
 
         function widgetAlbumThumbs($args) {
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
             $shashin_options['widget_album_thumbs']['force_picasa'] = true;
             $widget = ShashinAlbum::getAlbumThumbsMarkup($shashin_options['widget_album_thumbs']);
             ShashinWidget::_widgetDisplay($args, $shashin_options['widget_album_thumbs']['title'], $widget);
@@ -160,10 +160,14 @@ class ShashinWidget {
      * @access private
      */
     function _widgetControl($name, $args = null) {
-        // can't use the SHASHIN_OPTIONS constant as this function can be
+        // can't use the $shashin_options global as this function can be
         // called more than once in a single request, so we need to get the
         // updates made in each call.
-        $shashin_options = unserialize(get_option('shashin_options'));
+        $shashin_options = get_option('shashin_options');
+
+        if (!is_array($shashin_options)) {
+            $shashin_options = unserialize($shashin_options);
+        }
 
         // for handing the control form submission.
         if (is_array($_REQUEST["shashin_$name"])) {

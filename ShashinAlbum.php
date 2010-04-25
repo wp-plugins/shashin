@@ -154,7 +154,7 @@ class ShashinAlbum {
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
     function setAlbum($user_name, $album_identifier, $local_data = null) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         if (is_string($user_name)) {
             // read the feed for the user
@@ -310,7 +310,7 @@ class ShashinAlbum {
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
     function setAlbumPhotos() {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         // read the feed for the album's photos
         $feed_url = $shashin_options['picasa_server'] . SHASHIN_ALBUM_RSS;
@@ -491,7 +491,7 @@ class ShashinAlbum {
      * @return string URL embedded in an opening anchor tag
      */
     function _getAlbumLink($force_picasa = false) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         // comment out the if line and closing bracket if you want to always link to picasa
         if ($force_picasa) {
@@ -552,7 +552,7 @@ class ShashinAlbum {
      * @return array 0: true on success, false on failure; 1: message; 2: true if SQL error
      */
     function setUserAlbums($user_name, $local_data = null, $sync_only = true) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         if (is_string($user_name))  {
             // read the feed for the user
@@ -785,7 +785,7 @@ class ShashinAlbum {
         else {
             $order_by = $match['album_key'];
 
-            $shashin_options = unserialize(SHASHIN_OPTIONS);
+            global $shashin_options;
 
             if ($shashin_options['group_by_user'] == 'y') {
                 $order_by = "user, $order_by";
@@ -830,7 +830,7 @@ class ShashinAlbum {
      * @return string the xhtml markup to display the image
      */
     function _getDivMarkup($match) {
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
         $replace = '<div class="shashin_album" style="width: '
             . (SHASHIN_ALBUM_THUMB_SIZE + $shashin_options['div_padding']) . 'px;';
 
@@ -917,7 +917,7 @@ class ShashinAlbum {
 
         $replace .= ">\n";
 
-        $shashin_options = unserialize(SHASHIN_OPTIONS);
+        global $shashin_options;
 
         if ($shashin_options['group_by_user'] == 'y') {
             $replace .= '<caption>'
