@@ -3,12 +3,18 @@ Contributors: toppa
 Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Highslide, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 2.9.1
-Tested up to: 2.9.2
+Tested up to: 3.2.1
 Stable tag: 2.6.3
 
 Shashin is a powerful WordPress plugin that lets you display Picasa photos, albums, and videos anywhere in your WordPress site.
 
 == Description ==
+
+** Status Update July 2011 **
+
+I am working on Shashin 3. [You can read more about the upcoming version, download it for testing, and track progress](http://www.toppa.com/shashin-3-development-progress/).
+
+Some, but not all, users of Shashin 2 (the version currently available here at WordPress.org) are experiencing difficulty synchronizing albums since [Picasa switched to using https](http://googlesystem.blogspot.com/2011/02/default-https-access-for-picasa-web.html). There is no easy fix for this in Shashin 2, but it will not be a problem in Shashin 3.
 
 **Overview**
 
@@ -27,20 +33,7 @@ Shashin has many features for displaying your Picasa photos and videos in your W
 * Internationalization: Shashin supports translations into other languages (please contribute a translation if you're bilingual!)
 * Schedule daily automatic synchronization of Shashin with your Picasa albums.
 
-**Version 2.6.3 Updates**
-
-* Now compatible with WP 3 beta (WP 3 appears to automatically unserialize options, which was causing errors)
-* Added support for child themes
-* Can now uninstall and delete Shashin from the main plugin page (added uninstall hook for existing uninstall function)
-
 == Installation ==
-
-**Upgrade Instructions**
-
-1. Click the "upgrade automatically" link on your plugin menu, or: download the Shashin zip file, unzip it, and upload to your plugins directory, then deactivate and reactivate Shashin in your plugin panel.
-1. If you have any albums with videos, go to the Shashin Settings menu and select "yes" for "Sync all albums every 10 hours." Starting in early December 2009, all Picasa video URLs now automatically expire after 11 hours. Shashin needs to regularly retrieve fresh URLs so that Picasa videos embedded in your site will always work.
-
-**First-Time Installation Instructions**
 
 1. Download the zip file, unzip it, and upload the "shashin" folder to your plugins directory. Then activate it from your plugin panel. After successful activation, Shashin will appear in your "Tools" menu and your "Settings" menu.
 1. Go to the Shashin Settings menu and adjust the options as you like. Note the following in particular:
