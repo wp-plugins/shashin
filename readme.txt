@@ -10,7 +10,7 @@ Shashin is a powerful WordPress plugin that lets you display Picasa photos, albu
 
 == Description ==
 
-** Status Update July 2011 **
+**Status Update July 2011**
 
 I am working on Shashin 3. [You can read more about the upcoming version, download it for testing, and track progress](http://www.toppa.com/shashin-3-development-progress/).
 
