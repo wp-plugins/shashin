@@ -1,0 +1,1046 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Shashin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-28 08:16-0400\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Fat Cow <zhr@tut.by>\n"
+"Language-Team: Fat Cow <zhr@tut.by>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Belarusian\n"
+"X-Poedit-Country: BELARUS\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ShashinPhoto.php:88
+#: ShashinAlbum.php:94
+#: display/widget_random.php:38
+#: display/widget_thumbs.php:35
+#: display/widget_single.php:30
+#: display/options-main.php:46
+#: display/options-main.php:56
+#: display/options-main.php:171
+#: display/options-main.php:182
+#: display/options-main.php:214
+#: display/options-main.php:231
+#: display/options-main.php:302
+#: display/widget_album_thumbs.php:34
+#: display/widget_album_thumbs.php:37
+#: display/widget_newest.php:38
+msgid "Yes"
+msgstr "Так"
+
+#: ShashinPhoto.php:88
+#: ShashinAlbum.php:94
+#: display/widget_random.php:38
+#: display/widget_thumbs.php:35
+#: display/widget_single.php:30
+#: display/options-main.php:49
+#: display/options-main.php:59
+#: display/options-main.php:174
+#: display/options-main.php:185
+#: display/options-main.php:217
+#: display/options-main.php:234
+#: display/options-main.php:305
+#: display/widget_album_thumbs.php:34
+#: display/widget_album_thumbs.php:37
+#: display/widget_newest.php:38
+msgid "No"
+msgstr "Не"
+
+#: ShashinPhoto.php:145
+msgid "ShashinPhoto::getPhoto - Failed to retrieve photo. SQL Error:"
+msgstr "ShashinPhoto::getPhoto - Не атрымалася загрузіць фатаграфію. Памылка SQL:"
+
+#: ShashinPhoto.php:149
+msgid "Photo not found."
+msgstr "Фатаграфія не знойдзеная."
+
+#: ShashinPhoto.php:162
+msgid "ShashinPhoto::getPhoto - Called with invalid arguments."
+msgstr "ShashinPhoto::getPhoto - Выклік выраблены з няслушнымі параметрамі."
+
+#: ShashinPhoto.php:165
+msgid "Photo retrieved."
+msgstr "Фатаграфія загружаная."
+
+#: ShashinPhoto.php:178
+msgid "ShashinPhoto::setPhotoLocal - Called with invalid arguments."
+msgstr "ShashinPhoto::setPhotoLocal - Выклік выраблены з няслушнымі параметрамі."
+
+#: ShashinPhoto.php:184
+#, php-format
+msgid "ShashinPhoto::getPhotoLocal - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinPhoto::getPhotoLocal - Не атрымалася абнавіць запіс для фатаграфіі ID %d . Памылка SQL:"
+
+#: ShashinPhoto.php:187
+msgid "Photo updated."
+msgstr "Фатаграфія абноўленая."
+
+#: ShashinPhoto.php:223
+#: ShashinPhoto.php:781
+msgid "Shashin error:"
+msgstr "Памылка Shashin:"
+
+#: ShashinPhoto.php:264
+msgid "Shashin Error: unable to retrieve random photos."
+msgstr "Памылка Shashin: не атрымалася загрузіць выпадковыя фатаграфіі."
+
+#: ShashinPhoto.php:293
+msgid "Shashin Error: unable to retrieve newest photos."
+msgstr "Памылка Shashin: не атрымалася загрузіць новыя фатаграфіі."
+
+#: ShashinPhoto.php:317
+msgid "Shashin Error: unable to retrieve photo thumbnails."
+msgstr "Памылка Shashin: не атрымалася загрузіць мініяцюры фатаграфій."
+
+#: ShashinPhoto.php:382
+msgid "Shashin Error: unable to retrieve album photos."
+msgstr "Памылка Shashin: не атрымалася загрузіць фатаграфіі з альбома."
+
+#: ShashinPhoto.php:391
+msgid "Return to album list"
+msgstr "Назад да спісу альбомаў"
+
+#: ShashinPhoto.php:416
+msgid "Previous"
+msgstr "Назад"
+
+#: ShashinPhoto.php:421
+msgid "Next"
+msgstr "Наперад"
+
+#: ShashinPhoto.php:490
+msgid "Shashin Error: image size and the number of columns cannot both be 'max'"
+msgstr "Памылка Shashin: памер малюнка і колькасць слупкоў не могуць адначасова быць максімальнымі"
+
+#: ShashinPhoto.php:536
+#: ShashinAlbum.php:707
+#: ShashinAlbum.php:914
+msgid "Shashin Error:"
+msgstr "Памылка Shashin:"
+
+#: ShashinPhoto.php:665
+msgid "Click picture to play video"
+msgstr "Клікніце па малюначку, каб прайграць відэа"
+
+#: ShashinPhoto.php:666
+msgid "Click picture to enlarge"
+msgstr "Клікніце для павелічэння"
+
+#: Shashin.php:194
+#: Shashin.php:201
+msgid "Failed to create or update table "
+msgstr "Не атрымалася стварыць або абнавіць табліцу"
+
+#: Shashin.php:397
+#: Shashin.php:500
+msgid "Updates saved."
+msgstr "Абнаўленні захаваныя."
+
+#: Shashin.php:403
+msgid "No valid album ID supplied"
+msgstr "Паказаны няслушны ідэнтыфікатар альбома"
+
+#: Shashin.php:422
+msgid "That is not a valid URL for your Picasa server."
+msgstr "Няслушны URL сервера Picasa."
+
+#: Shashin.php:435
+msgid "Album added."
+msgstr "Альбом дададзены."
+
+#: Shashin.php:448
+msgid "Albums added."
+msgstr "Альбомы дададзеныя."
+
+#: Shashin.php:460
+msgid "All albums synced for "
+msgstr "Абноўленыя альбомы для ўліковага запісу "
+
+#: Shashin.php:495
+#: Shashin.php:559
+msgid "Failed to retrieve album data."
+msgstr "Не атрымалася загрузіць дадзеныя альбома."
+
+#: Shashin.php:514
+msgid "Album synchronized."
+msgstr "Альбом абноўлены."
+
+#: Shashin.php:529
+#: ShashinAlbum.php:248
+msgid "Album deleted."
+msgstr "Альбом выдалены."
+
+#: Shashin.php:554
+msgid "Failed to retrieve user data."
+msgstr "Не атрымалася загрузіць інфармацыю аб уліковым запісе."
+
+#: Shashin.php:576
+#: Shashin.php:663
+msgid "To complete the Shashin upgrade, please deactivate and reactivate Shashin from your plugins menu, and then re-sync all albums."
+msgstr "Каб завяршыць абнаўленне Shashin, дэактывуйце і затым актывуйце Shasin у падзеле ўбудоў, пасля чаго абновіце ўсе альбомы."
+
+#: Shashin.php:607
+msgid "Shashin has been uninstalled. You can now deactivate Shashin on your plugins management page."
+msgstr "Shashin быў выдалены. Зараз яго можна дэактываваць на старонцы кіравання ўбудовамі."
+
+#: Shashin.php:611
+msgid "Uninstall of Shashin failed. Database error:"
+msgstr "Пры выдаленні Shasin адбылася памылка базы дадзеных:"
+
+#: Shashin.php:617
+msgid "You must check the 'Uninstall Shashin' checkbox to confirm you want to uninstall Shashin"
+msgstr "Для пацверджання выдалення неабходна адзначыць пункт 'Выдаліць Shashin'."
+
+#: Shashin.php:626
+msgid "Invalid URL for Picasa Server"
+msgstr "Няслушны URL сервера Picasa"
+
+#: Shashin.php:653
+msgid "Shashin settings saved."
+msgstr "Налады Shashin захаваныя."
+
+#: ShashinAlbum.php:118
+msgid "ShashinAlbum::getAlbum - Failed to retrieve album. SQL Error:"
+msgstr "ShashinAlbum::getAlbum - Не атрымалася загрузіць альбом. Памылка SQL:"
+
+#: ShashinAlbum.php:122
+msgid "Album not found."
+msgstr "Альбом не знойдзены."
+
+#: ShashinAlbum.php:131
+msgid "ShashinAlbum::getAlbum - Called with invalid arguments."
+msgstr "ShashinAlbum::getAlbum - Выклік выраблены з няслушнымі параметрамі."
+
+#: ShashinAlbum.php:134
+msgid "Album retrieved."
+msgstr "Альбом загружаны."
+
+#: ShashinAlbum.php:167
+msgid "ShashinAlbum::setAlbum - First argument to setAlbum is not a valid username."
+msgstr "ShashinAlbum::setAlbum - Няслушнае імя карыстача для першага параметру setAlbum."
+
+#: ShashinAlbum.php:176
+msgid "ShashinAlbum::setAlbum - Failed to parse album feed."
+msgstr "ShashinAlbum::setAlbum - Не атрымалася апрацаваць RSS-стужку альбома."
+
+#: ShashinAlbum.php:189
+msgid "ShashinAlbum::setAlbum - Second argument to setAlbum is not a valid album identifier."
+msgstr "ShashinAlbum::setAlbum - Няслушны ідэнтыфікатар альбома для другога параметру setAlbum."
+
+#: ShashinAlbum.php:214
+msgid "ShashinAlbum::setAlbum - Failed to insert/update database record for album. SQL Error:"
+msgstr "ShashinAlbum::setAlbum - Не атрымоўваецца ўставіць/абнавіць дадзеныя альбома ў базе дадзеных. Памылка SQL:"
+
+#: ShashinAlbum.php:220
+msgid "Album metadata synchronized"
+msgstr "Метададзеныя альбома абноўленыя."
+
+#: ShashinAlbum.php:233
+msgid "ShashinAlbum::deleteAlbum - Album object not correctly set."
+msgstr "ShashinAlbum::deleteAlbum - Вылучаны няслушны альбом для выдалення."
+
+#: ShashinAlbum.php:239
+#, php-format
+msgid "ShashinAlbum::deleteAlbum - Failed to delete photo records for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::deleteAlbum - Не атрымалася выдаліць дадзеныя фатаграфій з альбома ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:245
+#, php-format
+msgid "ShashinAlbum::deleteAlbum - Failed to delete album record for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::deleteAlbum - Не атрымалася выдаліць дадзеныя альбома для альбома ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:282
+#, php-format
+msgid "ShashinAlbum::getAlbumPhotos - Failed to retrieve photos for Album ID %d. SQL Error:"
+msgstr "ShashinAlbum::getAlbumPhotos - Не атрымалася загрузіць фатаграфіі для альбома ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:286
+msgid "No photos found."
+msgstr "Фатаграфіі не знойдзеныя."
+
+#: ShashinAlbum.php:290
+msgid "Album photos retrieved."
+msgstr "Фатаграфіі загружаныя з альбома."
+
+#: ShashinAlbum.php:324
+msgid "ShashinAlbum::setAlbumPhotos - Failed to read Picasa RSS feed for album."
+msgstr "ShashinAlbum::setAlbumPhotos - Не атрымалася прачытаць RSS-стужку для альбома."
+
+#: ShashinAlbum.php:344
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to flag photo ID %d as deleted. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Не атрымалася пазначыць фатаграфію ID %d як выдаленую. Памылка SQL:"
+
+#: ShashinAlbum.php:389
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Не атрымалася абнавіць запіс для фатаграфіі ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:400
+#, php-format
+msgid "ShashinAlbum::setAlbumPhotos - Failed to insert record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumPhotos - Не атрымалася дадаць запіс для фота ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:409
+msgid "Album photos synchronized."
+msgstr "Усе фатаграфіі ў альбоме абноўленыя."
+
+#: ShashinAlbum.php:422
+msgid "ShashinAlbum::setAlbumLocal - Called with invalid arguments."
+msgstr "ShashinAlbum::setAlbumLocal - Выклік выраблены з няслушнымі параметрамі."
+
+#: ShashinAlbum.php:428
+#, php-format
+msgid "ShashinAlbum::setAlbumLocal - Failed to update record for photo ID %d. SQL Error:"
+msgstr "ShashinAlbum::setAlbumLocal - Не атрымалася абнавіць запіс для фатаграфіі ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:431
+msgid "Album updated."
+msgstr "Альбом абноўлены."
+
+#: ShashinAlbum.php:562
+msgid "ShashinAlbum::setUserAlbums - First argument to setUserAlbums is not a valid username."
+msgstr "ShashinAlbum::setUserAlbums - Няслушнае імя карыстача для першага параметру setUserAlbums."
+
+#: ShashinAlbum.php:566
+msgid "ShashinAlbum::setUserAlbums - Failed to parse album feed."
+msgstr "ShashinAlbum::setUserAlbums - Не атрымалася апрацаваць RSS-стужку альбома."
+
+#: ShashinAlbum.php:597
+#, php-format
+msgid "ShashinAlbum::setUserAlbums - Failed to update database record for album ID %d. SQL Error:"
+msgstr "ShashinAlbum::setUserAlbums - Не атрымалася абнавіць запіс для альбома ID %d. Памылка SQL:"
+
+#: ShashinAlbum.php:606
+#, php-format
+msgid "ShashinAlbum::setUserAlbums - Failed to insert database record for album ID %d. Possible SQL Error:"
+msgstr "ShashinAlbum::setUserAlbums - Не атрымалася дадаць запіс для альбома ID %d. Меркавана памылка SQL:"
+
+#: ShashinAlbum.php:630
+msgid "Album photos updated."
+msgstr "Абноўленыя фатаграфіі ў альбоме."
+
+#: ShashinAlbum.php:662
+msgid "Shashin Error: unable to retrieve albums."
+msgstr "Памылка Shashin: не атрымалася загрузіць альбомы."
+
+#: ShashinAlbum.php:718
+#: ShashinAlbum.php:841
+msgid "pictures"
+msgstr "малюнкі"
+
+#: ShashinAlbum.php:718
+#: ShashinAlbum.php:841
+msgid "picture"
+msgstr "малюнак"
+
+#: display/widget_random.php:17
+#: display/admin-main.php:51
+#: display/widget_thumbs.php:17
+#: display/widget_single.php:17
+#: display/widget_album_thumbs.php:17
+#: display/widget_newest.php:17
+msgid "Title"
+msgstr "Назоў"
+
+#: display/widget_random.php:21
+#: display/widget_newest.php:21
+msgid "Album"
+msgstr "Альбом"
+
+#: display/widget_random.php:25
+#: display/widget_thumbs.php:26
+#: display/widget_single.php:25
+#: display/widget_newest.php:25
+msgid "Image Size"
+msgstr "Памер фота"
+
+#: display/widget_random.php:29
+#: display/widget_thumbs.php:30
+msgid "Max Cols"
+msgstr "Кол-у слупкоў"
+
+#: display/widget_random.php:33
+#: display/widget_newest.php:33
+msgid "No. of Images"
+msgstr "Кол-у фота"
+
+#: display/widget_random.php:37
+#: display/widget_thumbs.php:34
+#: display/widget_single.php:29
+#: display/widget_newest.php:37
+msgid "Show Captions"
+msgstr "Паказваць подпісы"
+
+#: display/widget_random.php:41
+#: display/widget_thumbs.php:38
+#: display/widget_single.php:33
+#: display/widget_album_thumbs.php:40
+#: display/widget_newest.php:41
+msgid "CSS Float/Align"
+msgstr "CSS выраўнаванне"
+
+#: display/widget_random.php:45
+#: display/widget_thumbs.php:42
+#: display/widget_single.php:37
+#: display/widget_album_thumbs.php:44
+#: display/widget_newest.php:45
+msgid "CSS Clear"
+msgstr "Ачысціць CSS"
+
+#: display/admin-main.php:26
+#: display/admin-main.php:27
+#: display/options-main.php:21
+#: display/options-main.php:22
+#: display/admin-edit.php:32
+#: display/admin-edit.php:33
+msgid "Support Shashin"
+msgstr "Дапамагчы праекту Shashin"
+
+#: display/admin-main.php:27
+#: display/options-main.php:22
+#: display/admin-edit.php:33
+msgid "Support Deko Boko"
+msgstr "Дапамагчы праекту Deko Boko"
+
+#: display/admin-main.php:28
+#: display/options-main.php:23
+#: display/admin-edit.php:34
+msgid "Shashin Help"
+msgstr "Дапамога"
+
+#: display/admin-main.php:38
+msgid "Your Albums"
+msgstr "Альбомы"
+
+#: display/admin-main.php:42
+msgid "Click an album title to view its photos. See the <a href='#ref'>quick reference</a> below for help with Shashin album tags. Click a column header to order the album list by that column (and click again to reverse the order)."
+msgstr "Клікніце па альбоме для прагляду фатаграфій. Падрабязней аб тэгах для альбомаў Shashin можна прачытаць <a href='#ref'>ніжэй</a>. Клікніце па назове калонкі для сартавання (паўторны клік для сартавання ў зваротным парадку)."
+
+#: display/admin-main.php:57
+msgid "Album Key"
+msgstr "ID альбома"
+
+#: display/admin-main.php:61
+msgid "Sync"
+msgstr "Абнавіць"
+
+#: display/admin-main.php:62
+msgid "Delete"
+msgstr "Выдаліць"
+
+#: display/admin-main.php:63
+#: display/admin-edit.php:79
+msgid "Include in Random?"
+msgstr "Ухваліць для выпадковага паказу?"
+
+#: display/admin-main.php:66
+msgid "Photo Count"
+msgstr "Кол-у фатаграфій"
+
+#: display/admin-main.php:72
+msgid "Pub Date"
+msgstr "Дата публікацыі"
+
+#: display/admin-main.php:78
+msgid "Last Sync"
+msgstr "Апошняе абнаўленне"
+
+#: display/admin-main.php:107
+msgid "Are you sure you want to delete this album?"
+msgstr "Упэўненыя, што жадаеце выдаліць гэты альбом?"
+
+#: display/admin-main.php:126
+#: display/admin-edit.php:106
+msgid "Update Random Display"
+msgstr "Абнавіць выпадковыя фатаграфіі"
+
+#: display/admin-main.php:134
+#: display/admin-main.php:155
+msgid "You have not added any albums yet."
+msgstr "У базе няма ні аднаго альбома."
+
+#: display/admin-main.php:138
+msgid "Sync Multiple Albums"
+msgstr "Абнавіць некалькі альбомаў."
+
+#: display/admin-main.php:140
+msgid "You can synchronize all the albums for a Picasa user at the same time. This can take some time if you have many albums. Note this only synchronizes albums you have already added to Shashin."
+msgstr "Адначасова можна абнавіць усе карыстацкія альбомы Picasa. Калі альбомаў шмат, гэта зойме некаторы час. Увага, будуць абноўленыя толькі тыя альбомы, якія дададзеныя ў Shashin."
+
+#: display/admin-main.php:146
+msgid "Sync all albums for Picasa username:"
+msgstr "Абнавіць усе альбомы Picasa для ўліковага запісу:"
+
+#: display/admin-main.php:148
+msgid "Sync All"
+msgstr "Абнавіць усё"
+
+#: display/admin-main.php:160
+#: display/admin-main.php:178
+msgid "Add Albums"
+msgstr "Дадаць альбомы"
+
+#: display/admin-main.php:165
+msgid "Please enter the URL for your &quot;My Photos&quot; page on Picasa if you want to add all your public albums to Shashin, or enter the URL of an individual album. Use the regular URL, <strong>not the RSS URL</strong>."
+msgstr "URL старонкі &quot;My Photo (Мае фота) &quot; у Picasa дадае ў Shashin усе публічныя альбомы. URL альбома - пэўны альбом. Увага! Уводзіцца звычайны URL , <strong>не RSS URL</strong>."
+
+#: display/admin-main.php:167
+msgid "The URL should have one of these formats:"
+msgstr "URL павінен мець адзін наступных фарматаў:"
+
+#: display/admin-main.php:169
+#: display/admin-main.php:171
+msgid "username"
+msgstr "уліковы запіс"
+
+#: display/admin-main.php:170
+msgid "OR"
+msgstr "АБО"
+
+#: display/admin-main.php:171
+msgid "albumname"
+msgstr "назоў альбома"
+
+#: display/admin-main.php:173
+msgid "Picasa URL:"
+msgstr "Picasa URL:"
+
+#: display/admin-main.php:175
+msgid "Include photos in random photo display?"
+msgstr "Ухваліць для выпадковага паказу?"
+
+#: display/admin-main.php:183
+msgid "Album Tags Quick Reference"
+msgstr "Інфармацыя аб тэгах альбомаў"
+
+#: display/admin-main.php:186
+msgid "Display thumbnails for your albums in a table layout"
+msgstr "Паказваць мініяцюры альбомаў у выглядзе табліцы"
+
+#: display/admin-main.php:187
+msgid "[salbumthumbs=to_show,max_cols,location_yn,pubdate_yn,position,clear]"
+msgstr "[salbumthumbs=to_show,max_cols,location_yn,pubdate_yn,position,clear]"
+
+#: display/admin-main.php:188
+msgid "Example: [salbumthumbs=pub_date desc,3,y,n,center] All albums in reverse order by publication date, 3 columns of thumbnails, show albums locations, don't show publication dates, center on the page"
+msgstr "Прыклад: [salbumthumbs=pub_date desc,3,y,n,center] Альбомы будуць адсартаваныя па даце публікацыі ў зваротным парадку, 3 шэрагу мініяцюр, паказваць месца здымкі, не паказваць даты публікацыі, выраўноўваць па цэнтры"
+
+#: display/admin-main.php:189
+msgid "Example: [salbumthumbs=2|24|33,1,n,y,left] Albums with Shashin keys 2, 24, and 33 only, 1 column of thumbnails, don't show album locations, show publication dates, float left"
+msgstr "Прыклад: [salbumthumbs=2|24|33,1,n,y,left] Паказваць толькі альбомы з ідэнтыфікатарамі 2, 24 і 33, адзін слупок мініяцюр, не паказваць месцы здымкі, паказваць даты публікацыі, выраўноўваць па левым боку"
+
+#: display/admin-main.php:190
+#: display/admin-main.php:196
+msgid "Notes: For ordering, options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering)."
+msgstr "Нататка:Для сартавання выкарыстайце следующик параметры 'pub_date', 'title' або 'last_updated' (дадайце ' desc' для сартавання ў зваротным парадку)."
+
+#: display/admin-main.php:192
+msgid "Display thumbnails and descriptions for your albums in a list layout"
+msgstr "Паказваць мініяцюры альбомаў і іх апісання ў выглядзе спісу"
+
+#: display/admin-main.php:193
+msgid "[salbumlist=to_show,info_yn]"
+msgstr "[salbumlist=to_show,info_yn]"
+
+#: display/admin-main.php:194
+msgid "Example: [salbumlist=pub_date desc,y]  All albums in reverse order by publication date, with additional album information shown between the title and description (photo count, publication date, and location)"
+msgstr "Прыклад: [salbumlist=pub_date desc,y]  Альбомы будуць адсартаваныя па даце публікацыі ў зваротным парадку з даданнем дадатковай інфармацыі паміж назовам альбома і апісаннем (колькасць фатаграфій, дата публікацыі, месца здымкі)"
+
+#: display/admin-main.php:195
+msgid "Example: [salbumlist=2|24|33,n] Albums with Shashin keys 2, 24, and 33 only, no additional information shown."
+msgstr "Прыклад: [salbumlist=2|24|33,n] Паказваць толькі альбомы з ідэнтыфікатарамі 2, 24 і 33 без дадатковай інфармацыі."
+
+#: display/admin-main.php:197
+#: display/admin-edit.php:140
+msgid "See the"
+msgstr "Падрабязная інфармацыя на сатйе праекту:"
+
+#: display/admin-main.php:198
+#: display/admin-edit.php:141
+msgid "Shashin page"
+msgstr "Хатняя старонка Shashin"
+
+#: display/admin-main.php:199
+#: display/admin-edit.php:142
+msgid "for detailed instructions."
+msgstr "."
+
+#: display/widget_thumbs.php:21
+msgid "Photo Keys"
+msgstr "ID фатаграфій"
+
+#: display/widget_single.php:21
+#: display/admin-edit.php:62
+msgid "Photo Key"
+msgstr "ID фатаграфіі"
+
+#: display/options-main.php:27
+msgid "Settings"
+msgstr "Налады"
+
+#: display/options-main.php:37
+msgid "Your Picasa server:"
+msgstr "Сервер Picasa:"
+
+#: display/options-main.php:39
+msgid "The base URL of your Picasa server. Be sure to include 'http://'"
+msgstr "URL сервера Picasa. Спасылка павінна пачынацца з 'http://' ."
+
+#: display/options-main.php:43
+msgid "Sync all albums daily:"
+msgstr "Абнаўляць альбомы штодня:"
+
+#: display/options-main.php:50
+msgid "This will make Shashin sync all your albums automatically on a daily basis. NOTE: This may fail if you have several hundered albums, and/or several hundred photos per album."
+msgstr "Shashin будзе штодня проеврять альбомы Picasa на наяўнасць абнаўленняў. НАТАТКА: Абнаўленне можа не удаться, калі ў вас некалькі сотняў альбомаў і/або некалькі сотняў фатаграфій на альбом."
+
+#: display/options-main.php:54
+msgid "Add to photo caption:"
+msgstr "Дадаваць да назову фатаграфіі:"
+
+#: display/options-main.php:55
+msgid "Album Title:"
+msgstr "Назоў альбома:"
+
+#: display/options-main.php:61
+msgid "Date only"
+msgstr "Толькі дату"
+
+#: display/options-main.php:63
+msgid "All"
+msgstr "Усё"
+
+#: display/options-main.php:65
+msgid "None"
+msgstr "Нічога"
+
+#: display/options-main.php:66
+msgid "Album titles are prefixed to all captions. Dates are appended to expanded view captions only. EXIF data is appended to Highslide captions only, and includes the camera make, model, fstop, focal length, exposure time, and ISO."
+msgstr "Назовы альбомаў дадаюцца да ўсіх подпісаў. Даты дадаюцца толькі падчас прагляду павялічанага малюнка. Інфармацыя EXIF адлюстроўваецца толькі ў подпісах Highslide і ўключае ў сябе: вытворцы і мадэль фотаапарата, дыяфрагму, вытрымаю, фокусная адлегласць і ISO."
+
+#: display/options-main.php:70
+msgid "Image div padding:"
+msgstr "Водступы фотографиий (div padding):"
+
+#: display/options-main.php:72
+msgid "Make this 2x the '.shashin_image img' padding value in shashin.css"
+msgstr "Значэнне павінна быць у два разу больш чым водступы (padding) '.shashin_image img' у файле стыляў shashin.css"
+
+#: display/options-main.php:76
+msgid "Thumbnail div padding:"
+msgstr "Водступы эскізаў (div padding):"
+
+#: display/options-main.php:78
+msgid "Make this 2x the '.shashin_thumb img' padding value in shashin.css"
+msgstr "Значэнне павінна быць у два разу больш чым водступы (padding) '.shashin_thumb img' у файле стыляў shashin.css"
+
+#: display/options-main.php:82
+msgid "Maximum image width for your theme:"
+msgstr "Максімальная шырыня малюнка ў вашай тэме:"
+
+#: display/options-main.php:84
+msgid "The width of your theme's content area in pixels, minus any padding. If you use the word 'max' for the size in your Shashin tags, Shashin will use the closest, smaller supported Picasa size for the images. You can use 'max' for the image size with [sthumbs] and other tags. Shashin estimates 10px of total horizontal margin/padding per image."
+msgstr "Шырыня поля, у якім у вашай тэме размяшчаецца кантэнт, мінус отсупы. Калі вы выкарыстаеце тэг 'max', Shashin падбярэ максімальна магчымы памер малюнка з ліку падтрымоўваемых Picasa. Тэг 'max' можна выкарыстаць сумесна з [sthumbs] і іншымі тэгамі. Акрамя таго, Shshin рэзярвуе 10 пікселяў па гарызанталі для отсутпов."
+
+#: display/options-main.php:88
+msgid "Expanded image display:"
+msgstr "Адлюстроўваць павялічаныя фатаграфіі:"
+
+#: display/options-main.php:91
+msgid "At Picasa, in same browser window"
+msgstr "У Picasa, у гэтым жа акне браўзэра"
+
+#: display/options-main.php:94
+msgid "At Picasa, in a new browser window"
+msgstr "У Picasa, у новым акне браўзэра"
+
+#: display/options-main.php:97
+msgid "Use Highslide"
+msgstr "Выкарыстаць Highslide"
+
+#: display/options-main.php:100
+msgid "Use Other Viewer (e.g. Lightbox)"
+msgstr "Выкарыстаць іншы прагляднік (напрыклад, Lightbox)"
+
+#: display/options-main.php:103
+msgid "Do not make thumbnails clickable"
+msgstr "Мініяцюры не кликабельны"
+
+#: display/options-main.php:105
+msgid "This determines how to display an image when its thumbnail is clicked. Highslide is included with Shashin and works \"out of the box.\" <strong>If you select \"Use Other Viewer,\" you are responsible for implementing your own image viewer.</strong> See \"Highslide Settings\" and \"Other Viewer Settings\" below."
+msgstr "Вызначае спосаб паказу фатаграфіі пры кліку на яе мініяцюры. Highslide ужо ўключаны ў зборку Shashin і працуе без дадатковых налад. <strong>Пры выбары \"Выкарыстаць іншы прагляднік\", вы самі павінны яго наладзіць.</strong> Падрабязнасці ніжэй у падзелах \"Налады Highslide\" і \"Налады іншых прагляднікаў\"."
+
+#: display/options-main.php:109
+msgid "Album Photos Settings"
+msgstr "Налады адлюстравання фатаграфій у альбомах"
+
+#: display/options-main.php:109
+msgid "When using the [salbumthumbs] or [salbumlist] tags, these settings control how the photos in an album are displayed on your site when an album thumbnail is clicked."
+msgstr "Гэтыя налады вызначаюць якой выявай будуць адлюстроўвацца фатаграфіі ў альбоме пры выкарыстанні тэгаў [salbumthumbs] або [salbumlist]."
+
+#: display/options-main.php:113
+msgid "Thumbnail size:"
+msgstr "Памер миниаьюры:"
+
+#: display/options-main.php:125
+msgid "This determines the 'maximum dimension' of the thumbnails. This size is applied to either the height or the width (whichever is greater). The sizes listed in the drop-down menu are the only ones supported by Picasa. Note that the sizes"
+msgstr "Вызначае максімальны памер малюнка па вертыкалі або гарызанталі (завист ад таго, што больш). Picasa падтрымлівае толькі памеры, пералічаныя ў выпадальным меню. Звернеце ўвагу, што памеры"
+
+#: display/options-main.php:127
+msgid "are cropped square."
+msgstr "абразаюцца да квадратаў."
+
+#: display/options-main.php:131
+msgid "Number of columns:"
+msgstr "Кол-у слупкоў:"
+
+#: display/options-main.php:133
+msgid "The maximum number of columns for displaying the album photos. You will want to take into account the 'thumbnail size' you selected above, to make sure the overall display is not too wide for your WordPress theme."
+msgstr "Максімальны лік слупкоў выкарыстоўваных для паказу фатаграфій. Пры наладзе гэтага параметру, неабходна прымаць да ўвагі 'памер мініяцюр', каб не перавысіць шырыню тэмы WordPress."
+
+#: display/options-main.php:137
+msgid "Sort Order:"
+msgstr "Сартаваць:"
+
+#: display/options-main.php:158
+msgid "Select the display order for the photos."
+msgstr "Налада сартавання фатаграфій."
+
+#: display/options-main.php:162
+msgid "Photos per page:"
+msgstr "Кол-у фатаграфій на старонцы:"
+
+#: display/options-main.php:164
+msgid "The maximum number of photos to show per page. Leave blank to show all album photos on one page."
+msgstr "Колькасць фатаграфій, якія адлюстроўваюцца на адной старонцы. Каб паказваць усе фатаграфіі, пакіньце поле пустым. "
+
+#: display/options-main.php:168
+msgid "Display photo captions:"
+msgstr "Паказваць подпісы да фатаграфій:"
+
+#: display/options-main.php:175
+msgid "Whether to display a caption under each thumbnail."
+msgstr "Паказваць або няма подпісу пад мініяцюрамі фатаграфій."
+
+#: display/options-main.php:179
+msgid "Display album description:"
+msgstr "Паказваць апісанне альбома:"
+
+#: display/options-main.php:186
+msgid "The album title will appear above the photos. You can choose whether to also display the album description, after the title."
+msgstr "Назоў альбома будзе адлюстроўвацца над фатаграфіяй. Таксама вы можаце наладзіць паказ апісання альбома пасля назову."
+
+#: display/options-main.php:191
+msgid "Highslide Settings"
+msgstr "Налады Highslide"
+
+#: display/options-main.php:191
+msgid "These settings apply only if you select \"Use Highslide\" above."
+msgstr "Гэтыя налады ўжываюцца толькі, калі вылучаны пункт 'Выкарыстаць Highslide'."
+
+#: display/options-main.php:195
+msgid "Highslide image size:"
+msgstr "Памер малюнка ў Highslide:"
+
+#: display/options-main.php:207
+msgid "The maximum size to use for displaying the photos. See 'Thumbnail size' above for more information."
+msgstr "Максімальны памер для адлюстравання фатаграфій. Падрабязнасці ў падказцы да пункта 'Памер мініяцюр'."
+
+#: display/options-main.php:211
+msgid "Autoplay Highslide slideshows:"
+msgstr "Аўтазапуск слайдшоў у Highslide:"
+
+#: display/options-main.php:218
+msgid "If someone clicks an image in a slideshow group, this determines whether the slideshow plays automatically."
+msgstr "Слайдшоў будзе запускацца аўтаматычна пры кліку па мініяцюры фатаграфіі."
+
+#: display/options-main.php:222
+msgid "Highslide slideshow image display time:"
+msgstr "Інтэрвал змены слайдаў:"
+
+#: display/options-main.php:224
+msgid "How long each image is displayed in a slideshow (in milliseconds)"
+msgstr "Час паказу слайда (у мілісекундах)"
+
+#: display/options-main.php:228
+msgid "Repeat slideshow:"
+msgstr "Паўтараць слайдшоў:"
+
+#: display/options-main.php:235
+msgid "Whether to start over from the first slide when going to the next from the last slide."
+msgstr "Пачынаць паказ сладйшоу зноўку, калі дасягнуты канец альбома."
+
+#: display/options-main.php:239
+msgid "Highslide video dimensions:"
+msgstr "Памеры відэа ў Highslide:"
+
+#: display/options-main.php:240
+msgid "Width:"
+msgstr "Шырыня:"
+
+#: display/options-main.php:242
+msgid "Height:"
+msgstr "Вышыня:"
+
+#: display/options-main.php:244
+msgid "If you select Highslide for viewing images, it will also be used for displaying videos. This controls the height and width of the embedded video (unlike images, the dimensions cannot be calculated on the fly). A 4:3 (width:height) ratio is common for videos."
+msgstr "Highslide таксама выкарыстоўваецца для паказу відэа размешчанага ў альбомах Picasa. Тут можна наладзіць памеры відэа (у адрозненне ад малюнкаў, прапорцыі відэа на лету не змяняюцца). Суадносіны бакоў 4:3  (шырыня:вышыня) з'яўляецца агульнаўжывальным."
+
+#: display/options-main.php:248
+msgid "Outline type:"
+msgstr "Тып рамкі:"
+
+#: display/options-main.php:261
+msgid "The graphic outline applied to expanded images. Select 'null' for no outline."
+msgstr "Пры паказе павялічаных малюнкаў выкарыстоўваецца рамка ('null' - без рамкі)."
+
+#: display/options-main.php:264
+msgid "Controller Position:"
+msgstr "Пазіцыя кнопак:"
+
+#: display/options-main.php:290
+msgid "Where to position the slideshow control bar."
+msgstr "Пазіцыя кнопак кіравання паказам слайдаў."
+
+#: display/options-main.php:293
+msgid "Dimming opacity"
+msgstr "Празрыстасць фону"
+
+#: display/options-main.php:295
+msgid "Enter a number between 0 and 1. Indicates how much to dim the background when an image is expanded (enter 0 for no dimming). In highslide.css, look for .highslide-dimming to change the color (default is black)"
+msgstr "Усталёўвае ўзровень празрыстасці фону пры паказе павялічаных малюнкаў. можа прымаць значэнні ад 0 да 1, дзе 0 - поўнае отсутсвие фону. Опцыя .highslide-dimming у файле highslide.css усталёўвае колер фону (па змаўчанні, чорны)"
+
+#: display/options-main.php:299
+msgid "Hide controller on mouseout:"
+msgstr "Хаваць кнопкі:"
+
+#: display/options-main.php:306
+msgid "Whether the slideshow controller should be hidden when the mouse leaves the expanded image."
+msgstr "Хаваць кнопкі кіравання слайдшоў, калі курсор мышы выязджае за межы малюнка."
+
+#: display/options-main.php:310
+msgid "Other Viewer Settings"
+msgstr "Налады іншых прагляднікаў"
+
+#: display/options-main.php:310
+msgid "These settings apply only if you select \"Use Other Viewer\" above. There are a wide variety of configuration requirements for different viewers. Shashin accomodates them by letting you control the attributes for the link and image tags used for its thumbnails. All links and thumbnails automatically get unique IDs (e.g. \"shashin_thumb_link_24\", \"shashin_thumb_image_24\")."
+msgstr "Налады ўжываюцца толькі калі вылучаны пункт \"Выкарыстаць іншы прагляднік\". Для розных прагляднікаў, патрабуюцца розныя налады. Вы можаце выкарыстаць розныя атрыбуты ў тэгах для розных прагляднікаў. Усе спасылкі і мініяцюры атрымоўваюць унікальныя ідэнтыфікатары (\"shashin_thumb_link_24\", \"shashin_thumb_image_24\")."
+
+#: display/options-main.php:314
+msgid "Link \"rel\" for images:"
+msgstr "Спасылка \"rel\" для малюнкаў:"
+
+#: display/options-main.php:316
+msgid "The \"rel\" attribute for image links; e.g. \"lightbox\" if you are using Lightbox 2."
+msgstr "Атрыбут \"rel\" для спасылак на малюнкі; напрыклад \"lightbox\" для Lightbox 2."
+
+#: display/options-main.php:320
+msgid "Link \"rel\" for videos:"
+msgstr "Спасылка \"rel\" для відэа:"
+
+#: display/options-main.php:322
+msgid "The \"rel\" attribute for links if displaying a video; e.g. \"vidbox\" if you are using Videobox."
+msgstr "Атрыбут \"rel\" для спасылак на відэа; напрыклад \"vidbox\" для Videobox."
+
+#: display/options-main.php:326
+msgid "\"rel\" delimiter for image groups:"
+msgstr "\"rel\" падзельнік для груп малюнкаў:"
+
+#: display/options-main.php:328
+msgid "Brackets"
+msgstr "Квадратныя дужкі"
+
+#: display/options-main.php:330
+msgid "Hyphen"
+msgstr "Злучок"
+
+#: display/options-main.php:331
+msgid "How to delimit image groups in a rel tag. Lightbox 2 uses brackets (e.g. \"lightbox[33]\"). Many other viewers use hyphens (e.g. Slimbox: \"lightbox-33\")."
+msgstr "Падзельнік для груп малюнкаў у тэгу rel. Lightbox 2 выкарыстае квадратныя дужкі ( \"lightbox[33]\"), іншыя прагляднікі могуць выкарыстаць злучкі (Slimbox: \"lightbox-33\")."
+
+#: display/options-main.php:335
+msgid "Class for links:"
+msgstr "Клас для спасылак:"
+
+#: display/options-main.php:337
+msgid "A CSS class to apply to the link tags. Leave blank for none."
+msgstr "Клас CSS ужывальны да тэгаў спасылак (пустое поле - ніякі)."
+
+#: display/options-main.php:341
+msgid "Use photo caption as \"title\" in:"
+msgstr "Выкарыстаць подпіс да фатаграфіі ў якасці \"назовы\":"
+
+#: display/options-main.php:343
+msgid "Link tags"
+msgstr "Тэгі спасылак"
+
+#: display/options-main.php:345
+msgid "Image tags"
+msgstr "Тэгі малюнкаў"
+
+#: display/options-main.php:346
+msgid "You can use the photo's caption as the \"title\" for for its link tag, its image tag, or both."
+msgstr "Подпіс да фатаграфіі можна выкарыстаць у якасці назову ў тэгах спасылак, у тэгах малюнкаў або ў абодвух выпадках."
+
+#: display/options-main.php:350
+msgid "Class for thumbnails:"
+msgstr "Клас для мініяцюр:"
+
+#: display/options-main.php:352
+msgid "A CSS class to apply to the thumbnails image tags. Leave blank for none."
+msgstr "CSS клас, выкарыстоўваны для тэгаў мініяцюр (пустое поле - ніякі)."
+
+#: display/options-main.php:355
+msgid "Save Options"
+msgstr "Захаваць налады"
+
+#: display/options-main.php:359
+#: display/options-main.php:371
+msgid "Uninstall Shashin"
+msgstr "Выдаліць Shashin"
+
+#: display/options-main.php:365
+msgid "Uninstall Shashin?"
+msgstr "Выдаліць Shashin?"
+
+#: display/options-main.php:367
+msgid "Check this box if you want to completely remove Shashin. <strong>This will permanently break any Shashin tags that you still have in your posts or pages.</strong> After uninstalling, you can then deactivate Shashin on your plugins management page."
+msgstr "Пацверджанне поўнага выдалення Shashin. <strong>Усе тэгі Shashin стануць непрацоўнымі.</strong> Пасля выдалення, Shashin можа быць дэактываваны на старонцы кіравання ўбудовамі."
+
+#: display/options-main.php:371
+msgid "Are you sure you want to uninstall Shashin?"
+msgstr "Упэўненыя, што жадаеце выдаліць Shashin?"
+
+#: display/widget_album_thumbs.php:22
+msgid "If you want to display all your albums, indicate how to order them: options are 'pub_date', 'title', or 'last_updated' (add ' desc' for reverse ordering)."
+msgstr "Калі жадаеце, каб адлюстроўваліся ўсе альбомы, вылучыце парадак сартавання: 'pub_date', 'title' або 'last_updated'  (дадайце ' desc' для сартавання ў зваротным парадку)."
+
+#: display/widget_album_thumbs.php:23
+msgid "<strong>- OR -</strong> If you want only certain albums, enter their album keys instead, for example '12|22|14|17'"
+msgstr "<strong>- АБО -</strong> Для адлюстравання пэўных альбомаў, пакажыце іх ідэнтыфікатары, напрыклад '12|22|14|17'"
+
+#: display/widget_album_thumbs.php:25
+msgid "Albums"
+msgstr "Альбомы"
+
+#: display/widget_album_thumbs.php:25
+msgid "Keys or Sort"
+msgstr "ID альбомаў або спосаб сартавання"
+
+#: display/widget_album_thumbs.php:29
+#: display/widget_newest.php:29
+msgid "Max No. of Columns"
+msgstr "Максімальнае кол-у слупкоў"
+
+#: display/widget_album_thumbs.php:33
+msgid "Show Location"
+msgstr "Паказваць месца здымкі"
+
+#: display/widget_album_thumbs.php:36
+msgid "Show Pub. Date"
+msgstr "Паказваць дату публікацыі"
+
+#: display/admin-edit.php:46
+msgid "Shashin Admin"
+msgstr "Админка Shashin"
+
+#: display/admin-edit.php:48
+msgid "See the <a href='#ref'>quick reference</a> below for help with Shashin photo tags. Click a column header to order the photo list by that column (and click again to reverse the order)."
+msgstr "Падрабязней аб тэгах Shashin для фатаграфій глядзіце <a href='#ref'>ніжэй</a>. Сартаванне фатаграфій здзяйсняецца клікам па назове слупка."
+
+#: display/admin-edit.php:56
+msgid "Picasa"
+msgstr "Picasa"
+
+#: display/admin-edit.php:68
+msgid "Filename"
+msgstr "Імя файла"
+
+#: display/admin-edit.php:74
+msgid "Date Taken"
+msgstr "Дата здымкі"
+
+#: display/admin-edit.php:78
+msgid "Markup"
+msgstr "Тэг"
+
+#: display/admin-edit.php:113
+msgid "Photo Tags Quick Reference"
+msgstr "Інфармацыя аб тэгах фатаграфій"
+
+#: display/admin-edit.php:116
+msgid "<strong>Valid Picasa image sizes:</strong> "
+msgstr "<strong>Даступныя памеры малюнкаў Picasa:</strong> "
+
+#: display/admin-edit.php:118
+msgid "For a cropped square image, use sizes"
+msgstr "Даступныя памеры для абрэзаных квадратных малюнкаў:"
+
+#: display/admin-edit.php:120
+msgid "Display a single image or video"
+msgstr "Паказаць малюнак або відэа"
+
+#: display/admin-edit.php:121
+msgid "[simage=photo_key,max_size,caption_yn,position,clear,alt_thumb]"
+msgstr "[simage=photo_key,max_size,caption_yn,position,clear,alt_thumb]"
+
+#: display/admin-edit.php:122
+msgid "Example: [simage=17,max,y,center] Photo with Shashin key 17, maximum possible size, show the caption, centered (the size of the image depends on the width of your theme's content area)"
+msgstr "Прыклад: [simage=17,max,y,center] Фатаграфія з ID 17, максімальна магчымага памеру, подпіс, па цэнтры (памер малюнка завист ад шырыні поля для кантэнту)"
+
+#: display/admin-edit.php:123
+msgid "Example: [simage=22,200,n,left,none,33] Video with Shashin key 22, size of 200 pixels, no caption, float left, do not clear margins, use photo with Shashin key 33 as the thumbnail"
+msgstr "Прыклад: [simage=22,200,n,left,none,33] Відэа з ідэнтыфікатарам 22, памер 200 пікселяў, без подпісу, раўненне па левым боку, пакідаць палі, выкарыстаць фота з ID 33 у якасці мініяцюры"
+
+#: display/admin-edit.php:124
+msgid "Notes: alt_thumb is especially useful for videos when you don't want to use the thumbnail generated by Picasa"
+msgstr "Нататка: alt_thumb асабліва карысны ў тых выпадках, калі вы не жадаеце выкарыстаць мініяцюру згенераваную Picasa"
+
+#: display/admin-edit.php:126
+msgid "Display a group of thumbnails"
+msgstr "Паказваць некалькі минитюр"
+
+#: display/admin-edit.php:127
+msgid "[sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
+msgstr "[sthumbs=photo_key1|photo_key2|etc,max_size,max_cols,caption_yn,float,clear]"
+
+#: display/admin-edit.php:128
+msgid "Example: [sthumbs=5|202|115|84|33|189,160,2,n,right] Display photos with Shashin keys 5, 202, 115, 84, 33, and 189, size of 160 pixels for each image, display in 2 columns, no captions, float right (this is a 2x3 grid of pictures, floating to the right of the main content area)"
+msgstr "Прыклад: [sthumbs=5|202|115|84|33|189,160,2,n,right] Фатаграфіі з ID 5, 202, 115, 84, 33, і 189, памер малюнка 160 пікселяў, 2 калонкі, без подпісаў, выраўноўваць па правым боку (табліца 2x3 малюнкі, выравненная па правым боку зоны кантэнту)"
+
+#: display/admin-edit.php:129
+msgid "Example: [sthumbs=5|202|115|84,max,2,y,center] Display photos with Shashin keys 5, 202, 115, and 84, use the maximum possible size, 2 columns, show captions, centered (the size of the images depends on the width of your theme's content area)"
+msgstr "Прыклад: [sthumbs=5|202|115|84,max,2,y,center] Фатаграфіі з ID 5, 202, 115, і 84, максімальна вохможного памеру, 2 слупка,з подпісамі, цэнтраваць"
+
+#: display/admin-edit.php:131
+msgid "Display random images and videos"
+msgstr "Паказваць выпадковае фота або відэа"
+
+#: display/admin-edit.php:132
+msgid "[srandom=source,max_size,max_cols,how_many,caption_yn,position,clear]"
+msgstr "[srandom=source,max_size,max_cols,how_many,caption_yn,position,clear]"
+
+#: display/admin-edit.php:133
+msgid "Example: [srandom=3|7|9,288,2,6,n,left] Pick random photos from albums with Shashin keys 3, 7, and 9, size of 288 pixels for each image, display in 2 columns, 6 pictures, no captions, float left (this is a 2x3 grid of pictures, floating to the left of the main content)"
+msgstr "Прыклад: [srandom=3|7|9,288,2,6,n,left] Выбіраць выпадковае фота з альбомаў 3, 7  і 9, 288 пікселяў, 2 слупка, 6 фота, без подпісаў, выраўноўваць па левым боку"
+
+#: display/admin-edit.php:134
+msgid "Example: [srandom=any,160,max,10,y,center] Pick random photos from any album, size of 160 pixels for each image, create the maximum number of columns possible, show captions, centered (the number of columns depends on the width of your theme's content area)"
+msgstr "Прыклад: [srandom=any,160,max,10,y,center] Выбіраць выпадковае фота з любога альбома, 160 пікселяў, максімальны лік слупкоў, з подпісамі, цэнтраваць"
+
+#: display/admin-edit.php:136
+msgid "Display the newest images and videos"
+msgstr "Паказваць новыя фота і відэа"
+
+#: display/admin-edit.php:137
+msgid "[snewest=source,max_size,max_cols,how_many,caption_yn,position,clear]"
+msgstr "[snewest=source,max_size,max_cols,how_many,caption_yn,position,clear]"
+
+#: display/admin-edit.php:138
+msgid "See the srandom examples above - the snewest tag works the same way"
+msgstr "Дадзены тэг працуе аналагічна тэгу [srandom]"
+

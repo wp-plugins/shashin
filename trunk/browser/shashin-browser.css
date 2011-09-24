@@ -1,0 +1,141 @@
+html {
+    background: #fff;
+}
+
+form#shashin-browser {
+    width: 608px;
+    margin: 1em auto;
+}
+
+#shashin-browser-list img, #shashin-browser-selected img {
+    float: left;
+    padding: 2px;
+}
+
+#shashin-browser-insert select {
+    width: 80px;
+}
+
+#shashin-browser img:hover {
+    cursor: pointer;
+}
+
+#shashin-browser-filter {
+    height: 60px;
+}
+
+#shashin-browser-filter div {
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+
+div#shashin-browser-paging {
+    float: right;
+    margin: 0;
+}
+
+#shashin-browser-list {
+    height: 300px;
+    width: 608px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#shashin-browser-loading {
+    position: absolute;
+    width: 606px;
+    height: 168px;
+    background: #f9f9f9;
+    border: 1px solid #dfdfdf;
+    text-align: center;
+    padding-top: 130px;
+}
+
+#shashin-browser-loading img {
+    margin: 0 auto;
+    background: #f9f9f9;
+    display: block;
+}
+
+#shashin-browser-preview {
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    display: none;
+    background: white;
+    text-align: center;
+}
+
+#shashin-browser-preview img {
+    margin: 0 auto;
+    float: none;
+}
+
+#shashin-browser-selected {
+    float: left;
+    width: 260px;
+}
+
+#shashin-browser-insert {
+    float: right;
+}
+
+#shashin-browser-insert table.describe {
+    padding: 0;
+}
+
+#shashin-browser-albums-list {
+    margin-right: 5px;
+}
+
+#shashin-browser-albums-selected {
+    margin-left: 5px;
+}
+
+.shashin-browser-albums {
+    width: 299px;
+    float: left;
+}
+
+.shashin-browser-albums ul {
+    overflow: auto;
+    max-height: 322px;
+}
+
+.shashin-browser-albums ul a {
+    text-decoration: none;
+    display: block;
+    padding: 2px 5px;
+    font-weight: bold;
+}
+
+.shashin-browser-albums ul li {
+    margin: 0;
+}
+
+.shashin-browser-albums ul a:hover {
+    background: #eee;
+}
+
+.shashin-browser-albums ul span {
+    color: #666;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.shashin-browser-albums-insert {
+    width: 202px;
+    float: left;
+    border-top: 1px solid #dfdfdf;
+    margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+
