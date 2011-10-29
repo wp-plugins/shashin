@@ -114,7 +114,16 @@ class Admin_ShashinMenuActionHandlerAlbums {
             $albumToSync->get($this->request['id']);
         }
 
-        $synchronizerGetter = 'getSynchronizer' . ucfirst($albumToSync->albumType);
+        // this will not be set if upgrading from 2.6.3
+        if ($albumToSync->albumType) {
+            $albumType = $albumToSync->albumType;
+        }
+
+        else {
+            $albumType = 'picasa';
+        }
+
+        $synchronizerGetter = 'getSynchronizer' . ucfirst($albumType);
         $synchronizer = $this->adminContainer->$synchronizerGetter();
         $syncedAlbum = $synchronizer->syncExistingAlbum($albumToSync);
         return __('Synchronized', 'shashin') . ' "' . $syncedAlbum->title . '"';
