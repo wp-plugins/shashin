@@ -96,7 +96,9 @@ For troubleshooting help, please [post a comment on my latest Shashin post](http
 
 == Changelog ==
 
-= 3.0.5 = Now correctly handles when multiple album thumbnails are opened at the same time to show their album photos
+= 3.0.5 =
+* Now correctly handles when multiple album thumbnails are opened at the same time to show their album photos
+* Improves handling of commas in EXIF "exposure" data
 
 = 3.0.4 = Automatically crop photos as appropriate when reading old shortcodes
 
