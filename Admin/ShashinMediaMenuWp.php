@@ -1,18 +1,12 @@
 <?php
 
-class Admin_ShashinMediaMenu {
+class Admin_ShashinMediaMenuWp {
     private $version;
-    private $functionsFacade;
     private $request;
     private $container;
 
     public function __construct($version) {
         $this->version = $version;
-    }
-
-    public function setFunctionsFacade(ToppaFunctionsFacade $functionsFacade) {
-        $this->functionsFacade = $functionsFacade;
-        return $this->functionsFacade;
     }
 
     public function setContainer(Public_ShashinContainer $container = null) {
@@ -25,57 +19,40 @@ class Admin_ShashinMediaMenu {
         return $this->request;
     }
 
-    public function displayPhotoMenu() {
-        $this->functionsFacade->useHook('admin_print_styles', array($this, 'displayMediaMenuCss'));
-        $this->functionsFacade->addToMediaMenu(array($this, 'buildPhotoMenu'));
+    public function initPhotoMenu() {
+        add_action('admin_print_styles-media-upload-popup', array($this, 'displayMediaMenuCss'));
+        return wp_iframe(array($this, 'mediaDisplayPhotoMenu'));
     }
 
-    public function displayAlbumMenu() {
-        $this->functionsFacade->useHook('admin_print_styles', array($this, 'displayMediaMenuCss'));
-        $this->functionsFacade->addToMediaMenu(array($this, 'buildAlbumMenu'));
+    public function initAlbumMenu() {
+        add_action('admin_print_styles-media-upload-popup', array($this, 'displayMediaMenuCss'));
+        return wp_iframe(array($this, 'mediaDisplayAlbumMenu'));
     }
 
     public function displayMediaMenuCss() {
-        $this->functionsFacade->prepMediaMenuCss('type=shashin');
-        $cssUrl = $this->functionsFacade->getPluginsUrl('/Display/', __FILE__) .'media.css';
-        $this->functionsFacade->enqueueStylesheet('shashinMediaMenuStyle', $cssUrl, false, $this->version);
+        $cssUrl = plugins_url('/Display/', __FILE__) .'media.css';
+        wp_enqueue_style('shashinMediaMenuStyle', $cssUrl, false, $this->version);
     }
 
-    public function buildPhotoMenu() {
-        $this->buildMediaMenu('Display/mediaPhotos.php');
+    // WP requires the function name starts with "media" to load the necessary media menu CSS file!
+    public function mediaDisplayPhotoMenu() {
+        $this->displayMediaMenu('Display/mediaPhotos.php');
     }
 
-    public function buildAlbumMenu() {
-        $this->buildMediaMenu('Display/mediaAlbums.php');
+    // WP requires the function name starts with "media" to load the necessary media menu CSS file!
+    public function mediaDisplayAlbumMenu() {
+        $this->displayMediaMenu('Display/mediaAlbums.php');
     }
 
-    private function buildMediaMenu($templatePath) {
-        try {
-            $this->functionsFacade->useFilter('media_upload_tabs', array($this, 'addMediaMenuTabs'));
-            $this->functionsFacade->addMediaMenuHeader();
-            $rawShortcode = array('type' => 'album', 'order' => 'date', 'reverse' => 'y');
-            $shortcode = $this->container->getShortcode($rawShortcode);
-            $albumCollection = $this->container->getClonableAlbumCollection();
-            $albumCollection->setNoLimit(true);
-            $albums = $albumCollection->getCollectionForShortcode($shortcode);
-            $loaderUrl = $this->functionsFacade->getPluginsUrl('/Display/images/', __FILE__) .'loader.gif';
-            require_once $templatePath;
-        }
-
-        catch (Exception $e) {
-            return '<p><strong>'
-                . __('Shashin Error', 'shashin')
-                . ':<strong></p><pre>'
-                . $e->getMessage()
-                . '</pre>';
-        }
-    }
-
-    public function addMediaMenuTabs() {
-        return array(
-            'shashin_photos' => __('Photos', 'shashin'),
-            'shashin_albums' => __('Albums', 'shashin')
-        );
+    private function displayMediaMenu($templatePath) {
+        media_upload_header();
+        $rawShortcode = array('type' => 'album', 'order' => 'date', 'reverse' => 'y');
+        $shortcode = $this->container->getShortcode($rawShortcode);
+        $albumCollection = $this->container->getClonableAlbumCollection();
+        $albumCollection->setNoLimit(true);
+        $albums = $albumCollection->getCollectionForShortcode($shortcode);
+        $loaderUrl = plugins_url('/Display/images/', __FILE__) .'loader.gif';
+        require_once $templatePath;
     }
 
     public function getPhotosForMenu() {
