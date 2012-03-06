@@ -1,10 +1,10 @@
 <?php
 
-
 class Public_ShashinHeadTags {
     private $version;
     private $functionsFacade;
     private $settings;
+    private $baseUrl;
 
     public function __construct($version) {
         $this->version = $version;
@@ -21,34 +21,40 @@ class Public_ShashinHeadTags {
     }
 
     public function run() {
+        $this->baseUrl = $this->functionsFacade->getPluginsUrl('/Display/', __FILE__);
         $shashinCssUrl = $this->functionsFacade->getUrlforCustomizableFile('shashin.css', __FILE__, 'Display/');
         $this->functionsFacade->enqueueStylesheet('shashinStyle', $shashinCssUrl, false, $this->version);
-        $baseUrl = $this->functionsFacade->getPluginsUrl('/Display/', __FILE__);
+
+        if ($this->settings->imageDisplay == 'fancybox') {
+            $fancyboxCssUrl = $this->functionsFacade->getUrlforCustomizableFile('jquery.fancybox.css', __FILE__, 'Display/fancybox/');
+            $this->functionsFacade->enqueueStylesheet('shashinFancyboxStyle', $fancyboxCssUrl, false, '1.3.4');
+            $this->functionsFacade->enqueueScript(
+                'shashinFancybox',
+                $this->baseUrl . 'fancybox/jquery.fancybox.js',
+                array('jquery'),
+                '1.3.4'
+            );
+        }
+
         $this->functionsFacade->enqueueScript(
-            'shashinPhotoGroupsDisplayer',
-            $baseUrl . 'photoGroupsDisplayer.js',
+            'shashinJs',
+            $this->baseUrl . 'shashin.js',
             array('jquery'),
             $this->version
         );
-        $adminAjax = $this->functionsFacade->getAdminUrl('admin-ajax.php');
-        $photoGroupsDisplayerParams = array('ajaxurl' => $adminAjax);
-        $this->functionsFacade->localizeScript('shashinPhotoGroupsDisplayer', 'shashinPhotoGroupsDisplayer', $photoGroupsDisplayerParams);
 
-        if ($this->settings->imageDisplay == 'highslide') {
-            $highslideCssUrl = $this->functionsFacade->getUrlforCustomizableFile('highslide.css', __FILE__, 'Display/highslide/');
-            $this->functionsFacade->enqueueStylesheet('highslideStyle', $highslideCssUrl, false, '4.1.12');
-            $this->functionsFacade->enqueueScript('highslide', $baseUrl . 'highslide/highslide.js', false, '4.1.12');
-            $this->functionsFacade->enqueueScript('swfobject', $baseUrl . 'highslide/swfobject.js', false, '2.2');
-            $this->functionsFacade->enqueueScript('highslideSettings', $baseUrl . 'highslideSettings.js', false, $this->version);
-            $this->functionsFacade->localizeScript('highslideSettings', 'highslideSettings', array(
-                'graphicsDir' => $baseUrl . 'highslide/graphics/',
-                'outlineType' => $this->settings->highslideOutlineType,
-                'dimmingOpacity' => $this->settings->highslideDimmingOpacity,
-                'interval' => $this->settings->highslideInterval,
-                'repeat' => $this->settings->highslideRepeat,
-                'position' => $this->settings->highslideVPosition . ' ' . $this->settings->highslideHPosition,
-                'hideController' => $this->settings->highslideHideController
-            ));
-        }
+        $adminAjax = $this->functionsFacade->getAdminUrl('admin-ajax.php');
+        $shashinJsParams = array(
+            'ajaxUrl' => $adminAjax,
+            'imageDisplayer' => $this->settings->imageDisplay,
+            'fancyboxDir' => $this->baseUrl . 'fancybox/',
+            'fancyboxCyclic' => $this->settings->fancyboxCyclic,
+            'fancyboxVideoWidth' => $this->settings->fancyboxVideoWidth,
+            'fancyboxVideoHeight' => $this->settings->fancyboxVideoHeight,
+            'fancyboxTransition' => $this->settings->fancyboxTransition
+        );
+
+        $this->functionsFacade->localizeScript('shashinJs', 'shashinJs', $shashinJsParams);
+        return true;
     }
 }

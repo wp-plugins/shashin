@@ -6,13 +6,11 @@ class Public_ShashinPhotoDisplayerYoutubeOther extends Public_ShashinPhotoDispla
     }
 
     public function setImgTitle() {
-        $this->imgTitle = null;
-
         if (in_array('images', $this->settings->otherTitle)) {
-            $this->imgTitle = $this->makeTextQuotable($this->dataObject->description);
+            return parent::setImgTitle();
         }
 
-        return $this->imgTitle;
+        return null;
     }
 
     public function setImgClass() {
@@ -32,13 +30,21 @@ class Public_ShashinPhotoDisplayerYoutubeOther extends Public_ShashinPhotoDispla
     }
 
     private function generateLinkRelGroupMarker() {
+        $groupNumber = $this->sessionManager->getGroupCounter();
+
+        if ($this->albumIdForAjaxPhotoDisplay) {
+            $groupNumber .= '_' . $this->albumIdForAjaxPhotoDisplay;
+        }
+
         if ($this->settings->otherRelDelimiter == 'brackets') {
-            $this->linkRel .= '[' . $this->sessionManager->getGroupCounter() . ']';
+            $this->linkRel .= "[$groupNumber]";
         }
 
         else {
-            $this->linkRel .= '-' . $this->sessionManager->getGroupCounter();
+            $this->linkRel .= "-$groupNumber";
         }
+
+        return $this->linkRel;
     }
 
     public function setLinkTitle() {
@@ -51,6 +57,10 @@ class Public_ShashinPhotoDisplayerYoutubeOther extends Public_ShashinPhotoDispla
         return $this->linkTitle;
     }
 
+    public function setLinkTitleVideo() {
+        return $this->setLinkTitle();
+    }
+
     public function setLinkClass() {
         $this->linkClass = null;
 
@@ -59,5 +69,9 @@ class Public_ShashinPhotoDisplayerYoutubeOther extends Public_ShashinPhotoDispla
         }
 
         return $this->linkClass;
+    }
+
+    public function setLinkClassVideo() {
+        return $this->setLinkClass();
     }
 }

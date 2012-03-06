@@ -7,7 +7,7 @@ abstract class Public_ShashinDataObjectDisplayer {
     protected $dataObject;
     protected $thumbnail;
     protected $sessionManager;
-    protected $albumIdForAjaxHighslideDisplay;
+    protected $albumIdForAjaxPhotoDisplay;
     protected $actualThumbnailSize;
     protected $displayThumbnailSize;
     protected $actualExpandedSize;
@@ -72,12 +72,12 @@ abstract class Public_ShashinDataObjectDisplayer {
         return $this->sessionManager;
     }
 
-    public function setAlbumIdForAjaxHighslideDisplay($albumIdForAjaxHighslideDisplay = null) {
-        $this->albumIdForAjaxHighslideDisplay = $albumIdForAjaxHighslideDisplay;
-        return $this->albumIdForAjaxHighslideDisplay;
+    public function setAlbumIdForAjaxPhotoDisplay($albumIdForAjaxPhotoDisplay = null) {
+        $this->albumIdForAjaxPhotoDisplay = $albumIdForAjaxPhotoDisplay;
+        return $this->albumIdForAjaxPhotoDisplay;
     }
 
-    public function run($albumIdForAjaxHighslideDisplay = null) {
+    public function run() {
         $this->initializeSessionIdCounter();
         $requestedSize = $this->shortcode->size ? $this->shortcode->size : 'xsmall';
         $this->setDisplayThumbnailSize($requestedSize);
@@ -94,20 +94,22 @@ abstract class Public_ShashinDataObjectDisplayer {
 
         if ($this->dataObject->isVideo()) {
             $this->setLinkHrefVideo();
-            $this->setLinkOnClickVideo($albumIdForAjaxHighslideDisplay);
+            $this->setLinkOnClickVideo();
             $this->setLinkRelVideo();
+            $this->setLinkClassVideo();
+            $this->setLinkTitleVideo();
         }
 
         else {
             $this->setLinkHref();
-            $this->setLinkOnClick($albumIdForAjaxHighslideDisplay);
+            $this->setLinkOnClick();
             $this->setLinkRel();
+            $this->setLinkClass();
+            $this->setLinkTitle();
         }
 
-        $this->setLinkTitle();
         $this->setLinkIdForImg();
         $this->setLinkIdForCaption();
-        $this->setLinkClass();
         $this->setLinkTagForImg();
         $this->setLinkTagForCaption();
         $this->setCaption();
@@ -204,12 +206,6 @@ abstract class Public_ShashinDataObjectDisplayer {
     abstract public function setImgAlt();
     abstract public function setImgTitle();
 
-    public function makeTextQuotable($text) {
-        // there may already be entities in the text, so we want to be very
-        // conservative with what we replace
-        return str_replace('"', '&quot;', $text);
-    }
-
     public function setImgClass() {
         $this->imgClass = 'shashinThumbnailImage';
         return $this->imgClass;
@@ -265,16 +261,25 @@ abstract class Public_ShashinDataObjectDisplayer {
         return $this->linkRel;
     }
 
-    public function setLinkTitle() {
-        $this->linkTitle = null;
-        return $this->linkTitle;
-    }
-
     public function setLinkClass() {
         $this->linkClass = null;
         return $this->linkClass;
     }
 
+    public function setLinkClassVideo() {
+        $this->linkClass = null;
+        return $this->linkClass;
+    }
+
+    public function setLinkTitle() {
+        $this->linkTitle = null;
+        return $this->linkTitle;
+    }
+
+    public function setLinkTitleVideo() {
+        $this->linkTitle = null;
+        return $this->linkTitle;
+    }
     abstract public function setLinkIdForImg();
     abstract public function setLinkIdForCaption();
 
@@ -325,6 +330,7 @@ abstract class Public_ShashinDataObjectDisplayer {
         return $this->imgWidth;
     }
 
-    abstract public function formatExifDataForHighslideCaption();
-    abstract public function formatDateForHighslideCaption($date = null);
+    abstract public function setExifDataForCaption();
+    abstract public function setDateForCaption($date = null);
+    abstract public function adjustVideoDimensions();
 }

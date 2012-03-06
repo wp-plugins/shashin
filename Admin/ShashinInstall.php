@@ -4,14 +4,13 @@ class Admin_ShashinInstall {
     private $dbFacade;
     private $album;
     private $photo;
-    private $albumTable;
-    private $albumRefData;
-    private $photoTable;
-    private $photoRefData;
+    private $functionsFacade;
+    private $version;
     private $settings;
     private $settingsDefaults = array(
+        'version' => null,
         'supportOldShortcodes' => 'n',
-        'imageDisplay' => 'highslide',
+        'imageDisplay' => 'fancybox',
         'expandedImageSize' => 'medium',
         'defaultPhotoLimit' => 18,
         'scheduledUpdate' => 'n',
@@ -24,23 +23,21 @@ class Admin_ShashinInstall {
         'albumPhotosOrder' => 'source',
         'albumPhotosOrderReverse' => 'n',
         'albumPhotosCaption' => 'n',
-        'highslideAutoplay' => 'false',
-        'highslideInterval' => 5000,
-        'highslideRepeat' => '1',
-        'highslideOutlineType' => 'rounded-white',
-        'highslideDimmingOpacity' => 0.75,
-        'highslideHideController' => '0',
-        'highslideVPosition' => 'top',
-        'highslideHPosition' => 'center',
+        'fancyboxCyclic' => '0',
+        'fancyboxVideoWidth' => '560',
+        'fancyboxVideoHeight' => '340',
+        'fancyboxTransition' => 'fade',
         'otherRelImage' => null,
         'otherRelVideo' => null,
         'otherRelDelimiter' => null,
         'otherLinkClass' => null,
         'otherImageClass' => null,
         'otherTitle' => array(),
+        'externalViewers' => array()
     );
 
-    public function __construct() {
+    public function __construct($version) {
+        $this->version = $version;
     }
 
     public function setDbFacade(ToppaDatabaseFacade $dbFacade) {
@@ -48,17 +45,13 @@ class Admin_ShashinInstall {
         return $this->dbFacade;
     }
 
-    public function setAlbumAndAlbumVars(Lib_ShashinAlbum $album) {
+    public function setAlbum(Lib_ShashinAlbum $album) {
         $this->album = $album;
-        $this->albumTable = $this->album->getTableName();
-        $this->albumRefData = $this->album->getRefData();
         return $this->album;
     }
 
-    public function setPhotoAndPhotoVars(Lib_ShashinPhoto $photo) {
+    public function setPhoto(Lib_ShashinPhoto $photo) {
         $this->photo = $photo;
-        $this->photoTable = $this->photo->getTableName();
-        $this->photoRefData = $this->photo->getRefData();
         return $this->photo;
     }
 
@@ -67,44 +60,66 @@ class Admin_ShashinInstall {
         return $this->settings;
     }
 
+    public function setFunctionsFacade(ToppaFunctionsFacade $functionsFacade) {
+        $this->functionsFacade = $functionsFacade;
+        return $this->functionsFacade;
+    }
+
     public function run() {
-        $this->createAlbumTable();
-        $this->verifyAlbumTable();
-        $this->createPhotoTable();
-        $this->verifyPhotoTable();
+        return $this->functionsFacade->callFunctionForNetworkSites(array($this, 'runForNetworkSites'));
+    }
+
+    public function runForNetworkSites() {
+        // this is called for each site in the network, so the table
+        // name prefix will be different for each call
+        $albumTable = $this->dbFacade->getTableNamePrefix() . $this->album->getBaseTableName();
+        $photoTable = $this->dbFacade->getTableNamePrefix() . $this->photo->getBaseTableName();
+        $this->createAlbumTable($albumTable);
+        $this->verifyAlbumTable($albumTable);
+        $this->createPhotoTable($photoTable);
+        $this->verifyPhotoTable($photoTable);
         $this->updateSettings();
         return true;
     }
 
-    public function createAlbumTable() {
-        return $this->dbFacade->createTable($this->albumTable, $this->albumRefData);
+    public function createAlbumTable($albumTable) {
+        return $this->dbFacade->createTable($albumTable, $this->album->getRefData());
     }
 
-    public function verifyAlbumTable() {
-        $result = $this->dbFacade->verifyTableExists($this->albumTable, $this->albumRefData);
+    public function verifyAlbumTable($albumTable) {
+        $result = $this->dbFacade->verifyTableExists($albumTable, $this->album->getRefData());
 
         if (!$result) {
-            throw new Exception(__('Failed to create table ', 'shashin') . $this->albumTable);
+            throw new Exception(__('Failed to create table ', 'shashin') . $albumTable);
         }
 
         return $result;
     }
 
-    public function createPhotoTable() {
-        return $this->dbFacade->createTable($this->photoTable, $this->photoRefData);
+    public function createPhotoTable($photoTable) {
+        return $this->dbFacade->createTable($photoTable, $this->photo->getRefData());
     }
 
-    public function verifyPhotoTable() {
-        $result = $this->dbFacade->verifyTableExists($this->photoTable, $this->photoRefData);
+    public function verifyPhotoTable($photoTable) {
+        $result = $this->dbFacade->verifyTableExists($photoTable, $this->photo->getRefData());
 
         if (!$result) {
-            throw new Exception(__('Failed to create table ', 'shashin') . $this->photoTable);
+            throw new Exception(__('Failed to create table ', 'shashin') . $photoTable);
         }
 
         return $result;
     }
 
     public function updateSettings() {
+        // if upgrading from 3,0, the version is not set
+        // need to change the viewer selection from highslide to fancybox
+        $allSettings = $this->settings->refresh();
+
+        if (!isset($allSettings['version']) && $this->settings->imageDisplay == 'highslide') {
+            $this->settings->set(array('imageDisplay' => 'fancybox'));
+        }
+
+        $this->settings->set(array('version' => $this->version));
         return $this->settings->set($this->settingsDefaults, true);
     }
 }

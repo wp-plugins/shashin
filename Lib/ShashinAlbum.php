@@ -9,14 +9,15 @@ class Lib_ShashinAlbum extends Lib_ShashinDataObject {
       Lib_ShashinPhoto $clonablePhoto) {
 
         $this->clonablePhoto = $clonablePhoto;
-        $this->tableName = $dbFacade->getTableNamePrefix() . 'shashin_album';
+        $this->baseTableName = 'shashin_album';
+        $this->tableName = $dbFacade->getTableNamePrefix() . $this->baseTableName;
 
         parent::__construct($dbFacade, $refData);
     }
 
     public function get($id = null) {
         // check a field we would have only if we have a fully constructed album
-        if (!$this->data['sourceId']) {
+        if (!isset($this->data['sourceId'])) {
             return $this->refresh($id);
         }
 
