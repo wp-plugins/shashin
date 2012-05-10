@@ -1,7 +1,7 @@
 <?php
 
 class ShashinWp {
-    private $version = '3.1.4';
+    private $version = '3.1.5';
     private $autoLoader;
 
     public function __construct(ToppaAutoLoader $autoLoader) {
@@ -47,13 +47,7 @@ class ShashinWp {
         return true;
     }
 
-    // we need to check if Shashin has been upgraded, since WP no longer calls
-    // the activation hook during an automatic plugin update
     public function runtimeUpgrade() {
-        if (!current_user_can('activate_plugins')) {
-            return true;
-        }
-
         try {
             $adminContainer = new Admin_ShashinContainer($this->autoLoader);
             $upgrader = $adminContainer->getUpgrader();

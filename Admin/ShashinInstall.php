@@ -28,6 +28,7 @@ class Admin_ShashinInstall {
         'fancyboxVideoHeight' => '340',
         'fancyboxTransition' => 'fade',
         'fancyboxInterval' => null,
+        'fancyboxLoadScript' => 'y',
         'otherRelImage' => null,
         'otherRelVideo' => null,
         'otherRelDelimiter' => null,
@@ -70,10 +71,15 @@ class Admin_ShashinInstall {
         return $this->functionsFacade->callFunctionForNetworkSites(array($this, 'runForNetworkSites'));
     }
 
-    // need to run this even if the plugin is not deactivated and reactivated
-    // (which is the case during automatic upgrades)
-    // if a future upgrade includes table changes, probably just call run() from here
     public function runtimeUpgrade() {
+        $status = shashinActivationChecks();
+
+        if (is_string($status)) {
+            shashinCancelActivation($status);
+            return null;
+        }
+
+        // update the version number if needed
         $allSettings = $this->settings->refresh();
 
         if (!isset($allSettings['version']) || version_compare($allSettings['version'], $this->version, '<')) {
@@ -130,9 +136,11 @@ class Admin_ShashinInstall {
         $allSettings = $this->settings->refresh();
 
         // for a new installation, imageDisplay is not set, so catch that exception
-        // and do nothing
+        // and do nothing (fancybox is already the default)
+        // checking for 'version' lets us know if this version of Shashin pre-dates
+        // the availability of the Highslide for Shashin plugin
         try {
-            if (!isset($allSettings['version']) && $this->settings->imageDisplay == 'highslide') {
+            if (!array_key_exists('version', $allSettings) && $this->settings->imageDisplay == 'highslide') {
                 $this->settings->set(array('imageDisplay' => 'fancybox'));
             }
         }
