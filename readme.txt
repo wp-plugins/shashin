@@ -13,11 +13,11 @@ Shashin is a powerful WordPress plugin that lets you easily display photos and v
 
 **Installation of [Toppa Plugin Libraries for WordPress](http://wordpress.org/extend/plugins/toppa-plugin-libraries-for-wordpress/) is required. Please download and activate it before installing Shashin.**
 
-**What's new in Shashin 3.1**
+**What's new in Shashin 3.1.5**
 
-* Fanycbox 1.3.4 for displaying photos (Highslide has been removed as its license is incompatible with wordpress.org's requirements)
-* Multi-site compatible
-* Improved error reporting when there are problems with album synchronizing
+* Improved installation and activation process (manual re-activation is no longer needed)
+* Ability to disable Shashin's Fancybox if you already have your own Fancybox installed
+* Improvements to album synchronizing, for handling slow connections and server's with misconfigured SSL settings (which is surprisingly common)
 
 **Overview**
 
