@@ -17,7 +17,7 @@ Shashin is a powerful WordPress plugin that lets you easily display photos and v
 
 * Improved installation and activation process (manual re-activation is no longer needed)
 * Ability to disable Shashin's Fancybox if you already have your own Fancybox installed
-* Improvements to album synchronizing, for handling slow connections and server's with misconfigured SSL settings (which is surprisingly common)
+* Improvements to album synchronizing, for handling slow connections and servers with misconfigured SSL settings (which is surprisingly common)
 
 **Overview**
 
