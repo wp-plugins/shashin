@@ -4,7 +4,7 @@ Plugin Name: Shashin
 Plugin URI: http://www.toppa.com/shashin-wordpress-plugin/
 Description: A plugin for integrating photos and videos from Picasa, YouTube, and Twitpic in WordPress.
 Author: Michael Toppa
-Version: 3.1.5
+Version: 3.2
 Author URI: http://www.toppa.com
 License: GPLv2 or later
 */
@@ -16,9 +16,9 @@ load_plugin_textdomain('shashin', false, basename(dirname(__FILE__)) . '/Languag
 
 if (file_exists($shashinAutoLoaderPath)) {
     require_once($shashinAutoLoaderPath);
-    $shashinToppaAutoLoader = new ToppaAutoLoaderWp('/toppa-plugin-libraries-for-wordpress');
-    $shashinAutoLoader = new ToppaAutoLoaderWp('/shashin');
-    $shashin = new ShashinWp($shashinAutoLoader);
+    new ToppaAutoLoaderWp('/toppa-plugin-libraries-for-wordpress');
+    new ToppaAutoLoaderWp('/shashin');
+    $shashin = new ShashinWp();
     $shashin->run();
 }
 
@@ -42,9 +42,7 @@ function shashinActivate() {
     }
 
     require_once dirname(__FILE__) . '/../toppa-plugin-libraries-for-wordpress/ToppaAutoLoaderWp.php';
-    $toppaAutoLoader = new ToppaAutoLoaderWp('/toppa-plugin-libraries-for-wordpress');
-    $shashinAutoLoader = new ToppaAutoLoaderWp('/shashin');
-    $shashin = new ShashinWp($shashinAutoLoader);
+    $shashin = new ShashinWp();
     $status = $shashin->install();
 
     if (is_string($status)) {
@@ -59,7 +57,7 @@ function shashinActivationChecks() {
     $autoLoaderPath = dirname(__FILE__) . '/../toppa-plugin-libraries-for-wordpress/ToppaAutoLoaderWp.php';
     $toppaLibsVersion = get_option('toppaLibsVersion');
 
-    if (!file_exists($autoLoaderPath) || !$toppaLibsVersion || version_compare($toppaLibsVersion, '1.3.3', '<')) {
+    if (!file_exists($autoLoaderPath) || !$toppaLibsVersion || version_compare($toppaLibsVersion, '1.3.4', '<')) {
         return __('To activate Shashin you need to have the current version of', 'shashin')
             . ' <a href="plugin-install.php?tab=plugin-information&plugin=toppa-plugin-libraries-for-wordpress">Toppa Plugins Libraries for WordPress</a>. '
             . __('Click this link to view details, and then click the "Install Now" button to get the current version. Then you can activate Shashin.', 'shashin');
@@ -84,7 +82,6 @@ function shashinCancelActivation($message) {
 }
 
 function shashinDeactivateForNetworkSites() {
-    $toppaAutoLoader = new ToppaAutoLoaderWp('/toppa-plugin-libraries-for-wordpress');
     $functionsFacade = new ToppaFunctionsFacadeWp();
     $functionsFacade->callFunctionForNetworkSites('shashinDeactivate');
 }

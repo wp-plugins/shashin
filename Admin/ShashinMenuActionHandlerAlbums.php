@@ -42,8 +42,9 @@ class Admin_ShashinMenuActionHandlerAlbums {
 
         switch ($this->request['shashinAction']) {
             case 'addAlbums':
-                $this->functionsFacade->checkAdminNonceFields('shashinNonceAdd', 'shashinNonceAdd');
-                $message = $this->runSynchronizerBasedOnRssUrl();
+                $nonceToCheck = 'shashinNonceAdd' . ucfirst($this->request['shashinAlbumType']);
+                $this->functionsFacade->checkAdminNonceFields($nonceToCheck, $nonceToCheck);
+                $message = $this->runSynchronizerBasedOnUrl();
                 break;
             case 'syncAlbum':
                 $this->functionsFacade->checkAdminNonceFields('shashinNonceSync_' . $this->request['id']);
@@ -70,38 +71,9 @@ class Admin_ShashinMenuActionHandlerAlbums {
         return $this->menuDisplayer->run($message);
     }
 
-    public function runSynchronizerBasedOnRssUrl() {
-        // all of a Picasa user's albums
-        if (strpos($this->request['rssUrl'], 'kind=album') !== false) {
-            $synchronizer = $this->adminContainer->getSynchronizerPicasa($this->request);
-            $albumCount = $synchronizer->addMultipleAlbumsFromRssUrl();
-            return __('Added', 'shashin') . " $albumCount " . __('Picasa albums', 'shashin');
-        }
-
-        // a single Picasa album
-        elseif (strpos($this->request['rssUrl'], 'kind=photo') !== false) {
-            $synchronizer = $this->adminContainer->getSynchronizerPicasa($this->request);
-            $syncedAlbum = $synchronizer->addSingleAlbumFromRssUrl();
-            return __('Added Picasa album', 'shashin') . ' "' . $syncedAlbum->title . '"';
-        }
-
-        // a YouTube feed
-        elseif (strpos($this->request['rssUrl'], 'gdata.youtube.com') !== false) {
-            $synchronizer = $this->adminContainer->getSynchronizerYoutube($this->request);
-            $syncedAlbum = $synchronizer->addSingleAlbumFromRssUrl();
-            return __('Added YouTube videos', 'shashin') . ' "' . $syncedAlbum->title . '"';
-        }
-
-        // a Twitpic feed
-        elseif (strpos($this->request['rssUrl'], 'twitpic.com/photos') !== false) {
-            $synchronizer = $this->adminContainer->getSynchronizerTwitpic($this->request);
-            $syncedAlbum = $synchronizer->addSingleAlbumFromRssUrl();
-            return __('Added Twitpic photos', 'shashin') . ' "' . $syncedAlbum->title . '"';
-        }
-
-        else {
-            throw new Exception(__('Unrecognized RSS feed', 'shashin'));
-        }
+    public function runSynchronizerBasedOnUrl() {
+        $synchronizer = $this->adminContainer->getSynchronizer($this->request);
+        return $synchronizer->syncUserRequest();
     }
 
     public function runSynchronizerForExistingAlbum(Lib_ShashinAlbum $albumToSync = null) {
@@ -110,8 +82,7 @@ class Admin_ShashinMenuActionHandlerAlbums {
             $albumToSync->get($this->request['id']);
         }
 
-        $synchronizerToGet = 'getSynchronizer' . ucfirst($albumToSync->albumType);
-        $synchronizer = $this->adminContainer->$synchronizerToGet();
+        $synchronizer = $this->adminContainer->getSynchronizer(array('shashinAlbumType' => $albumToSync->albumType));
         $syncedAlbum = $synchronizer->syncExistingAlbum($albumToSync);
         return __('Synchronized', 'shashin') . ' "' . $syncedAlbum->title . '"';
     }
@@ -138,7 +109,7 @@ class Admin_ShashinMenuActionHandlerAlbums {
 
     public function runUpdateIncludeInRandom() {
         $albumsShortcodeMimic = array('type' => 'album', 'order' => 'title');
-        $albums = $this->menuDisplayer->getDataObjects($albumsShortcodeMimic);
+        $albums = Admin_ShashinContainer::getDataObjectCollection($albumsShortcodeMimic);
 
         foreach ($albums as $album) {
             if ($album->includeInRandom == $this->request['includeInRandom'][$album->id]) {
@@ -149,16 +120,13 @@ class Admin_ShashinMenuActionHandlerAlbums {
             $album->set($includeInRandom);
             $album->flush();
 
-            /* I want to set this for every photo in the album as well, but this isn't
-             working - commenting out for now
             $albumPhotosShortcodeMimic = array('id' => $album->id, 'type' => 'albumphotos');
-            $albumPhotos = $this->menuDisplayer->getDataObjects($albumPhotosShortcodeMimic);
+            $albumPhotos = Admin_ShashinContainer::getDataObjectCollection($albumPhotosShortcodeMimic);
 
             foreach ($albumPhotos as $photo) {
                 $photo->set($includeInRandom);
                 $photo->flush();
             }
-            */
         }
 
         return __('Updated "Include In Random" settings', 'shashin');
