@@ -1,6 +1,7 @@
 <?php
 
 abstract class Public_ShashinPhotoDisplayer extends Public_ShashinDataObjectDisplayer {
+
     public function __construct() {
         $this->expandedSizesMap = array(
             'xsmall' => 400,
@@ -79,8 +80,6 @@ abstract class Public_ShashinPhotoDisplayer extends Public_ShashinDataObjectDisp
             . '</a>'
             . '</div>' . PHP_EOL;
 
-        $this->caption .= $this->setDivOriginalPhotoLinkForCaption();
-
         $exifCaption = $this->setExifDataForCaption();
 
         if ($this->dataObject->description || $exifCaption) {
@@ -98,6 +97,7 @@ abstract class Public_ShashinPhotoDisplayer extends Public_ShashinDataObjectDisp
         }
 
         // leave this comment - shashin.js looks for it and will manipulate this closing div
+        $this->caption .= $this->setDivOriginalPhotoLinkForCaption();
         $this->caption .= '<!-- comment for image counter --></div>' . PHP_EOL;
         $this->caption .= '</div>' . PHP_EOL;
         return $this->caption;
@@ -110,7 +110,6 @@ abstract class Public_ShashinPhotoDisplayer extends Public_ShashinDataObjectDisp
             . $linkId
             . '">' . PHP_EOL;
         $this->caption .= '<div class="shashinPrettyPhotoCaption">' . PHP_EOL;
-        $this->caption .= $this->setDivOriginalPhotoLinkForCaption();
         $exifCaption = $this->setExifDataForCaption();
 
         if ($this->dataObject->description || $exifCaption) {
@@ -123,6 +122,7 @@ abstract class Public_ShashinPhotoDisplayer extends Public_ShashinDataObjectDisp
             }
         }
 
+        $this->caption .= $this->setDivOriginalPhotoLinkForCaption();
         $this->caption .= '</div></div>' . PHP_EOL;
         return $this->caption;
     }

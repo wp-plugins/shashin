@@ -37,20 +37,20 @@ class Public_ShashinHeadTags {
             // assume 4:3 ratio
             $shashinJsParams['prettyPhotoDefaultHeight'] = $sizesMap[$this->settings->expandedImageSize] * .75;
             $shashinJsParams['prettyPhotoShowTitle'] = $this->settings->prettyPhotoShowTitle;
+            $shashinJsParams['prettyPhotoShowSocialButtons'] = $this->settings->prettyPhotoShowSocialButtons;
             $shashinJsParams['prettyPhotoAutoplaySlideshow'] = $this->settings->prettyPhotoAutoplaySlideshow;
             $shashinJsParams['prettyPhotoSlideshow'] = $this->settings->prettyPhotoSlideshow;
 
-            if ($this->settings->prettyPhotoLoadScript != 'n') {
-                // use same name to enqueue as the prettyphoto Media plugin
-                $prettyPhotoCssUrl = $this->functionsFacade->getUrlforCustomizableFile('prettyPhoto.css', __FILE__, 'display/prettyphoto/');
-                $this->functionsFacade->enqueueStylesheet('prettyphoto', $prettyPhotoCssUrl, false, '3.1.5');
-                $this->functionsFacade->enqueueScript(
-                    'prettyphoto',
-                    $this->baseUrl . 'prettyphoto/jquery.prettyPhoto.js',
-                    array('jquery'),
-                    '3.1.5.shashin'
-                );
-            }
+            $prettyPhotoVersion = '3.1.5.' . 'shashin.' . $this->version;
+            // use same name to enqueue as the prettyphoto Media plugin
+            $prettyPhotoCssUrl = $this->functionsFacade->getUrlforCustomizableFile('prettyPhoto.css', __FILE__, 'display/prettyphoto/');
+            $this->functionsFacade->enqueueStylesheet('prettyphoto', $prettyPhotoCssUrl, false, $prettyPhotoVersion);
+            $this->functionsFacade->enqueueScript(
+                'prettyphoto',
+                $this->baseUrl . 'prettyphoto/jquery.prettyPhoto.js',
+                array('jquery'),
+                $prettyPhotoVersion
+            );
         }
 
         elseif ($this->settings->imageDisplay == 'fancybox') {
@@ -85,6 +85,22 @@ class Public_ShashinHeadTags {
         $this->functionsFacade->enqueueScript(
             'shashinJs',
             $this->baseUrl . 'shashin.js',
+            array('jquery'),
+            $this->version,
+            true
+        );
+
+        $this->functionsFacade->enqueueScript(
+            'jquery-imagesloaded',
+            $this->baseUrl . 'jquery.imagesloaded.min.js',
+            array('jquery'),
+            $this->version,
+            true
+        );
+
+        $this->functionsFacade->enqueueScript(
+            'jquery-trunk8',
+            $this->baseUrl . 'trunk8.js',
             array('jquery'),
             $this->version,
             true
