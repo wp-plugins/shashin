@@ -4,7 +4,7 @@ Donate link: http://www.toppa.com/shashin-wordpress-plugin
 Tags: Picasa, Fancybox, prettyPhoto, Twitpic, Youtube, image, images, photo, photos, picture, pictures, gallery, widget, widgets, video
 Requires at least: 3.0
 Tested up to: 3.6.1
-Stable tag: 3.4
+Stable tag: 3.4.1
 License: GPLv2 or later
 
 Shashin is a powerful WordPress plugin that lets you easily display photos and videos from Picasa, Twitpic, and Youtube in your WordPress site.
@@ -13,13 +13,14 @@ Shashin is a powerful WordPress plugin that lets you easily display photos and v
 
 **What's new in Shashin 3.4**
 
-* Responsive design: your photos will look good on any size display
+* Responsive design: your thumbnails will look good on any size display, and so will the expanded view.
 * Social sharing: link directly to the full size display of any Shashin photo from Twitter, Facebook, or Pinterest (and you can just share a link directly with someone)
 * Improved experience when navigating thumbnails of photos within an album
 * Captions now overlay the bottom of thumbnails
 * Updated to handle the latest changes from Google in how Google+ interacts with the Picasa API
 * Removed support for viewers other than prettyPhoto and Fancybox. There is now too much custom javascript in Shashin for it work with any viewer.
 
+Note: on the Shashin settings page, you will want to pick prettyPhoto as your viewer to take full advantage of the new responsive design and social sharing features.
 **Overview**
 
 Shashin has many features for displaying photos and videos from Picasa, Youtube, and Twitpic in your Wordpress posts and pages:
@@ -90,7 +91,20 @@ If you have a question, enter a post in [the wordpress.org support forum for Sha
 3. The Shashin media browser
 4. A Fancybox slideshow
 
+== Upgrade Notice ==
+
+= 3.4.1 =
+Fixes thumbnails showing up too small in certain situations, and thumbnail centering not working correctly.
+
+= 3.4 =
+Adds responsive design and social sharing of photos.
+
 == Changelog ==
+
+= 3.4.1 =
+
+* bug fix: thumbnails were showing up too small in some cases with 'colums="max"' in the shortcode.
+* bug fix: 'position="center"' was not working correctly; fix by adding table layout styles to stylesheet
 
 = 3.4 =
 
