@@ -153,7 +153,9 @@ class Public_ShashinLayoutManager {
     }
 
     public function setOpeningTableTag() {
-        $this->openingTableTag = '<div class="shashinThumbnailsTable" id="' . $this->currentTableId . '"'
+        $this->openingTableTag = '<div class="'
+            . ($this->settings->thumbnailDisplay == 'square' ? 'shashinTableSquare ' : '')
+            . 'shashinThumbnailsTable" id="' . $this->currentTableId . '"'
             . $this->addStyleForOpeningTableTag()
             . '>'
             . PHP_EOL;
@@ -316,7 +318,7 @@ class Public_ShashinLayoutManager {
 
     public function setNumericColumnsIfNeeded() {
         if (is_numeric($this->shortcode->columns)) {
-            $this->numericColumns = $this->shortcode->columns;
+            $maxPossibleColumns = $this->shortcode->columns;
         }
 
         elseif ($this->shortcode->columns == 'max') {
@@ -330,22 +332,23 @@ class Public_ShashinLayoutManager {
 
             // guess 10px for padding/margins
             $columns = $this->settings->themeMaxSize / ($thumbnailSize + 10);
-            $max_possible_columns = floor($columns) ? floor($columns) : 1;
-
-            // make sure the calculated number of columns isn't greater than
-            // the total number of photos
-            if ($max_possible_columns > count($this->collection)) {
-                $this->numericColumns = count($this->collection);
-            }
-
-            else {
-                $this->numericColumns = $max_possible_columns;
-            }
+            $maxPossibleColumns = floor($columns) ? floor($columns) : 1;
         }
 
 
         else {
-            $this->numericColumns = 1;
+            $maxPossibleColumns = 1;
+        }
+
+
+        // make sure the calculated number of columns isn't greater than
+        // the total number of photos
+        if ($maxPossibleColumns > count($this->collection)) {
+            $this->numericColumns = count($this->collection);
+        }
+
+        else {
+            $this->numericColumns = $maxPossibleColumns;
         }
 
         return $this->numericColumns;
@@ -383,15 +386,15 @@ class Public_ShashinLayoutManager {
 
     public function addTableCell() {
         $linkAndImageTags = $this->currentDataObjectDisplayer->run();
-        $width = floor(100 / $this->numericColumns) - 4; // there is a 2% margin in the stylesheet
+        $width = floor(100 / $this->numericColumns);
         $maxWidth = $this->currentDataObjectDisplayer->getImgWidth();
         $cell = '<div class="shashinTableCell"'
             . ' data-original_width="' . $width . '%"' // to recalculate the width if the browser is being resized
             . ' style=" width: ' . $width . '%;'
             . ' max-width: ' . ($maxWidth ? ($maxWidth . 'px;') : 'none')
-            . '">'
+            . '"><div class="shashinThumbnailWrapper">'
             . $linkAndImageTags
-            . '</div>' . PHP_EOL;
+            . '</div></div>' . PHP_EOL;
         return $cell;
     }
 
